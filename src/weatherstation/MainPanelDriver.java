@@ -4,15 +4,9 @@ import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.swing.JTextField;
 import weatherstation.panels.MainDashboardPanel;
 import weatherstation.utilities.CollectInput;
@@ -34,26 +28,26 @@ public class MainPanelDriver implements ActionListener{
     private int inputCode = 0;
     private int outputCode = 1;
     
+    public int sortOrder = 0;
+    public int air = 1;
+    public int apparentTemp = 2;
+    public int dewPoint = 3;
+    public int relativeHumidity = 4;
+    public int deltaT = 5;
+    public int windDirection = 6;
+    public int windSpeedKmh = 7;
+    public int windGustsKmh = 8;
+    public int windSpeedKnots = 9;
+    public int windGustsKnots = 10;
+    public int pressQnh = 11;
+    public int pressMsl = 12;
+    public int rainSince = 13;
+    public int dateTime = 14;
+    //public int topLabel = 14;
+    
     //replace with multi dimensional array
     //convert all to string then back
-    String[][] bomData;
-    int[] sortOrder; //0
-    String[] dateTime; //1
-    public static double[] airTemp; //2
-    public static ArrayList<Double> todaysAirTemps; //3
-    double[] apparentTemp; //4
-    double[] dewPoint; //5
-    double[] relativeHumidity; //6
-    double[] deltaT; //7
-    String[] windDirection; //8
-    double[] windSpeedKmh; //9
-    double[] windGustsKmh; //10
-    double[] windSpeedKnots; //11
-    double[] windGustsKnots; //12
-    double[] pressQnh; //13
-    double[] pressMsl; //14
-    String[] rainSince; //15
-    
+    public static String[][] bomData;
     LocalDate date = LocalDate.now();
     int dow = date.getDayOfMonth();
     
@@ -74,10 +68,10 @@ public class MainPanelDriver implements ActionListener{
     
     @Override
     public void actionPerformed(ActionEvent ae){
-        if(ae.getSource() == mainPanel.closeButton){
+        if(ae.getSource() == mainPanel.button[mainPanel.closeButton]){
             System.exit(0);
         }
-        else if(ae.getSource() == mainPanel.nextButton){
+        else if(ae.getSource() == mainPanel.button[mainPanel.nextButton]){
             CardLayout cl = (CardLayout)(WeatherStation.cards.getLayout());
             cl.show(WeatherStation.cards, "card2");
         }
@@ -88,11 +82,10 @@ public class MainPanelDriver implements ActionListener{
        int numberOfEntries = input.results.size();
        int index = 0;
        
-       
-       todaysAirTemps = new ArrayList<Double>();
+       //todaysAirTemps = new ArrayList<Double>();
        
        bomData = new String[numberOfEntries][15]; 
-       
+       /*
        sortOrder = new int[numberOfEntries];
        dateTime = new String[numberOfEntries];
        airTemp = new double[numberOfEntries];
@@ -108,10 +101,9 @@ public class MainPanelDriver implements ActionListener{
        pressQnh = new double[numberOfEntries];
        pressMsl = new double[numberOfEntries];
        rainSince = new String[numberOfEntries];
-       
-       
-       
+        */
        for(JsonObject result : input.results.getValuesAs(JsonObject.class)){
+           /*
            sortOrder[index] = result.getInt("sort_order");
            dateTime[index] = result.getString("local_date_time");
            airTemp[index] = result.getJsonNumber("air_temp").doubleValue();
@@ -127,26 +119,28 @@ public class MainPanelDriver implements ActionListener{
            pressQnh[index] = result.getJsonNumber("press_qnh").doubleValue();
            pressMsl[index] = result.getJsonNumber("press_msl").doubleValue();
            rainSince[index] = result.getString("rain_trace");
-           
-           bomData[index][0] = String.valueOf(result.getInt("sort_order"));
-           bomData[index][1] = String.valueOf(result.getString("local_date_time"));
-           bomData[index][2] = String.valueOf(result.getJsonNumber("air_temp").doubleValue());
-           bomData[index][3] = String.valueOf(result.getJsonNumber("apparent_t").doubleValue());
-           bomData[index][4] = String.valueOf(result.getJsonNumber("dewpt").doubleValue());
-           bomData[index][5] = String.valueOf(result.getJsonNumber("rel_hum").doubleValue());
-           bomData[index][6] = String.valueOf(result.getJsonNumber("delta_t").doubleValue());
-           bomData[index][7] = String.valueOf(result.getString("wind_dir"));
-           bomData[index][8] = String.valueOf(result.getJsonNumber("wind_spd_kmh").doubleValue());
-           bomData[index][9] = String.valueOf(result.getJsonNumber("gust_kmh").doubleValue());
-           bomData[index][10] = String.valueOf(result.getJsonNumber("wind_spd_kt").doubleValue());
-           bomData[index][11] = String.valueOf(result.getJsonNumber("gust_kt").doubleValue());
-           bomData[index][12] = String.valueOf(result.getJsonNumber("press_qnh").doubleValue());
-           bomData[index][13] = String.valueOf(result.getJsonNumber("press_msl").doubleValue());
-           bomData[index][14] = String.valueOf(result.getString("rain_trace"));
+            */
+    
+           bomData[index][sortOrder] = String.valueOf(result.getInt("sort_order"));
+           bomData[index][air] = String.valueOf(result.getJsonNumber("air_temp").doubleValue());
+           bomData[index][apparentTemp] = String.valueOf(result.getJsonNumber("apparent_t").doubleValue());
+           bomData[index][dewPoint] = String.valueOf(result.getJsonNumber("dewpt").doubleValue());
+           bomData[index][relativeHumidity] = String.valueOf(result.getJsonNumber("rel_hum").doubleValue());
+           bomData[index][deltaT] = String.valueOf(result.getJsonNumber("delta_t").doubleValue());
+           bomData[index][windDirection] = String.valueOf(result.getString("wind_dir"));
+           bomData[index][windSpeedKmh] = String.valueOf(result.getJsonNumber("wind_spd_kmh").doubleValue());
+           bomData[index][windGustsKmh] = String.valueOf(result.getJsonNumber("gust_kmh").doubleValue());
+           bomData[index][windSpeedKnots] = String.valueOf(result.getJsonNumber("wind_spd_kt").doubleValue());
+           bomData[index][windGustsKnots] = String.valueOf(result.getJsonNumber("gust_kt").doubleValue());
+           bomData[index][pressQnh] = String.valueOf(result.getJsonNumber("press_qnh").doubleValue());
+           bomData[index][pressMsl] = String.valueOf(result.getJsonNumber("press_msl").doubleValue());
+           bomData[index][rainSince] = String.valueOf(result.getString("rain_trace"));
+           bomData[index][dateTime] = String.valueOf(result.getString("local_date_time"));
            index++;
            
            //assign int variables to each name to use as index variables. s
        }
+/*
        boolean stillToday = true;
        int i = 0;
 
@@ -165,27 +159,27 @@ public class MainPanelDriver implements ActionListener{
            i++;
            
        }
-
+       */
        displayOutputToLabel();
     }
     private void displayOutputToLabel(){
-        String time = String.valueOf(dateTime[0]);
+        String time = String.valueOf(bomData[0][dateTime]);
         
-        mainPanel.label2[mainPanel.sortOrder].setText(String.valueOf(sortOrder[0]));
-        mainPanel.label2[mainPanel.dateTime].setText(time.substring(3));
-        mainPanel.label2[mainPanel.air].setText(String.valueOf(airTemp[0]) + "°C");
-        mainPanel.label2[mainPanel.apparentTemp].setText(String.valueOf(apparentTemp[0]) + "°C");
-        mainPanel.label2[mainPanel.dewPoint].setText(String.valueOf(dewPoint[0]));
-        mainPanel.label2[mainPanel.relativeHumidity].setText(String.valueOf(relativeHumidity[0]) + "%");
-        mainPanel.label2[mainPanel.deltaT].setText(String.valueOf(deltaT[0]));
-        mainPanel.label2[mainPanel.windDirection].setText(String.valueOf(windDirection[0]));
-        mainPanel.label2[mainPanel.windSpeedKmh].setText(String.valueOf(windSpeedKmh[0]));
-        mainPanel.label2[mainPanel.windGustsKmh].setText(String.valueOf(windGustsKmh[0]));
-        mainPanel.label2[mainPanel.windSpeedKnots].setText(String.valueOf(windSpeedKnots[0]));
-        mainPanel.label2[mainPanel.windGustsKnots].setText(String.valueOf(windGustsKnots[0]));
-        mainPanel.label2[mainPanel.pressQnh].setText(String.valueOf(pressQnh[0]));
-        mainPanel.label2[mainPanel.pressMsl].setText(String.valueOf(pressMsl[0]));
-        mainPanel.label2[mainPanel.rainSince].setText(String.valueOf(rainSince[0]));
+        mainPanel.label2[sortOrder].setText(String.valueOf(bomData[0][sortOrder]));
+        mainPanel.label2[dateTime].setText(time.substring(3));
+        mainPanel.label2[air].setText(String.valueOf(bomData[0][air]) + "°C");
+        mainPanel.label2[apparentTemp].setText(String.valueOf(bomData[0][apparentTemp]) + "°C");
+        mainPanel.label2[dewPoint].setText(String.valueOf(bomData[0][dewPoint]));
+        mainPanel.label2[relativeHumidity].setText(String.valueOf(bomData[0][relativeHumidity]) + "%");
+        mainPanel.label2[deltaT].setText(String.valueOf(bomData[0][deltaT]));
+        mainPanel.label2[windDirection].setText(String.valueOf(bomData[0][windDirection]));
+        mainPanel.label2[windSpeedKmh].setText(String.valueOf(bomData[0][windSpeedKmh]));
+        mainPanel.label2[windGustsKmh].setText(String.valueOf(bomData[0][windGustsKmh]));
+        mainPanel.label2[windSpeedKnots].setText(String.valueOf(bomData[0][windSpeedKnots]));
+        mainPanel.label2[windGustsKnots].setText(String.valueOf(bomData[0][windGustsKnots]));
+        mainPanel.label2[pressQnh].setText(String.valueOf(bomData[0][pressQnh]));
+        mainPanel.label2[pressMsl].setText(String.valueOf(bomData[0][pressMsl]));
+        mainPanel.label2[rainSince].setText(String.valueOf(bomData[0][rainSince]));
 
     }
 }

@@ -30,6 +30,7 @@ public class DrawingPanel extends JPanel {
     int GRAPH_POINT_WIDTH = 2;
     int Y_HATCH_CNT = 10;
     int NumberOfRecords;
+    int air = 1;
     
     private int padding = 25;
     private int labelPadding = 25;
@@ -49,7 +50,7 @@ public class DrawingPanel extends JPanel {
         super.paintComponent(g);
         
         for(int k = 48; k >=0; k--){
-            values.add(MainPanelDriver.airTemp[k]);
+            values.add(Double.parseDouble(MainPanelDriver.bomData[k][air]));
         }
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -178,7 +179,7 @@ public class DrawingPanel extends JPanel {
       List<Point> graphPoints = new ArrayList<Point>();
       for (int i = 0; i < NumberOfRecords; i++) {
          int x1 = (int) (i * xScale + BORDER_GAP);
-         int y1 = (int) ((MAX_SCORE - MainPanelDriver.airTemp[i]) * yScale + BORDER_GAP);
+         int y1 = (int) ((MAX_SCORE - Double.parseDouble(MainPanelDriver.bomData[i][air])) * yScale + BORDER_GAP);
          graphPoints.add(new Point(x1, y1));
       }
 
