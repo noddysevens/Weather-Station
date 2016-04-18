@@ -6,7 +6,6 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -68,30 +67,20 @@ public class WeatherStation {
         
     }
     private static void createAndShowGUI() throws IOException {
-        //Create and set up the window.
         frame.setUndecorated(true);
         frame.setBackground(gioBlue);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(HEIGHT,WIDTH));
-        //Create and set up the content pane.
         WeatherStation calcSuite = new WeatherStation();
         calcSuite.addComponentToPane(frame.getContentPane());
-        
-        //frameIcon();
-        //frame.setIconImage(frameIcon.getImage());
-        //Display the window.
         frame.pack();
-        
         frame.setLocationRelativeTo( null );
         frame.setVisible(true);
-        
-        
     }
-
     private void addCardsToDeck(MainPanelDriver driver){
         cards.add(driver.mainPanel, "Main");
     }
-    public void addComponentToPane(Container pane) throws IOException {
+    private void addComponentToPane(Container pane) throws IOException {
         MainPanelDriver driver = new MainPanelDriver();
         
         cards = new JPanel(new CardLayout());

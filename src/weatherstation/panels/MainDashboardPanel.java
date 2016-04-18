@@ -19,13 +19,11 @@ import weatherstation.WeatherStation;
  * Last Changed: 18 - April - 2016
  */
 public class MainDashboardPanel extends JPanel{
-    
     private Color darkBlue;
     private Color gioBlue;
     private Color lightGrayBackground;
     private Color mainTextColor;
     
-    //Font settings
     private final String FONT_FACE = "verdana";
     private final int FONT_STYLE = Font.BOLD;
     public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
@@ -44,11 +42,13 @@ public class MainDashboardPanel extends JPanel{
     private final int NUMBER_OF_LABELS2 = 15;
     
     private JPanel[] panel = new JPanel[NUMBER_OF_PANELS];
+    public JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
+    private JPanel[] buttonPanel = new JPanel[NUMBER_OF_BUTTON_PANELS];
+    
     public JButton[] button = new JButton[NUMBER_OF_BUTTONS];
-    //public JButton nextButton = new JButton("Next");
-    //public JButton closeButton = new JButton("Close");
     
     public JLabel[] label = new JLabel[NUMBER_OF_LABELS];
+    public JLabel[] label2 = new JLabel[NUMBER_OF_LABELS2];
 
     public int sortOrder = 0;
     public int air = 1;
@@ -66,12 +66,7 @@ public class MainDashboardPanel extends JPanel{
     public int rainSince = 13;
     public int dateTime = 14;
     public int topLabel = 14;
-
-    public JLabel[] label2 = new JLabel[NUMBER_OF_LABELS2];
     
-    public JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
-    
-    private JPanel[] buttonPanel = new JPanel[NUMBER_OF_BUTTON_PANELS];
     public int closeButton = 0;
     public int nextButton = 1;
     
@@ -117,14 +112,11 @@ public class MainDashboardPanel extends JPanel{
             label2[index].setForeground(WeatherStation.mainTextColor);
         }
         
-        label[topLabel].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
         label[topLabel].setForeground(Color.WHITE);
-        label2[dateTime].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM_LARGE.value));
+        label[topLabel].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
+        
         label2[dateTime].setForeground(Color.WHITE);
         label2[air].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.LARGE.value));
-        label2[air].setForeground(WeatherStation.mainTextColor);
-        label2[apparentTemp].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM_LARGE.value));
-        label2[apparentTemp].setForeground(WeatherStation.mainTextColor);
         
     }
     private void initializeButtons(){
@@ -138,8 +130,6 @@ public class MainDashboardPanel extends JPanel{
         }
     }
     public void createPanels(){
-        setBackground(WeatherStation.BACKGROUND_COLOUR);
-        
         for(int index = 0; index < NUMBER_OF_LABEL_PANELS; index++){
             labelPanel[index] = new JPanel();
             labelPanel[index].setBackground(WeatherStation.BACKGROUND_COLOUR);
@@ -150,7 +140,6 @@ public class MainDashboardPanel extends JPanel{
         }
         
         labelPanel[dateTime].setBackground(WeatherStation.darkBlue);
-        labelPanel[apparentTemp].setBackground(WeatherStation.BACKGROUND_COLOUR);
         
         labelPanel[sortOrder].add(label[sortOrder]);
         labelPanel[air].add(label[air]);
@@ -222,7 +211,6 @@ public class MainDashboardPanel extends JPanel{
         
         //this panerl needs to be it's own panel.
         JPanel panel4 = new JPanel();
-        //panel4.setBackground(BACKGROUND_COLOUR);
         panel4.setLayout(new FlowLayout());
         WeatherStation.drawingPanel.setBackground(Color.white);
         panel4.add(WeatherStation.drawingPanel);
