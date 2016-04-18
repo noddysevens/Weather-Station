@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import weatherstation.MainPanelDriver;
-import weatherstation.WeatherStation;
 
 /**
  * Program info: 
@@ -171,7 +170,7 @@ public class DrawingPanel extends JPanel {
     }
     
     public void drawGraph(Graphics g){
-      NumberOfRecords = MainPanelDriver.numberOfRecordsSinceMidnight;
+      NumberOfRecords = 48;
       
       double xScale = ((double) width - 2 * 2) / (NumberOfRecords - 1);
       double yScale = ((double) height - 2 * 2) / (50 - 1);

@@ -4,13 +4,9 @@ import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import javax.json.JsonObject;
-import javax.swing.JTextField;
 import weatherstation.panels.MainDashboardPanel;
 import weatherstation.utilities.CollectInput;
-
 
 /**
  * Program info: 
@@ -22,9 +18,7 @@ public class MainPanelDriver implements ActionListener{
     CollectInput input = new CollectInput();
 
     public MainDashboardPanel mainPanel;
-     
-    private String lastCard = "";
-    private JTextField lastJTextField;
+    
     private int inputCode = 0;
     private int outputCode = 1;
     
@@ -43,15 +37,8 @@ public class MainPanelDriver implements ActionListener{
     public int pressMsl = 12;
     public int rainSince = 13;
     public int dateTime = 14;
-    //public int topLabel = 14;
-    
-    //replace with multi dimensional array
-    //convert all to string then back
+
     public static String[][] bomData;
-    LocalDate date = LocalDate.now();
-    int dow = date.getDayOfMonth();
-    
-    public static int numberOfRecordsSinceMidnight;
 
     public MainPanelDriver() throws IOException {
         mainPanel = new MainDashboardPanel(this);
@@ -82,45 +69,9 @@ public class MainPanelDriver implements ActionListener{
        int numberOfEntries = input.results.size();
        int index = 0;
        
-       //todaysAirTemps = new ArrayList<Double>();
-       
        bomData = new String[numberOfEntries][15]; 
-       /*
-       sortOrder = new int[numberOfEntries];
-       dateTime = new String[numberOfEntries];
-       airTemp = new double[numberOfEntries];
-       apparentTemp = new double[numberOfEntries];
-       dewPoint = new double[numberOfEntries];
-       relativeHumidity = new double[numberOfEntries];
-       deltaT = new double[numberOfEntries];
-       windDirection = new String[numberOfEntries];
-       windSpeedKmh = new double[numberOfEntries];
-       windGustsKmh = new double[numberOfEntries];
-       windSpeedKnots = new double[numberOfEntries];
-       windGustsKnots = new double[numberOfEntries];
-       pressQnh = new double[numberOfEntries];
-       pressMsl = new double[numberOfEntries];
-       rainSince = new String[numberOfEntries];
-        */
+        
        for(JsonObject result : input.results.getValuesAs(JsonObject.class)){
-           /*
-           sortOrder[index] = result.getInt("sort_order");
-           dateTime[index] = result.getString("local_date_time");
-           airTemp[index] = result.getJsonNumber("air_temp").doubleValue();
-           apparentTemp[index] = result.getJsonNumber("apparent_t").doubleValue();
-           dewPoint[index] = result.getJsonNumber("dewpt").doubleValue();
-           relativeHumidity[index] = result.getJsonNumber("rel_hum").doubleValue();
-           deltaT[index] = result.getJsonNumber("delta_t").doubleValue();
-           windDirection[index] = result.getString("wind_dir");
-           windSpeedKmh[index] = result.getJsonNumber("wind_spd_kmh").doubleValue();
-           windGustsKmh[index] = result.getJsonNumber("gust_kmh").doubleValue();
-           windSpeedKnots[index] = result.getJsonNumber("wind_spd_kt").doubleValue();
-           windGustsKnots[index] = result.getJsonNumber("gust_kt").doubleValue();
-           pressQnh[index] = result.getJsonNumber("press_qnh").doubleValue();
-           pressMsl[index] = result.getJsonNumber("press_msl").doubleValue();
-           rainSince[index] = result.getString("rain_trace");
-            */
-    
            bomData[index][sortOrder] = String.valueOf(result.getInt("sort_order"));
            bomData[index][air] = String.valueOf(result.getJsonNumber("air_temp").doubleValue());
            bomData[index][apparentTemp] = String.valueOf(result.getJsonNumber("apparent_t").doubleValue());
@@ -137,29 +88,7 @@ public class MainPanelDriver implements ActionListener{
            bomData[index][rainSince] = String.valueOf(result.getString("rain_trace"));
            bomData[index][dateTime] = String.valueOf(result.getString("local_date_time"));
            index++;
-           
-           //assign int variables to each name to use as index variables. s
        }
-/*
-       boolean stillToday = true;
-       int i = 0;
-
-       System.out.println("todays date is " + dow);
-       String s = String.valueOf(dow - 1);
-       
-       while(stillToday){
-           int indexOfyesterday = dateTime[i].indexOf(s);
-           System.out.println(dateTime[i]);
-           System.out.println("index of 12" + indexOfyesterday);
-           if(indexOfyesterday == 0){
-               stillToday = false;
-               System.out.println("i yesterday = " + (i - 1));
-               numberOfRecordsSinceMidnight = i;
-           }
-           i++;
-           
-       }
-       */
        displayOutputToLabel();
     }
     private void displayOutputToLabel(){
@@ -180,6 +109,5 @@ public class MainPanelDriver implements ActionListener{
         mainPanel.label2[pressQnh].setText(String.valueOf(bomData[0][pressQnh]));
         mainPanel.label2[pressMsl].setText(String.valueOf(bomData[0][pressMsl]));
         mainPanel.label2[rainSince].setText(String.valueOf(bomData[0][rainSince]));
-
     }
 }

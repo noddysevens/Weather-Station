@@ -12,11 +12,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
-import java.net.URL;
-import javax.json.JsonObject;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import weatherstation.utilities.CollectInput;
 
 /**
  *
@@ -25,17 +22,6 @@ import weatherstation.utilities.CollectInput;
 public class WeatherStation {
     private static int HEIGHT = 600;
     private static int WIDTH = 650;
-
-    //Font settings
-    private final String FONT_FACE = "verdana";
-    private final int FONT_STYLE = Font.BOLD;
-    public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
-        private int value;
-
-        private FONT_SIZE(int value) {
-                this.value = value;
-        }
-    };
     
     public static Color darkBlue = new Color(0,86,150);
     public static Color gioBlue = new Color(102,204,255);
