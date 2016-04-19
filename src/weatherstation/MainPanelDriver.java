@@ -60,7 +60,7 @@ public class MainPanelDriver implements ActionListener{
         }
         else if(ae.getSource() == mainPanel.button[mainPanel.nextButton]){
             CardLayout cl = (CardLayout)(WeatherStation.cards.getLayout());
-            cl.show(WeatherStation.cards, "card2");
+            cl.show(WeatherStation.cards, "Graph");
         }
     }
     private void initializeArrays() throws IOException{
@@ -72,23 +72,28 @@ public class MainPanelDriver implements ActionListener{
        bomData = new String[numberOfEntries][15]; 
         
        for(JsonObject result : input.results.getValuesAs(JsonObject.class)){
-           bomData[index][sortOrder] = String.valueOf(result.getInt("sort_order"));
-           bomData[index][air] = String.valueOf(result.getJsonNumber("air_temp").doubleValue());
-           bomData[index][apparentTemp] = String.valueOf(result.getJsonNumber("apparent_t").doubleValue());
-           bomData[index][dewPoint] = String.valueOf(result.getJsonNumber("dewpt").doubleValue());
-           bomData[index][relativeHumidity] = String.valueOf(result.getJsonNumber("rel_hum").doubleValue());
-           bomData[index][deltaT] = String.valueOf(result.getJsonNumber("delta_t").doubleValue());
-           bomData[index][windDirection] = String.valueOf(result.getString("wind_dir"));
-           bomData[index][windSpeedKmh] = String.valueOf(result.getJsonNumber("wind_spd_kmh").doubleValue());
-           bomData[index][windGustsKmh] = String.valueOf(result.getJsonNumber("gust_kmh").doubleValue());
-           bomData[index][windSpeedKnots] = String.valueOf(result.getJsonNumber("wind_spd_kt").doubleValue());
-           bomData[index][windGustsKnots] = String.valueOf(result.getJsonNumber("gust_kt").doubleValue());
-           bomData[index][pressQnh] = String.valueOf(result.getJsonNumber("press_qnh").doubleValue());
-           bomData[index][pressMsl] = String.valueOf(result.getJsonNumber("press_msl").doubleValue());
-           bomData[index][rainSince] = String.valueOf(result.getString("rain_trace"));
-           bomData[index][dateTime] = String.valueOf(result.getString("local_date_time"));
-           index++;
-       }
+            String time = String.valueOf(result.getString("local_date_time"));
+            String sub = time.substring(7, 8);
+            if(sub.equals("0")){
+                bomData[index][sortOrder] = String.valueOf(result.getInt("sort_order"));
+                bomData[index][air] = String.valueOf(result.getJsonNumber("air_temp").doubleValue());
+                bomData[index][apparentTemp] = String.valueOf(result.getJsonNumber("apparent_t").doubleValue());
+                bomData[index][dewPoint] = String.valueOf(result.getJsonNumber("dewpt").doubleValue());
+                bomData[index][relativeHumidity] = String.valueOf(result.getJsonNumber("rel_hum").doubleValue());
+                bomData[index][deltaT] = String.valueOf(result.getJsonNumber("delta_t").doubleValue());
+                bomData[index][windDirection] = String.valueOf(result.getString("wind_dir"));
+                bomData[index][windSpeedKmh] = String.valueOf(result.getJsonNumber("wind_spd_kmh").doubleValue());
+                bomData[index][windGustsKmh] = String.valueOf(result.getJsonNumber("gust_kmh").doubleValue());
+                bomData[index][windSpeedKnots] = String.valueOf(result.getJsonNumber("wind_spd_kt").doubleValue());
+                bomData[index][windGustsKnots] = String.valueOf(result.getJsonNumber("gust_kt").doubleValue());
+                bomData[index][pressQnh] = String.valueOf(result.getJsonNumber("press_qnh").doubleValue());
+                bomData[index][pressMsl] = String.valueOf(result.getJsonNumber("press_msl").doubleValue());
+                bomData[index][rainSince] = String.valueOf(result.getString("rain_trace"));
+                bomData[index][dateTime] = String.valueOf(result.getString("local_date_time"));
+            index++;
+            }
+           
+        }
        displayOutputToLabel();
     }
     private void displayOutputToLabel(){

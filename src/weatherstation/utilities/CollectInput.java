@@ -25,7 +25,6 @@ public class CollectInput{
     static URL url;
     
     public void getInput() {
-        System.out.println("I'm runnign");
         try
         {
             url = new URL("http://www.bom.gov.au/fwo/IDQ60801/IDQ60801.95551.json");

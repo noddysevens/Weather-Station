@@ -13,6 +13,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import weatherstation.panels.GraphPanel;
 
 /**
  *
@@ -31,6 +32,7 @@ public class WeatherStation {
     public static JPanel cards;
     
     public static DrawingPanel drawingPanel = new DrawingPanel();
+    GraphPanel graphPanel = new GraphPanel();
     
     static JFrame frame = new JFrame("Json Test");
     
@@ -43,6 +45,7 @@ public class WeatherStation {
     
     public static void main(String[] Args) throws IOException{
         frame.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent e) {
                 point.x = e.getX();
                 point.y = e.getY();
@@ -59,12 +62,9 @@ public class WeatherStation {
             public void run() {
                 try {
                     createAndShowGUI();
-
                 } catch (IOException ex) {}
             }
         });
-        
-        
     }
     private static void createAndShowGUI() throws IOException {
         frame.setUndecorated(true);
@@ -79,6 +79,7 @@ public class WeatherStation {
     }
     private void addCardsToDeck(MainPanelDriver driver){
         cards.add(driver.mainPanel, "Main");
+        cards.add(graphPanel, "Graph");
     }
     private void addComponentToPane(Container pane) throws IOException {
         MainPanelDriver driver = new MainPanelDriver();
