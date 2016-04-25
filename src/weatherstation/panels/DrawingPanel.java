@@ -23,16 +23,18 @@ import weatherstation.WeatherStation;
  * Last Changed: 
  */
 public class DrawingPanel extends JPanel {
+    private final int DIVISIONS_PER_LABEL = 4;
+    private final int BORDER_GAP = 2;
+    //private final int MAX_SCORE = 50;
+    private final int GRAPH_POINT_WIDTH = 2;
+    private int Y_HATCH_CNT = 10;
+    
+    private final int width = 550;
+    private final int height = 500;
 
-    int width = 550;
-    int height = 550;
-    int BORDER_GAP = 2;
-    int MAX_SCORE = 50;
-    int GRAPH_POINT_WIDTH = 2;
-    int Y_HATCH_CNT = 10;
-    int NumberOfRecords;
-    int air = 1;
-    int dateTime = 14;
+    private int NumberOfRecords;
+    private int air = 1;
+    private int dateTime = 14;
     
     private final int padding = 25;
     private final int labelPadding = 25;
@@ -42,8 +44,8 @@ public class DrawingPanel extends JPanel {
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
     private final int pointWidth = 4;
     private final int numberYDivisions = 12;
-    private List<Double> values;
-    private List<String> times;
+    public  List<Double> values;
+    public  List<String> times;
     
     public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
         private int value;
@@ -64,10 +66,12 @@ public class DrawingPanel extends JPanel {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         
+        //fill lists with data
         for(int k = 49; k >=0; k--){
             values.add(Double.parseDouble(MainPanelDriver.bomData[k][air]));
             times.add(MainPanelDriver.bomData[k][dateTime].substring(3));
         }
+        
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -111,6 +115,7 @@ public class DrawingPanel extends JPanel {
         return maxScore;
     }
     
+    //convert raw data into a list of graph points
     private List<Point> getGraphPoints(){
         double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (values.size() - 1);
         double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (getMaxScore() - getMinScore());
@@ -154,7 +159,7 @@ public class DrawingPanel extends JPanel {
                 if ((i % ((int) ((values.size() / 24.0)) + 0)) == 0) {  
                     g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth, x1, padding);
                     g2.setColor(Color.BLACK);
-                    if(i % (4) == 0){    
+                    if(i % DIVISIONS_PER_LABEL == 0){    
                         String xLabel = times.get(timeCounter);
                         g2.setFont(new Font("Century Gothic", Font.PLAIN, 9));
                         FontMetrics metrics = g2.getFontMetrics();

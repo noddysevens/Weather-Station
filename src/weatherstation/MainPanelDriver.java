@@ -114,5 +114,7 @@ public class MainPanelDriver implements ActionListener{
         mainPanel.label2[pressQnh].setText(String.valueOf(bomData[0][pressQnh]));
         mainPanel.label2[pressMsl].setText(String.valueOf(bomData[0][pressMsl]));
         mainPanel.label2[rainSince].setText(String.valueOf(bomData[0][rainSince]));
+        
+        
     }
 }

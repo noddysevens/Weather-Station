@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -38,10 +39,11 @@ public class GraphPanel extends JPanel implements ActionListener{
     
     private final int NUMBER_OF_PANELS = 2;
     public final int NUMBER_OF_BUTTONS = 2;
-    private final int NUMBER_OF_LABEL_PANELS = 15;
+    
+    private final int NUMBER_OF_LABEL_PANELS = 1;
     private final int NUMBER_OF_BUTTON_PANELS = 5;
-    private final int NUMBER_OF_LABELS = 15;
-    private final int NUMBER_OF_LABELS2 = 15;
+    private final int NUMBER_OF_LABELS = 1;
+    private final int NUMBER_OF_LABELS2 = 1;
     
     private JPanel[] panel = new JPanel[NUMBER_OF_PANELS];
     public JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
@@ -68,9 +70,12 @@ public class GraphPanel extends JPanel implements ActionListener{
     public int rainSince = 13;
     public int dateTime = 14;
     public int topLabel = 14;
+    public int graphHeading = 0;
     
     public int closeButton = 0;
     public int backButton = 1;
+    
+    public String graphHeading2 = "air temp";
     
     public GraphPanel(){
         darkBlue = WeatherStation.darkBlue;
@@ -92,40 +97,21 @@ public class GraphPanel extends JPanel implements ActionListener{
         createPanels();
     }
     public void initializeLabels(){
-        /*
-        label[sortOrder] = new JLabel("Sort Order:");
-        label[air] = new JLabel("Air Temp:");
-        label[apparentTemp] = new JLabel("Apparent Temp:");
-        label[dewPoint] = new JLabel("Dew Point:");
-        label[relativeHumidity] = new JLabel("Relative Humidity:");
-        label[deltaT] = new JLabel("Delta T:");
-        label[windDirection] = new JLabel("Wind Dir:");
-        label[windSpeedKmh] = new JLabel("Wind Speed(kmh):");
-        label[windGustsKmh] = new JLabel("Wind Gusts(kmh):");
-        label[windSpeedKnots] = new JLabel("Wind Speed(knots):");
-        label[windGustsKnots] = new JLabel("Wind Gusts(knots):");
-        label[pressQnh] = new JLabel("Press QNH:");
-        label[pressMsl] = new JLabel("Press MSL:");
-        label[rainSince] = new JLabel("Rain since 9am mm:");
-        label[topLabel] = new JLabel("Weather conditions at:");
+
+        label[graphHeading] = new JLabel("Past 24 hours of:");
+        
+        label2[graphHeading] = new JLabel("Air Temp");
 
         for(int index = 0; index < NUMBER_OF_LABELS; index++){
-            label[index].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.SMALL.value));
-            label[index].setForeground(WeatherStation.darkBlue);
+            label[index].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
+            label[index].setForeground(WeatherStation.mainTextColor);
         }
         
         for(int index = 0; index < NUMBER_OF_LABELS2; index++){
-            label2[index] = new JLabel("NULL");
+            //label2[index] = new JLabel("NULL");
             label2[index].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM_LARGE.value));
             label2[index].setForeground(WeatherStation.mainTextColor);
         }
-        
-        label[topLabel].setForeground(Color.WHITE);
-        label[topLabel].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
-        
-        label2[dateTime].setForeground(Color.WHITE);
-        label2[air].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.LARGE.value));
-        */
     }
     private void initializeButtons(){
         button[closeButton] = new JButton("Close");
@@ -138,14 +124,30 @@ public class GraphPanel extends JPanel implements ActionListener{
         }
     }
     public void createPanels(){
+        for(int index = 0; index < NUMBER_OF_LABEL_PANELS; index++){
+            labelPanel[index] = new JPanel();
+            labelPanel[index].setBackground(WeatherStation.BACKGROUND_COLOUR);
+        }
         for(int index = 0; index < NUMBER_OF_BUTTON_PANELS; index++){
             buttonPanel[index] = new JPanel();
             buttonPanel[index].setBackground(WeatherStation.BACKGROUND_COLOUR);
         }
-
+        
+        labelPanel[graphHeading].add(label[graphHeading]);
+        labelPanel[graphHeading].add(label2[graphHeading]);
+                
         buttonPanel[closeButton].add(button[closeButton]);
         buttonPanel[backButton].add(button[backButton]);
-
+        
+        JPanel headingPanel = new JPanel();
+        headingPanel.setBackground(WeatherStation.BACKGROUND_COLOUR);
+        headingPanel.add(labelPanel[graphHeading]);
+        
+        JPanel mainPanel = new JPanel();
+        mainPanel.setBackground(WeatherStation.BACKGROUND_COLOUR);
+        mainPanel.add(headingPanel);
+        mainPanel.add(drawingPanel);
+        
         JPanel buttonsPanelMain = new JPanel();
         buttonsPanelMain.setBackground(WeatherStation.BACKGROUND_COLOUR);
         buttonsPanelMain.add(buttonPanel[backButton]);
@@ -153,8 +155,10 @@ public class GraphPanel extends JPanel implements ActionListener{
 
         this.setLayout(new BorderLayout());
         this.setBackground(WeatherStation.BACKGROUND_COLOUR);
-        this.add(drawingPanel, BorderLayout.NORTH);
-        this.add(buttonsPanelMain ,BorderLayout.CENTER);
+        //this.setLayout(new GridLayout(4,1));
+        this.add(headingPanel, BorderLayout.NORTH);
+        this.add(drawingPanel, BorderLayout.CENTER);
+        this.add(buttonsPanelMain, BorderLayout.SOUTH);
     }
     @Override
     public void actionPerformed(ActionEvent ae) {
@@ -164,6 +168,9 @@ public class GraphPanel extends JPanel implements ActionListener{
         else if(ae.getSource() == button[backButton]){
             CardLayout cl = (CardLayout)(WeatherStation.cards.getLayout());
             cl.show(WeatherStation.cards, "Main");
+            drawingPanel.values.clear();
+            drawingPanel.times.clear();
+        
         }
     }
 }
