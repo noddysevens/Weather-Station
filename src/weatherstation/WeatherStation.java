@@ -16,11 +16,15 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import weatherstation.panels.GraphPanel;
+import weatherstation.utilities.PrepareStationData;
+import weatherstation.utilities.ZipReader;
 
 /**
  * Program Info: This program collects BOM data for toowoomba airport
@@ -88,6 +92,9 @@ public class WeatherStation implements ActionListener{
     static Timer timer;
     
     private static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
+    public static int NUMBER_OF_STATION_ROWS = 20116;
+    public static int NUMBER_OF_STATION_COLUMNS = 12;
+    public static String[][] stationData = new String[NUMBER_OF_STATION_ROWS][NUMBER_OF_STATION_COLUMNS];
     
     public static void main(String[] Args) throws IOException{
         frame.addMouseListener(new MouseAdapter() {
@@ -128,6 +135,16 @@ public class WeatherStation implements ActionListener{
                 button[NAVIGATION_BUTTON].requestFocus();
             }
         });
+        //run the zip reader
+        try {
+            ZipReader.readZip();
+            PrepareStationData.removeNthLine("C:/Users/David/Downloads/stations.txt", 20118);
+            PrepareStationData.parseWords();
+            System.out.println("parsewords complete");
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        
     }
     private void addCardsToDeck(MainPanelDriver driver){
         cards.add(driver.mainPanel, "Main");
