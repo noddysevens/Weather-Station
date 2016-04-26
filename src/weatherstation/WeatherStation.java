@@ -6,15 +6,19 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -27,6 +31,18 @@ import weatherstation.panels.GraphPanel;
 public class WeatherStation implements ActionListener{
     private static int HEIGHT = 600;
     private static int WIDTH = 650;
+    
+    private final String FONT_FACE = "verdana";
+    private final int FONT_STYLE = Font.BOLD;
+    
+    
+    public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
+        public int value;
+
+        private FONT_SIZE(int value) {
+                this.value = value;
+        }
+    };
     
     public static Color darkBlue = new Color(0,86,150);
     public static Color gioBlue = new Color(102,204,255);
@@ -112,6 +128,8 @@ public class WeatherStation implements ActionListener{
         frame.pack();
         frame.setLocationRelativeTo( null );
         frame.setVisible(true);
+        //Make textField get the focus whenever frame is activated.
+        
         
         
     }
@@ -130,7 +148,57 @@ public class WeatherStation implements ActionListener{
         cards = new JPanel(new CardLayout());
         addCardsToDeck(driver);
         
-        pane.add(driver.mainPanel.labelPanel[driver.mainPanel.dateTime], BorderLayout.NORTH);
+        JButton minimize = new JButton("-");
+        minimize.setBackground(darkBlue);
+        minimize.setForeground(Color.WHITE);
+        minimize.setBorderPainted(false);
+        minimize.setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM_LARGE.value));
+        minimize.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.setState(frame.ICONIFIED);
+            }
+        });
+        
+        
+        
+        
+        final JButton close = new JButton("X");
+        close.setBackground(darkBlue);
+        close.setForeground(Color.WHITE);
+        close.setBorderPainted(false);
+        close.setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
+        close.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        
+        frame.addWindowFocusListener(new WindowAdapter() {
+            public void windowGainedFocus(WindowEvent e) {
+                driver.mainPanel.button[driver.mainPanel.nextButton].grabFocus();
+                driver.mainPanel.button[driver.mainPanel.nextButton].requestFocus();
+            }
+        });
+        
+        JPanel topSub = new JPanel();
+        topSub.setLayout(new BorderLayout());
+        topSub.setBackground(gioBlue);
+        topSub.add(driver.mainPanel.labelPanel[driver.mainPanel.dateTime], BorderLayout.CENTER);
+        topSub.add(minimize, BorderLayout.LINE_END);
+        
+        JPanel controls = new JPanel();
+        controls.setLayout(new BorderLayout());
+        controls.setBackground(gioBlue);
+        controls.add(topSub, BorderLayout.CENTER);
+        controls.add(close, BorderLayout.LINE_END);
+        
+        JPanel topPanel = new JPanel();
+        topPanel.add(controls);
+        
+        pane.add(controls , BorderLayout.NORTH);
+        //pane.add(driver.mainPanel.labelPanel[driver.mainPanel.dateTime], BorderLayout.NORTH);
         pane.add(cards, BorderLayout.CENTER);
     }
 

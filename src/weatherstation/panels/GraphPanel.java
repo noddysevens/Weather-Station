@@ -55,7 +55,7 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
     
     private final int NUMBER_OF_COMBOBOXES = 1;
     private final int NUMBER_OF_PANELS = 2;
-    public final int NUMBER_OF_BUTTONS = 2;
+    public static final int NUMBER_OF_BUTTONS = 2;
     private final int NUMBER_OF_LABEL_PANELS = 1;
     private final int NUMBER_OF_COMBOBOX_PANELS = 1;
     private final int NUMBER_OF_BUTTON_PANELS = 5;
@@ -67,7 +67,7 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
     public JPanel[] comboBoxPanel = new JPanel[NUMBER_OF_COMBOBOX_PANELS];
     private JPanel[] buttonPanel = new JPanel[NUMBER_OF_BUTTON_PANELS];
     
-    public JButton[] button = new JButton[NUMBER_OF_BUTTONS];
+    public static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
     
     public JLabel[] label = new JLabel[NUMBER_OF_LABELS];
     public JLabel[] label2 = new JLabel[NUMBER_OF_LABELS2];
@@ -94,7 +94,7 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
     public int graphHeading = 0;
     
     public int closeButton = 0;
-    public int backButton = 1;
+    public static int backButton = 1;
     
     public int dataSelectBox = 0;
     
@@ -145,6 +145,7 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
             button[index].setBorderPainted(false);
             button[index].setBackground(darkBlue);
             button[index].setForeground(Color.WHITE);
+            button[index].setFont(new Font(FONT_FACE, FONT_STYLE, WeatherStation.FONT_SIZE.MEDIUM.value));
         }
     }
     
@@ -160,6 +161,7 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
             comboBox[index].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM_LARGE.value));
             comboBox[index].addActionListener(this);
             comboBox[index].addPopupMenuListener(this);
+            comboBox[index].setBackground(WeatherStation.BACKGROUND_COLOUR);
             comboBox[index].setForeground(WeatherStation.mainTextColor);
             comboBox[index].setModel(models[0]);
             comboBox[index].setSelectedIndex(0);
@@ -201,7 +203,7 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
         JPanel buttonsPanelMain = new JPanel();
         buttonsPanelMain.setBackground(WeatherStation.BACKGROUND_COLOUR);
         buttonsPanelMain.add(buttonPanel[backButton]);
-        buttonsPanelMain.add(buttonPanel[closeButton]);
+        //buttonsPanelMain.add(buttonPanel[closeButton]);
 
         this.setLayout(new BorderLayout());
         this.setBackground(WeatherStation.BACKGROUND_COLOUR);
@@ -220,6 +222,8 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
             cl.show(WeatherStation.cards, "Main");
             drawingPanel.values.clear();
             drawingPanel.times.clear();
+            MainDashboardPanel.button[MainDashboardPanel.nextButton].grabFocus();
+            MainDashboardPanel.button[MainDashboardPanel.nextButton].requestFocus();
         
         }
         else if(ae.getSource() == comboBox[dataSelectBox]){

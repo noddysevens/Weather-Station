@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.json.JsonObject;
+import weatherstation.panels.GraphPanel;
 import weatherstation.panels.MainDashboardPanel;
 import weatherstation.utilities.CollectInput;
 
@@ -61,6 +62,8 @@ public class MainPanelDriver implements ActionListener{
         else if(ae.getSource() == mainPanel.button[mainPanel.nextButton]){
             CardLayout cl = (CardLayout)(WeatherStation.cards.getLayout());
             cl.show(WeatherStation.cards, "Graph");
+            GraphPanel.button[GraphPanel.backButton].grabFocus();
+            GraphPanel.button[GraphPanel.backButton].requestFocus();
         }
     }
     public void initializeArrays() throws IOException{

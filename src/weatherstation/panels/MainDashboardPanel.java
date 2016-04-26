@@ -35,7 +35,7 @@ public class MainDashboardPanel extends JPanel{
     };
     
     private final int NUMBER_OF_PANELS = 3;
-    public final int NUMBER_OF_BUTTONS = 2;
+    public static final int NUMBER_OF_BUTTONS = 2;
     private final int NUMBER_OF_LABEL_PANELS = 15;
     private final int NUMBER_OF_BUTTON_PANELS = 5;
     private final int NUMBER_OF_LABELS = 15;
@@ -45,7 +45,7 @@ public class MainDashboardPanel extends JPanel{
     public JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
     private JPanel[] buttonPanel = new JPanel[NUMBER_OF_BUTTON_PANELS];
     
-    public JButton[] button = new JButton[NUMBER_OF_BUTTONS];
+    public static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
     
     public JLabel[] label = new JLabel[NUMBER_OF_LABELS];
     public JLabel[] label2 = new JLabel[NUMBER_OF_LABELS2];
@@ -68,7 +68,7 @@ public class MainDashboardPanel extends JPanel{
     public int topLabel = 14;
     
     public int closeButton = 0;
-    public int nextButton = 1;
+    public static int nextButton = 1;
     
     public MainDashboardPanel(MainPanelDriver driver) throws IOException {
         darkBlue = WeatherStation.darkBlue;
@@ -121,12 +121,13 @@ public class MainDashboardPanel extends JPanel{
     }
     private void initializeButtons(){
         button[closeButton] = new JButton("Close");
-        button[nextButton] = new JButton("Next");
+        button[nextButton] = new JButton("Graphs");
         
         for(int index = 0; index < NUMBER_OF_BUTTONS; index++){
             button[index].setBorderPainted(false);
             button[index].setBackground(darkBlue);
             button[index].setForeground(Color.WHITE);
+            button[index].setFont(new Font(FONT_FACE, FONT_STYLE, WeatherStation.FONT_SIZE.MEDIUM.value));
         }
     }
     public void createPanels(){
@@ -218,7 +219,7 @@ public class MainDashboardPanel extends JPanel{
         JPanel buttonsPanelMain = new JPanel();
         buttonsPanelMain.setBackground(WeatherStation.BACKGROUND_COLOUR);
         buttonsPanelMain.add(buttonPanel[nextButton]);
-        buttonsPanelMain.add(buttonPanel[closeButton]);
+        //buttonsPanelMain.add(buttonPanel[closeButton]);
         
         JPanel dataLabels = new JPanel();
         dataLabels.setBackground(WeatherStation.BACKGROUND_COLOUR);
