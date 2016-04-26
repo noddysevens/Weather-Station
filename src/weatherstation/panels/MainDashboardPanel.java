@@ -13,7 +13,7 @@ import weatherstation.WeatherStation;
 
 /**
  * Class info: This class is the main dashboard panel
- * Author: David Gillett (NoddySevens) Java Developer
+ * Author: David (NoddySevens) Java Developer
  * E-mail Address: noddysevens@gmail.com
  * Last Changed: 26 - April - 2016
  */

@@ -26,7 +26,7 @@ import weatherstation.panels.GraphPanel;
  * Program Info: This program collects BOM data for toowoomba airport
  * and displays it in a dashboard and as 24hr graphs
  * Class info: This class is the main Driver for the Program
- * Author: David Gillett (NoddySevens) Java Developer
+ * Author: David (NoddySevens) Java Developer
  * E-mail Address: noddysevens@gmail.com
  * Last Changed: 26 - April - 2016
  */
