@@ -224,7 +224,7 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
         }
         else if(ae.getSource() == comboBox[dataSelectBox]){
             //drawingPanel.selectedIndex = comboBox[dataSelectBox].getSelectedIndex();
-            drawingPanel.selectedlabel = comboBox[dataSelectBox].getSelectedItem().toString();
+            drawingPanel.selectedLabel = comboBox[dataSelectBox].getSelectedItem().toString();
             drawingPanel.repaint();
         }
     }

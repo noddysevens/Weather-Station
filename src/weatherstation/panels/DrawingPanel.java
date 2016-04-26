@@ -48,7 +48,7 @@ public class DrawingPanel extends JPanel {
     public  List<String> times;
     
     public int selectedIndex = 0;
-    public String selectedlabel = "";
+    public String selectedLabel = "";
     
     public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
         private int value;
@@ -70,7 +70,7 @@ public class DrawingPanel extends JPanel {
         super.paintComponent(g);
         
         for(int i = 0; i < WeatherStation.weatherMeasurements.length; i++){
-            if(selectedlabel.equals(WeatherStation.weatherMeasurements[i])){
+            if(selectedLabel.equals(WeatherStation.weatherMeasurements[i])){
                 selectedIndex = i;
             }
         }

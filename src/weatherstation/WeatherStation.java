@@ -7,19 +7,24 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import weatherstation.panels.GraphPanel;
 
 /**
  *
  * @author David
  */
-public class WeatherStation {
+public class WeatherStation implements ActionListener{
     private static int HEIGHT = 600;
     private static int WIDTH = 650;
     
@@ -61,6 +66,9 @@ public class WeatherStation {
     public int rainSince = 13;
     public int dateTime = 14;
     
+    static Timer timer;
+    
+    MainPanelDriver driver;
     
     //public static JPanel card1 = new JPanel();
     //public static JPanel card2 = new JPanel();
@@ -87,8 +95,12 @@ public class WeatherStation {
                 try {
                     createAndShowGUI();
                 } catch (IOException ex) {}
+                
+                
             }
         });
+        
+        
     }
     private static void createAndShowGUI() throws IOException {
         frame.setUndecorated(true);
@@ -100,6 +112,8 @@ public class WeatherStation {
         frame.pack();
         frame.setLocationRelativeTo( null );
         frame.setVisible(true);
+        
+        
     }
     private void addCardsToDeck(MainPanelDriver driver){
 
@@ -107,12 +121,24 @@ public class WeatherStation {
         cards.add(graphPanel, "Graph");
     }
     private void addComponentToPane(Container pane) throws IOException {
-        MainPanelDriver driver = new MainPanelDriver();
+        timer = new Timer(60000, this);
+        timer.setInitialDelay(1000);
+        timer.start(); 
+        
+        driver = new MainPanelDriver();
         
         cards = new JPanel(new CardLayout());
         addCardsToDeck(driver);
         
         pane.add(driver.mainPanel.labelPanel[driver.mainPanel.dateTime], BorderLayout.NORTH);
         pane.add(cards, BorderLayout.CENTER);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            driver.initializeArrays();
+            driver.displayOutputToLabel();
+        } catch (IOException ex) {}
     }
 }

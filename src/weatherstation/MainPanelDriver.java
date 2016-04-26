@@ -63,7 +63,7 @@ public class MainPanelDriver implements ActionListener{
             cl.show(WeatherStation.cards, "Graph");
         }
     }
-    private void initializeArrays() throws IOException{
+    public void initializeArrays() throws IOException{
        input.getInput();
 
        int numberOfEntries = input.results.size();
@@ -94,9 +94,9 @@ public class MainPanelDriver implements ActionListener{
             }
            
         }
-       displayOutputToLabel();
+       //displayOutputToLabel();
     }
-    private void displayOutputToLabel(){
+    public void displayOutputToLabel(){
         String time = String.valueOf(bomData[0][dateTime]);
         
         mainPanel.label2[sortOrder].setText(String.valueOf(bomData[0][sortOrder]));
