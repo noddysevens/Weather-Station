@@ -188,6 +188,7 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
         labelPanel[graphHeading].add(label[graphHeading]);
         labelPanel[graphHeading].add(comboBoxPanel[dataSelectBox]);
         
+        //no longer required
         buttonPanel[closeButton].add(button[closeButton]);
         buttonPanel[backButton].add(button[backButton]);
         
@@ -199,18 +200,11 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
         mainPanel.setBackground(WeatherStation.BACKGROUND_COLOUR);
         mainPanel.add(headingPanel);
         mainPanel.add(drawingPanel);
-        
-        JPanel buttonsPanelMain = new JPanel();
-        buttonsPanelMain.setBackground(WeatherStation.BACKGROUND_COLOUR);
-        buttonsPanelMain.add(buttonPanel[backButton]);
-        //buttonsPanelMain.add(buttonPanel[closeButton]);
 
         this.setLayout(new BorderLayout());
         this.setBackground(WeatherStation.BACKGROUND_COLOUR);
-        //this.setLayout(new GridLayout(4,1));
         this.add(headingPanel, BorderLayout.NORTH);
         this.add(drawingPanel, BorderLayout.CENTER);
-        this.add(buttonsPanelMain, BorderLayout.SOUTH);
     }
     @Override
     public void actionPerformed(ActionEvent ae) {

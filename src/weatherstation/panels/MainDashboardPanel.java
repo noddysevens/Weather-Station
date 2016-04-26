@@ -208,7 +208,7 @@ public class MainDashboardPanel extends JPanel{
         
         mainPanel[panelF].add(labelPanel[pressQnh]);
         mainPanel[panelF].add(labelPanel[pressMsl]);
-        mainPanel[panelF].add(labelPanel[rainSince]);
+        //mainPanel[panelF].add(labelPanel[rainSince]);
         
         //this panerl needs to be it's own panel.
         JPanel panel4 = new JPanel();
@@ -222,7 +222,7 @@ public class MainDashboardPanel extends JPanel{
         //buttonsPanelMain.add(buttonPanel[closeButton]);
         
         JPanel dataLabels = new JPanel();
-        dataLabels.setBackground(WeatherStation.BACKGROUND_COLOUR);
+        //dataLabels.setBackground(WeatherStation.BACKGROUND_COLOUR);
         dataLabels.setLayout(new GridLayout(7, 1));
         dataLabels.add(mainPanel[panelA]);
         dataLabels.add(mainPanel[panelB]);
@@ -230,10 +230,11 @@ public class MainDashboardPanel extends JPanel{
         dataLabels.add(mainPanel[panelD]);
         dataLabels.add(mainPanel[panelE]);
         dataLabels.add(mainPanel[panelF]);
+        dataLabels.add(labelPanel[rainSince]);
         
         this.setLayout(new BorderLayout());
         this.setBackground(WeatherStation.BACKGROUND_COLOUR);
         this.add(dataLabels, BorderLayout.NORTH);
-        this.add(buttonsPanelMain ,BorderLayout.CENTER);
+        //this.add(buttonsPanelMain ,BorderLayout.CENTER);
     }
 }

@@ -64,6 +64,7 @@ public class MainPanelDriver implements ActionListener{
             cl.show(WeatherStation.cards, "Graph");
             GraphPanel.button[GraphPanel.backButton].grabFocus();
             GraphPanel.button[GraphPanel.backButton].requestFocus();
+            mainPanel.button[mainPanel.nextButton].setText("Back");
         }
     }
     public void initializeArrays() throws IOException{

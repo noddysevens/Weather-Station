@@ -86,6 +86,10 @@ public class WeatherStation implements ActionListener{
     
     MainPanelDriver driver;
     
+    public static JButton navigationButton = new JButton("Graphs");
+    JButton minimize = new JButton("-");
+    final JButton close = new JButton("X");
+    
     //public static JPanel card1 = new JPanel();
     //public static JPanel card2 = new JPanel();
     //private JPanel main = new JPanel();
@@ -138,17 +142,31 @@ public class WeatherStation implements ActionListener{
         cards.add(driver.mainPanel, "Main");
         cards.add(graphPanel, "Graph");
     }
-    private void addComponentToPane(Container pane) throws IOException {
-        timer = new Timer(60000, this);
-        timer.setInitialDelay(1000);
-        timer.start(); 
+    private void initializeButtons(){
+        navigationButton.setBackground(darkBlue);
+        navigationButton.setForeground(Color.WHITE);
+        navigationButton.setBorderPainted(false);
+        navigationButton.setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
+        navigationButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(navigationButton.getText().equals("Back")){
+                    CardLayout cl = (CardLayout)(cards.getLayout());
+                    cl.show(cards, "Main");
+                    navigationButton.grabFocus();
+                    navigationButton.requestFocus();
+                    navigationButton.setText("Graph");
+                } else {
+                    CardLayout cl = (CardLayout)(cards.getLayout());
+                    cl.show(cards, "Graph");
+                    navigationButton.grabFocus();
+                    navigationButton.requestFocus();
+                    navigationButton.setText("Back");
+                }
+                
+            }
+        });
         
-        driver = new MainPanelDriver();
-        
-        cards = new JPanel(new CardLayout());
-        addCardsToDeck(driver);
-        
-        JButton minimize = new JButton("-");
         minimize.setBackground(darkBlue);
         minimize.setForeground(Color.WHITE);
         minimize.setBorderPainted(false);
@@ -160,10 +178,6 @@ public class WeatherStation implements ActionListener{
             }
         });
         
-        
-        
-        
-        final JButton close = new JButton("X");
         close.setBackground(darkBlue);
         close.setForeground(Color.WHITE);
         close.setBorderPainted(false);
@@ -174,7 +188,19 @@ public class WeatherStation implements ActionListener{
                 System.exit(0);
             }
         });
+    }
+    private void addComponentToPane(Container pane) throws IOException {
+        initializeButtons(); 
         
+        timer = new Timer(60000, this);
+        timer.setInitialDelay(1000);
+        timer.start(); 
+        
+        driver = new MainPanelDriver();
+        
+        cards = new JPanel(new CardLayout());
+        addCardsToDeck(driver);
+
         frame.addWindowFocusListener(new WindowAdapter() {
             public void windowGainedFocus(WindowEvent e) {
                 driver.mainPanel.button[driver.mainPanel.nextButton].grabFocus();
@@ -184,7 +210,7 @@ public class WeatherStation implements ActionListener{
         
         JPanel topSub = new JPanel();
         topSub.setLayout(new BorderLayout());
-        topSub.setBackground(gioBlue);
+        topSub.setBackground(WeatherStation.BACKGROUND_COLOUR);
         topSub.add(driver.mainPanel.labelPanel[driver.mainPanel.dateTime], BorderLayout.CENTER);
         topSub.add(minimize, BorderLayout.LINE_END);
         
@@ -194,12 +220,14 @@ public class WeatherStation implements ActionListener{
         controls.add(topSub, BorderLayout.CENTER);
         controls.add(close, BorderLayout.LINE_END);
         
-        JPanel topPanel = new JPanel();
-        topPanel.add(controls);
+        JPanel navigationPanel = new JPanel();
+        navigationPanel.add(navigationButton);
+        navigationPanel.setBackground(WeatherStation.BACKGROUND_COLOUR);
         
         pane.add(controls , BorderLayout.NORTH);
         //pane.add(driver.mainPanel.labelPanel[driver.mainPanel.dateTime], BorderLayout.NORTH);
         pane.add(cards, BorderLayout.CENTER);
+        pane.add(navigationPanel, BorderLayout.SOUTH);
     }
 
     @Override
