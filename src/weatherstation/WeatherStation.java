@@ -16,8 +16,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -90,11 +88,6 @@ public class WeatherStation implements ActionListener{
     JButton minimize = new JButton("-");
     final JButton close = new JButton("X");
     
-    //public static JPanel card1 = new JPanel();
-    //public static JPanel card2 = new JPanel();
-    //private JPanel main = new JPanel();
-    //public MainPanelDriver mainPanelDriver = new MainPanelDriver();
-    
     public static void main(String[] Args) throws IOException{
         frame.addMouseListener(new MouseAdapter() {
             @Override
@@ -115,12 +108,8 @@ public class WeatherStation implements ActionListener{
                 try {
                     createAndShowGUI();
                 } catch (IOException ex) {}
-                
-                
             }
         });
-        
-        
     }
     private static void createAndShowGUI() throws IOException {
         frame.setUndecorated(true);
@@ -132,10 +121,6 @@ public class WeatherStation implements ActionListener{
         frame.pack();
         frame.setLocationRelativeTo( null );
         frame.setVisible(true);
-        //Make textField get the focus whenever frame is activated.
-        
-        
-        
     }
     private void addCardsToDeck(MainPanelDriver driver){
 
@@ -203,8 +188,8 @@ public class WeatherStation implements ActionListener{
 
         frame.addWindowFocusListener(new WindowAdapter() {
             public void windowGainedFocus(WindowEvent e) {
-                driver.mainPanel.button[driver.mainPanel.nextButton].grabFocus();
-                driver.mainPanel.button[driver.mainPanel.nextButton].requestFocus();
+                navigationButton.grabFocus();
+                navigationButton.requestFocus();
             }
         });
         
@@ -225,7 +210,6 @@ public class WeatherStation implements ActionListener{
         navigationPanel.setBackground(WeatherStation.BACKGROUND_COLOUR);
         
         pane.add(controls , BorderLayout.NORTH);
-        //pane.add(driver.mainPanel.labelPanel[driver.mainPanel.dateTime], BorderLayout.NORTH);
         pane.add(cards, BorderLayout.CENTER);
         pane.add(navigationPanel, BorderLayout.SOUTH);
     }

@@ -6,7 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.io.IOException;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import weatherstation.MainPanelDriver;
@@ -35,18 +34,12 @@ public class MainDashboardPanel extends JPanel{
     };
     
     private final int NUMBER_OF_PANELS = 3;
-    public static final int NUMBER_OF_BUTTONS = 2;
     private final int NUMBER_OF_LABEL_PANELS = 15;
-    private final int NUMBER_OF_BUTTON_PANELS = 5;
     private final int NUMBER_OF_LABELS = 15;
     private final int NUMBER_OF_LABELS2 = 15;
     
     private JPanel[] panel = new JPanel[NUMBER_OF_PANELS];
     public JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
-    private JPanel[] buttonPanel = new JPanel[NUMBER_OF_BUTTON_PANELS];
-    
-    public static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
-    
     public JLabel[] label = new JLabel[NUMBER_OF_LABELS];
     public JLabel[] label2 = new JLabel[NUMBER_OF_LABELS2];
 
@@ -67,9 +60,6 @@ public class MainDashboardPanel extends JPanel{
     public int dateTime = 14;
     public int topLabel = 14;
     
-    public int closeButton = 0;
-    public static int nextButton = 1;
-    
     public MainDashboardPanel(MainPanelDriver driver) throws IOException {
         darkBlue = WeatherStation.darkBlue;
         gioBlue = WeatherStation.gioBlue;
@@ -81,7 +71,6 @@ public class MainDashboardPanel extends JPanel{
 
     private void initialiseComponents(){
         initializeLabels();
-        initializeButtons();
         createPanels();
     }
     public void initializeLabels(){
@@ -119,25 +108,10 @@ public class MainDashboardPanel extends JPanel{
         label2[air].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.LARGE.value));
         
     }
-    private void initializeButtons(){
-        button[closeButton] = new JButton("Close");
-        button[nextButton] = new JButton("Graphs");
-        
-        for(int index = 0; index < NUMBER_OF_BUTTONS; index++){
-            button[index].setBorderPainted(false);
-            button[index].setBackground(darkBlue);
-            button[index].setForeground(Color.WHITE);
-            button[index].setFont(new Font(FONT_FACE, FONT_STYLE, WeatherStation.FONT_SIZE.MEDIUM.value));
-        }
-    }
     public void createPanels(){
         for(int index = 0; index < NUMBER_OF_LABEL_PANELS; index++){
             labelPanel[index] = new JPanel();
             labelPanel[index].setBackground(WeatherStation.BACKGROUND_COLOUR);
-        }
-        for(int index = 0; index < NUMBER_OF_BUTTON_PANELS; index++){
-            buttonPanel[index] = new JPanel();
-            buttonPanel[index].setBackground(WeatherStation.BACKGROUND_COLOUR);
         }
         
         labelPanel[dateTime].setBackground(WeatherStation.darkBlue);
@@ -174,9 +148,6 @@ public class MainDashboardPanel extends JPanel{
         labelPanel[rainSince].add(label2[rainSince]);
         labelPanel[dateTime].add(label[topLabel]);
         labelPanel[dateTime].add(label2[dateTime]);
-
-        buttonPanel[closeButton].add(button[closeButton]);
-        buttonPanel[nextButton].add(button[nextButton]);
 
         JPanel[] mainPanel = new JPanel[6];
         for (int i = 0; i < 6; i++){
@@ -216,13 +187,8 @@ public class MainDashboardPanel extends JPanel{
         WeatherStation.drawingPanel.setBackground(Color.white);
         panel4.add(WeatherStation.drawingPanel);
         
-        JPanel buttonsPanelMain = new JPanel();
-        buttonsPanelMain.setBackground(WeatherStation.BACKGROUND_COLOUR);
-        buttonsPanelMain.add(buttonPanel[nextButton]);
-        //buttonsPanelMain.add(buttonPanel[closeButton]);
-        
         JPanel dataLabels = new JPanel();
-        //dataLabels.setBackground(WeatherStation.BACKGROUND_COLOUR);
+        dataLabels.setBackground(WeatherStation.BACKGROUND_COLOUR);
         dataLabels.setLayout(new GridLayout(7, 1));
         dataLabels.add(mainPanel[panelA]);
         dataLabels.add(mainPanel[panelB]);
@@ -235,6 +201,5 @@ public class MainDashboardPanel extends JPanel{
         this.setLayout(new BorderLayout());
         this.setBackground(WeatherStation.BACKGROUND_COLOUR);
         this.add(dataLabels, BorderLayout.NORTH);
-        //this.add(buttonsPanelMain ,BorderLayout.CENTER);
     }
 }

@@ -24,26 +24,20 @@ import weatherstation.WeatherStation;
  */
 public class DrawingPanel extends JPanel {
     private final int DIVISIONS_PER_LABEL = 4;
-    private final int BORDER_GAP = 2;
-    //private final int MAX_SCORE = 50;
-    private final int GRAPH_POINT_WIDTH = 2;
-    private int Y_HATCH_CNT = 10;
-    
     private final int width = 550;
     private final int height = 500;
-
-    private int NumberOfRecords;
-    private int air = 1;
-    private int dateTime = 14;
-    
+    private final int dateTime = 14;
     private final int padding = 30;
     private final int labelPadding = 30;
+    private final int pointWidth = 4;
+    private final int numberYDivisions = 12;
+    
     private final Color lineColor = new Color(44, 102, 230, 180);
     private final Color pointColor = new Color(100, 100, 100, 180);
     private final Color gridColor = new Color(200, 200, 200, 200);
+    
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
-    private final int pointWidth = 4;
-    private final int numberYDivisions = 12;
+    
     public  List<Double> values;
     public  List<String> times;
     
@@ -52,12 +46,10 @@ public class DrawingPanel extends JPanel {
     
     public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
         private int value;
-
         private FONT_SIZE(int value) {
                 this.value = value;
         }
     };
-    
     
     public DrawingPanel(){
         setPreferredSize(new Dimension(width, height));
@@ -74,14 +66,13 @@ public class DrawingPanel extends JPanel {
                 selectedIndex = i;
             }
         }
-        //fill lists wit
+
         values.clear();
         times.clear();
         for(int k = 49; k >=0; k--){
             values.add(Double.parseDouble(MainPanelDriver.bomData[k][selectedIndex]));
             times.add(MainPanelDriver.bomData[k][dateTime].substring(3));
         }
-        
         
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

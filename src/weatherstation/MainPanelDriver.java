@@ -1,11 +1,7 @@
 package weatherstation;
 
-import java.awt.CardLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.json.JsonObject;
-import weatherstation.panels.GraphPanel;
 import weatherstation.panels.MainDashboardPanel;
 import weatherstation.utilities.CollectInput;
 
@@ -15,7 +11,7 @@ import weatherstation.utilities.CollectInput;
  * E-mail Address: noddysevens@gmail.com
  * Last Changed: 
  */
-public class MainPanelDriver implements ActionListener{
+public class MainPanelDriver{
     CollectInput input = new CollectInput();
 
     public MainDashboardPanel mainPanel;
@@ -44,29 +40,9 @@ public class MainPanelDriver implements ActionListener{
     public MainPanelDriver() throws IOException {
         mainPanel = new MainDashboardPanel(this);
         initializeArrays();
-        addActionListeners();
         displayOutputToLabel();
     }
-    
-    private void addActionListeners(){
-        for(int index = 0; index < mainPanel.NUMBER_OF_BUTTONS; index++){
-            mainPanel.button[index].addActionListener(this);
-        }
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent ae){
-        if(ae.getSource() == mainPanel.button[mainPanel.closeButton]){
-            System.exit(0);
-        }
-        else if(ae.getSource() == mainPanel.button[mainPanel.nextButton]){
-            CardLayout cl = (CardLayout)(WeatherStation.cards.getLayout());
-            cl.show(WeatherStation.cards, "Graph");
-            GraphPanel.button[GraphPanel.backButton].grabFocus();
-            GraphPanel.button[GraphPanel.backButton].requestFocus();
-            mainPanel.button[mainPanel.nextButton].setText("Back");
-        }
-    }
+
     public void initializeArrays() throws IOException{
        input.getInput();
 
