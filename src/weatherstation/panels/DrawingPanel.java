@@ -36,8 +36,8 @@ public class DrawingPanel extends JPanel {
     private int air = 1;
     private int dateTime = 14;
     
-    private final int padding = 25;
-    private final int labelPadding = 25;
+    private final int padding = 30;
+    private final int labelPadding = 30;
     private final Color lineColor = new Color(44, 102, 230, 180);
     private final Color pointColor = new Color(100, 100, 100, 180);
     private final Color gridColor = new Color(200, 200, 200, 200);
@@ -46,6 +46,9 @@ public class DrawingPanel extends JPanel {
     private final int numberYDivisions = 12;
     public  List<Double> values;
     public  List<String> times;
+    
+    public int selectedIndex = 0;
+    public String selectedlabel = "";
     
     public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
         private int value;
@@ -66,11 +69,19 @@ public class DrawingPanel extends JPanel {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         
-        //fill lists with data
+        for(int i = 0; i < WeatherStation.weatherMeasurements.length; i++){
+            if(selectedlabel.equals(WeatherStation.weatherMeasurements[i])){
+                selectedIndex = i;
+            }
+        }
+        //fill lists wit
+        values.clear();
+        times.clear();
         for(int k = 49; k >=0; k--){
-            values.add(Double.parseDouble(MainPanelDriver.bomData[k][air]));
+            values.add(Double.parseDouble(MainPanelDriver.bomData[k][selectedIndex]));
             times.add(MainPanelDriver.bomData[k][dateTime].substring(3));
         }
+        
         
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -139,7 +150,8 @@ public class DrawingPanel extends JPanel {
                 g2.setColor(gridColor);
                 g2.drawLine(padding + labelPadding + 1 + pointWidth, y0, getWidth() - padding, y1);
                 g2.setColor(Color.BLACK);
-                String yLabel = ((int) ((getMinScore() + (getMaxScore() - getMinScore()) * ((i * 1.0) / numberYDivisions)) * 100)) / 100.0 + "";
+                String yLabel = ((int) ((getMinScore() + (getMaxScore() - getMinScore()) * ((i * 1.0) / numberYDivisions)) * 100)) / 100.0 + WeatherStation.dataUnits[selectedIndex];
+                g2.setFont(new Font("Century Gothic", Font.PLAIN, 11));
                 FontMetrics metrics = g2.getFontMetrics();
                 int labelWidth = metrics.stringWidth(yLabel);
                 g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);

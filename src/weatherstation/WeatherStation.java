@@ -37,6 +37,30 @@ public class WeatherStation {
     static JFrame frame = new JFrame("Json Test");
     
     private static Point point = new Point();
+    public static String[] weatherMeasurements = {"Sort Order", "Air Temp","Apparent Temp"
+            ,"Dew Point","Relative Humidity","Delta T","Wind Direction"
+            ,"Wind Speed(km/h)", "Wind Gusts(km/h)", "Wind Speed(knots)"
+            , "Wind Gusts(knots)", "Pressure(Qnh)", "Pressure(MSL)","Rain Since"
+            ,"Date Time"};
+    private String[] dataIndexes = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14"};
+    public static String[] dataUnits = {"","°C","°C","","%","","","","","","","","","mm",""};
+
+    public int sortOrder = 0;
+    public int air = 1;
+    public int apparentTemp = 2;
+    public int dewPoint = 3;
+    public int relativeHumidity = 4;
+    public int deltaT = 5;
+    public int windDirection = 6;
+    public int windSpeedKmh = 7;
+    public int windGustsKmh = 8;
+    public int windSpeedKnots = 9;
+    public int windGustsKnots = 10;
+    public int pressQnh = 11;
+    public int pressMsl = 12;
+    public int rainSince = 13;
+    public int dateTime = 14;
+    
     
     //public static JPanel card1 = new JPanel();
     //public static JPanel card2 = new JPanel();
@@ -78,6 +102,7 @@ public class WeatherStation {
         frame.setVisible(true);
     }
     private void addCardsToDeck(MainPanelDriver driver){
+
         cards.add(driver.mainPanel, "Main");
         cards.add(graphPanel, "Graph");
     }

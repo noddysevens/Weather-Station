@@ -4,12 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import weatherstation.WeatherStation;
 
 /**
@@ -18,7 +22,12 @@ import weatherstation.WeatherStation;
  * E-mail Address: noddysevens@gmail.com
  * Last Changed: 18 - April - 2016
  */
-public class GraphPanel extends JPanel implements ActionListener{
+
+/**
+ * TODO: change "Air TEMP" label (label 2) into combo box for selecting data  
+ * 
+ */
+public class GraphPanel extends JPanel implements ActionListener, PopupMenuListener{
     private Color darkBlue;
     private Color gioBlue;
     private Color lightGrayBackground;
@@ -26,6 +35,7 @@ public class GraphPanel extends JPanel implements ActionListener{
     
     private final String FONT_FACE = "verdana";
     private final int FONT_STYLE = Font.BOLD;
+    
     
     public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
         private int value;
@@ -36,23 +46,34 @@ public class GraphPanel extends JPanel implements ActionListener{
     };
     
     public static DrawingPanel drawingPanel = new DrawingPanel();
+    private String[] weatherMeasurements = {"Sort Order", "Air Temp","Apparent Temp"
+            ,"Dew Point","Relative Humidity","Delta T","Wind Direction"
+            ,"Wind Speed(km/h)", "Wind Gusts(km/h)", "Wind Speed(knots)"
+            , "Wind Gusts(knots)", "Pressure(Qnh)", "Pressure(MSL)","Rain Since"
+            ,"Date Time"};
+
     
+    private final int NUMBER_OF_COMBOBOXES = 1;
     private final int NUMBER_OF_PANELS = 2;
     public final int NUMBER_OF_BUTTONS = 2;
-    
     private final int NUMBER_OF_LABEL_PANELS = 1;
+    private final int NUMBER_OF_COMBOBOX_PANELS = 1;
     private final int NUMBER_OF_BUTTON_PANELS = 5;
     private final int NUMBER_OF_LABELS = 1;
     private final int NUMBER_OF_LABELS2 = 1;
     
     private JPanel[] panel = new JPanel[NUMBER_OF_PANELS];
     public JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
+    public JPanel[] comboBoxPanel = new JPanel[NUMBER_OF_COMBOBOX_PANELS];
     private JPanel[] buttonPanel = new JPanel[NUMBER_OF_BUTTON_PANELS];
     
     public JButton[] button = new JButton[NUMBER_OF_BUTTONS];
     
     public JLabel[] label = new JLabel[NUMBER_OF_LABELS];
     public JLabel[] label2 = new JLabel[NUMBER_OF_LABELS2];
+    
+    public JComboBox[] comboBox = new JComboBox[NUMBER_OF_COMBOBOXES];
+    public ComboBoxModel[] models = new ComboBoxModel[1];
 
     public int sortOrder = 0;
     public int air = 1;
@@ -75,6 +96,8 @@ public class GraphPanel extends JPanel implements ActionListener{
     public int closeButton = 0;
     public int backButton = 1;
     
+    public int dataSelectBox = 0;
+    
     public String graphHeading2 = "air temp";
     
     public GraphPanel(){
@@ -94,6 +117,7 @@ public class GraphPanel extends JPanel implements ActionListener{
     private void initialiseComponents(){
         initializeLabels();
         initializeButtons();
+        initializeComboBoxes();
         createPanels();
     }
     public void initializeLabels(){
@@ -123,19 +147,45 @@ public class GraphPanel extends JPanel implements ActionListener{
             button[index].setForeground(Color.WHITE);
         }
     }
+    
+    private void initializeComboBoxes(){
+        comboBox[dataSelectBox] = new JComboBox(weatherMeasurements);
+        models[0] = new DefaultComboBoxModel(new String[]{
+            "Air Temp","Apparent Temp","Dew Point","Relative Humidity","Delta T"
+            ,"Wind Speed(km/h)", "Wind Gusts(km/h)", "Wind Speed(knots)"
+            , "Wind Gusts(knots)", "Pressure(Qnh)", "Pressure(MSL)","Rain Since"
+        });
+ 
+        for(int index = 0; index < NUMBER_OF_COMBOBOXES; index++){
+            comboBox[index].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM_LARGE.value));
+            comboBox[index].addActionListener(this);
+            comboBox[index].addPopupMenuListener(this);
+            comboBox[index].setForeground(WeatherStation.mainTextColor);
+            comboBox[index].setModel(models[0]);
+            comboBox[index].setSelectedIndex(0);
+        }
+    }
+    
+    
     public void createPanels(){
         for(int index = 0; index < NUMBER_OF_LABEL_PANELS; index++){
             labelPanel[index] = new JPanel();
             labelPanel[index].setBackground(WeatherStation.BACKGROUND_COLOUR);
+        }
+        for(int index = 0; index < NUMBER_OF_COMBOBOX_PANELS; index++){
+            comboBoxPanel[index] = new JPanel();
+            comboBoxPanel[index].setBackground(WeatherStation.BACKGROUND_COLOUR);
         }
         for(int index = 0; index < NUMBER_OF_BUTTON_PANELS; index++){
             buttonPanel[index] = new JPanel();
             buttonPanel[index].setBackground(WeatherStation.BACKGROUND_COLOUR);
         }
         
+        comboBoxPanel[dataSelectBox].add(comboBox[dataSelectBox]);
+        
         labelPanel[graphHeading].add(label[graphHeading]);
-        labelPanel[graphHeading].add(label2[graphHeading]);
-                
+        labelPanel[graphHeading].add(comboBoxPanel[dataSelectBox]);
+        
         buttonPanel[closeButton].add(button[closeButton]);
         buttonPanel[backButton].add(button[backButton]);
         
@@ -172,5 +222,25 @@ public class GraphPanel extends JPanel implements ActionListener{
             drawingPanel.times.clear();
         
         }
+        else if(ae.getSource() == comboBox[dataSelectBox]){
+            //drawingPanel.selectedIndex = comboBox[dataSelectBox].getSelectedIndex();
+            drawingPanel.selectedlabel = comboBox[dataSelectBox].getSelectedItem().toString();
+            drawingPanel.repaint();
+        }
+    }
+    
+    public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+        System.out.println("pop up visible");
+    }
+
+    @Override
+    public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+        System.out.println("Pop up invisible");
+        drawingPanel.repaint();
+    }
+
+    @Override
+    public void popupMenuCanceled(PopupMenuEvent e) {
+        System.out.println("Pop up cancelled");
     }
 }
