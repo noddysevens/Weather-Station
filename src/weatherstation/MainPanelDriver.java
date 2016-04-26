@@ -16,9 +16,6 @@ public class MainPanelDriver{
 
     public MainDashboardPanel mainPanel;
     
-    private int inputCode = 0;
-    private int outputCode = 1;
-    
     public int sortOrder = 0;
     public int air = 1;
     public int apparentTemp = 2;
