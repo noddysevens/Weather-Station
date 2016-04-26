@@ -23,7 +23,6 @@ public class MainDashboardPanel extends JPanel{
     private final int FONT_STYLE = Font.BOLD;
     public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
         private int value;
-
         private FONT_SIZE(int value) {
                 this.value = value;
         }

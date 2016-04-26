@@ -23,12 +23,20 @@ import javax.swing.Timer;
 import weatherstation.panels.GraphPanel;
 
 /**
- *
- * @author David
+ * Program Info: This program collects BOM data for toowoomba airport
+ * and displays it in a dashboard and as 24hr graphs
+ * Class info: This class is the main Driver for the Program
+ * Author: David Gillett (NoddySevens) Java Developer
+ * E-mail Address: noddysevens@gmail.com
+ * Last Changed: 26 - April - 2016
  */
 public class WeatherStation implements ActionListener{
     private static int HEIGHT = 600;
     private static int WIDTH = 650;
+    private final static int NUMBER_OF_BUTTONS = 3;
+    private final static int NAVIGATION_BUTTON = 0;
+    private final int MINIMIZE = 1;
+    private final int CLOSE = 2;
     
     private final String FONT_FACE = "verdana";
     private final int FONT_STYLE = Font.BOLD;
@@ -41,14 +49,14 @@ public class WeatherStation implements ActionListener{
     
     public static Color darkBlue = new Color(0,86,150);
     public static Color gioBlue = new Color(102,204,255);
-    public static Color lightGrayBackground = new Color(236,244,250);
+    public static Color BACKGROUND_COLOUR = new Color(236,244,250);
     public static Color mainTextColor = new Color(30,56,91);
-    public static Color BACKGROUND_COLOUR = lightGrayBackground;
         
     public static JPanel cards;
     
     public static DrawingPanel drawingPanel = new DrawingPanel();
     GraphPanel graphPanel = new GraphPanel();
+    MainPanelDriver driver;
     
     static JFrame frame = new JFrame("Json Test");
     
@@ -79,11 +87,7 @@ public class WeatherStation implements ActionListener{
     
     static Timer timer;
     
-    MainPanelDriver driver;
-    
-    public static JButton navigationButton = new JButton("Graphs");
-    JButton minimize = new JButton("-");
-    final JButton close = new JButton("X");
+    private static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
     
     public static void main(String[] Args) throws IOException{
         frame.addMouseListener(new MouseAdapter() {
@@ -120,8 +124,8 @@ public class WeatherStation implements ActionListener{
         frame.setVisible(true);
         frame.addWindowFocusListener(new WindowAdapter() {
             public void windowGainedFocus(WindowEvent e) {
-                navigationButton.grabFocus();
-                navigationButton.requestFocus();
+                button[NAVIGATION_BUTTON].grabFocus();
+                button[NAVIGATION_BUTTON].requestFocus();
             }
         });
     }
@@ -130,56 +134,30 @@ public class WeatherStation implements ActionListener{
         cards.add(graphPanel, "Graph");
     }
     private void initializeButtons(){
-        navigationButton.setBackground(darkBlue);
-        navigationButton.setForeground(Color.WHITE);
-        navigationButton.setBorderPainted(false);
-        navigationButton.setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
-        navigationButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(navigationButton.getText().equals("Back")){
-                    CardLayout cl = (CardLayout)(cards.getLayout());
-                    cl.show(cards, "Main");
-                    navigationButton.grabFocus();
-                    navigationButton.requestFocus();
-                    navigationButton.setText("Graph");
-                } else {
-                    CardLayout cl = (CardLayout)(cards.getLayout());
-                    cl.show(cards, "Graph");
-                    navigationButton.grabFocus();
-                    navigationButton.requestFocus();
-                    navigationButton.setText("Back");
-                }
-                
-            }
-        });
+        button[NAVIGATION_BUTTON] = new JButton("Graphs");
+        button[MINIMIZE] = new JButton("-");
+        button[CLOSE] = new JButton("X");
         
-        minimize.setBackground(darkBlue);
-        minimize.setForeground(Color.WHITE);
-        minimize.setBorderPainted(false);
-        minimize.setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM_LARGE.value));
-        minimize.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.setState(frame.ICONIFIED);
-            }
-        });
-        
-        close.setBackground(darkBlue);
-        close.setForeground(Color.WHITE);
-        close.setBorderPainted(false);
-        close.setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
-        close.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        for(int i = 0; i < NUMBER_OF_BUTTONS; i++){
+            button[i].setBackground(darkBlue);
+            button[i].setForeground(Color.WHITE);
+            button[i].setBorderPainted(false);
+            button[i].addActionListener(this);
+            button[i].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
+        }
+        button[MINIMIZE].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM_LARGE.value));
     }
     private void addComponentToPane(Container pane) throws IOException {
         initializeButtons(); 
         
-        timer = new Timer(60000, this);
+        timer = new Timer(60000, new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    driver.initializeArrays();
+                    driver.displayOutputToLabel();
+                } catch (IOException ex) {}
+            }
+        });
         timer.setInitialDelay(1000);
         timer.start(); 
         
@@ -192,16 +170,16 @@ public class WeatherStation implements ActionListener{
         topSub.setLayout(new BorderLayout());
         topSub.setBackground(WeatherStation.BACKGROUND_COLOUR);
         topSub.add(driver.mainPanel.labelPanel[driver.mainPanel.dateTime], BorderLayout.CENTER);
-        topSub.add(minimize, BorderLayout.LINE_END);
+        topSub.add(button[MINIMIZE], BorderLayout.LINE_END);
         
         JPanel controls = new JPanel();
         controls.setLayout(new BorderLayout());
         controls.setBackground(gioBlue);
         controls.add(topSub, BorderLayout.CENTER);
-        controls.add(close, BorderLayout.LINE_END);
+        controls.add(button[CLOSE], BorderLayout.LINE_END);
         
         JPanel navigationPanel = new JPanel();
-        navigationPanel.add(navigationButton);
+        navigationPanel.add(button[NAVIGATION_BUTTON]);
         navigationPanel.setBackground(WeatherStation.BACKGROUND_COLOUR);
         
         pane.add(controls , BorderLayout.NORTH);
@@ -211,9 +189,24 @@ public class WeatherStation implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        try {
-            driver.initializeArrays();
-            driver.displayOutputToLabel();
-        } catch (IOException ex) {}
+        if(e.getSource() == button[CLOSE]){
+            System.exit(0);
+        } else if(e.getSource() == button[MINIMIZE]){
+            frame.setState(frame.ICONIFIED);
+        } else if(e.getSource() == button[NAVIGATION_BUTTON]){
+            if(button[NAVIGATION_BUTTON].getText().equals("Back")){
+                    CardLayout cl = (CardLayout)(cards.getLayout());
+                    cl.show(cards, "Main");
+                    button[NAVIGATION_BUTTON].grabFocus();
+                    button[NAVIGATION_BUTTON].requestFocus();
+                    button[NAVIGATION_BUTTON].setText("Graph");
+                } else {
+                    CardLayout cl = (CardLayout)(cards.getLayout());
+                    cl.show(cards, "Graph");
+                    button[NAVIGATION_BUTTON].grabFocus();
+                    button[NAVIGATION_BUTTON].requestFocus();
+                    button[NAVIGATION_BUTTON].setText("Back");
+                }
+        }
     }
 }

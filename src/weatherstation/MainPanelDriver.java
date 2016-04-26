@@ -72,10 +72,9 @@ public class MainPanelDriver{
                 bomData[index][dateTime] = String.valueOf(result.getString("local_date_time"));
             index++;
             }
-           
         }
-       //displayOutputToLabel();
     }
+    
     public void displayOutputToLabel(){
         String time = String.valueOf(bomData[0][dateTime]);
         
@@ -94,7 +93,5 @@ public class MainPanelDriver{
         mainPanel.label2[pressQnh].setText(String.valueOf(bomData[0][pressQnh]));
         mainPanel.label2[pressMsl].setText(String.valueOf(bomData[0][pressMsl]));
         mainPanel.label2[rainSince].setText(String.valueOf(bomData[0][rainSince]));
-        
-        
     }
 }
