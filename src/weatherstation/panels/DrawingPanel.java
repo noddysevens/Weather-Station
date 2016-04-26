@@ -96,11 +96,7 @@ public class DrawingPanel extends JPanel {
 
         createLinesAndPoints(g2, graphPoints);
     }
-
-//    @Override
-//    public Dimension getPreferredSize() {
-//        return new Dimension(width, heigth);
-//    }
+    
     private double getMinScore() {
         double minScore = Double.MAX_VALUE;
         for (Double score : values) {

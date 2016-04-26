@@ -10,10 +10,10 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 
 /**
- * Program info: 
+ * Program info: This class collects the data from the BOM website
  * Author: David (NoddySevens) Programmer
  * E-mail Address: noddysevens@gmail.com
- * Last Changed: 
+ * Last Changed: 26-Apr-2016
  */
 
 public class CollectInput{

@@ -32,11 +32,8 @@ public class WeatherStation implements ActionListener{
     
     private final String FONT_FACE = "verdana";
     private final int FONT_STYLE = Font.BOLD;
-    
-    
     public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
         public int value;
-
         private FONT_SIZE(int value) {
                 this.value = value;
         }
@@ -121,9 +118,14 @@ public class WeatherStation implements ActionListener{
         frame.pack();
         frame.setLocationRelativeTo( null );
         frame.setVisible(true);
+        frame.addWindowFocusListener(new WindowAdapter() {
+            public void windowGainedFocus(WindowEvent e) {
+                navigationButton.grabFocus();
+                navigationButton.requestFocus();
+            }
+        });
     }
     private void addCardsToDeck(MainPanelDriver driver){
-
         cards.add(driver.mainPanel, "Main");
         cards.add(graphPanel, "Graph");
     }
@@ -186,13 +188,6 @@ public class WeatherStation implements ActionListener{
         cards = new JPanel(new CardLayout());
         addCardsToDeck(driver);
 
-        frame.addWindowFocusListener(new WindowAdapter() {
-            public void windowGainedFocus(WindowEvent e) {
-                navigationButton.grabFocus();
-                navigationButton.requestFocus();
-            }
-        });
-        
         JPanel topSub = new JPanel();
         topSub.setLayout(new BorderLayout());
         topSub.setBackground(WeatherStation.BACKGROUND_COLOUR);

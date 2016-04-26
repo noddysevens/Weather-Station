@@ -15,13 +15,9 @@ import weatherstation.WeatherStation;
  * Class info: This class is the main dashboard panel
  * Author: David Gillett (NoddySevens) Java Developer
  * E-mail Address: noddysevens@gmail.com
- * Last Changed: 18 - April - 2016
+ * Last Changed: 26 - April - 2016
  */
 public class MainDashboardPanel extends JPanel{
-    private Color darkBlue;
-    private Color gioBlue;
-    private Color lightGrayBackground;
-    private Color mainTextColor;
     
     private final String FONT_FACE = "verdana";
     private final int FONT_STYLE = Font.BOLD;
@@ -61,11 +57,6 @@ public class MainDashboardPanel extends JPanel{
     public int topLabel = 14;
     
     public MainDashboardPanel(MainPanelDriver driver) throws IOException {
-        darkBlue = WeatherStation.darkBlue;
-        gioBlue = WeatherStation.gioBlue;
-        lightGrayBackground = WeatherStation.lightGrayBackground;
-        mainTextColor = WeatherStation.mainTextColor;
-        
         initialiseComponents();
     }
 
@@ -179,13 +170,6 @@ public class MainDashboardPanel extends JPanel{
         
         mainPanel[panelF].add(labelPanel[pressQnh]);
         mainPanel[panelF].add(labelPanel[pressMsl]);
-        //mainPanel[panelF].add(labelPanel[rainSince]);
-        
-        //this panerl needs to be it's own panel.
-        JPanel panel4 = new JPanel();
-        panel4.setLayout(new FlowLayout());
-        WeatherStation.drawingPanel.setBackground(Color.white);
-        panel4.add(WeatherStation.drawingPanel);
         
         JPanel dataLabels = new JPanel();
         dataLabels.setBackground(WeatherStation.BACKGROUND_COLOUR);
