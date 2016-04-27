@@ -9,25 +9,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import weatherstation.WeatherStation;
 
 /**
- * Program info: 
+ * Program info: This class processes the Stations.txt file into an arraylist 
+ * for further processing. This allows the stations with JSON files to be 
+ * extracted in the next update.
  * Author: David (NoddySevens) Programmer
  * E-mail Address: noddysevens@gmail.com
  * Last Changed: 
  */
 public class PrepareStationData {
 
-    static TwoDimentionalArrayList<String> stationdata = new TwoDimentionalArrayList<String>();
-    static int row = 0;
-    static int column = 0;
-    static String s;
+    static ArrayList<String> StationDataColumns = new ArrayList<>();
+    static ArrayList<ArrayList<String>> StationDataRows = new ArrayList<>();
     
     public static void removeNthLine(String f, int toRemove) throws IOException {
         File directory = new File("C:/Users/David/Downloads");
         File tmp = File.createTempFile("tmp", null, directory);
-
 
         BufferedReader br = new BufferedReader(new FileReader(f));
         BufferedWriter bw = new BufferedWriter(new FileWriter(tmp));
@@ -38,70 +36,198 @@ public class PrepareStationData {
             } else {
                 bw.write(String.format("%s%n", br.readLine()));
             }
-            
         }
 
         br.readLine();
-        /*
-        String l;
-        while (null != (l = br.readLine()))
-            bw.write(String.format("%s%n", l));
-        */
+        
         br.close();
         bw.close();
 
         File oldFile = new File(f);
 
-        if (oldFile.delete())
+        if (oldFile.delete()){
             tmp.renameTo(oldFile);
-        System.out.println("removed nth ");
+        }
 
-    }
+        System.out.println("removed nth ");
+        }
     
-        public static void parseWords(){
-            Scanner sc2 = null;
-            try {
-                sc2 = new Scanner(new File("C:/Users/David/Downloads/stations.txt"));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();  
+    public static void parseWords(){
+        Scanner sc2 = null;
+        try {
+            sc2 = new Scanner(new File("C:/Users/David/Downloads/stations.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();  
+        }
+        ArrayList<String> values = new ArrayList<>();
+
+        while (sc2.hasNextLine()) {
+            Scanner s2 = new Scanner(sc2.nextLine());
+            while (s2.hasNext()) {
+                values.add(s2.next());
             }
-            while (sc2.hasNextLine()) {
-                    Scanner s2 = new Scanner(sc2.nextLine());
-                while (s2.hasNext()) {
-                    s = s2.next();
-                    System.out.println(s);
-                    stationdata.addToInnerArray(column, s);
-                    WeatherStation.stationData[row][column] = s;
-                    if(column < WeatherStation.NUMBER_OF_STATION_COLUMNS - 1){
-                        column++;
-                    } else {
-                        column = 0;
-                        row++;
+            try{
+            //Process "Site" column
+            StationDataColumns.add(values.get(0));
+            values.remove(0);
+
+            //Process "Dist" column
+            boolean twoDigitAndAlpha = false;
+            String current = values.get(0);
+            if(current.length() == 3 && Character.isDigit(current.charAt(0)) 
+                    && Character.isDigit(current.charAt(1)) 
+                    && Character.isAlphabetic(current.charAt(2))){ 
+                twoDigitAndAlpha = true;
+            }
+
+            boolean twoDigitAndTwoAlpha = false;
+            if(current.length() == 4 && Character.isDigit(current.charAt(0)) 
+                    && Character.isDigit(current.charAt(1)) 
+                    && Character.isAlphabetic(current.charAt(2)) 
+                    && Character.isAlphabetic(current.charAt(3))){ 
+                twoDigitAndTwoAlpha = true;
+            }
+
+            boolean twoDigitAndNextIsAlpha = false;
+            if(current.length() == 2 && Character.isDigit(current.charAt(0)) 
+                    && Character.isDigit(current.charAt(1)) 
+                    && Character.isAlphabetic(values.get(1).charAt(0))){ 
+                twoDigitAndNextIsAlpha = true;
+            }
+
+
+            if(twoDigitAndTwoAlpha || twoDigitAndAlpha || twoDigitAndNextIsAlpha){
+                values.remove(0);
+            }
+
+            //Process "Station Name" column
+            boolean firstWord = true;
+            boolean notNumeric = true;
+            int i = 0;
+            while(notNumeric){
+                while(i < values.get(0).length()){
+                    if(Character.isDigit(values.get(0).charAt(i))){
+                        notNumeric = false;
+                        if(values.get(0).length() < 4){
+                            notNumeric = true;
+                            break;
+                        } else if(values.get(0).indexOf(".") > 0){
+                            notNumeric = true;
+                            break;
+                        } else if(values.get(0).charAt(0) == '(' || values.get(0).charAt(values.get(0).length() - 1) == ')'){
+                            notNumeric = true;
+                            break;
+                        } else if(values.get(0).length() == 4){
+                            int j = 0;
+                            while(j < values.get(0).length()){
+                                if(Character.isAlphabetic(values.get(0).charAt(j))){
+                                    notNumeric = true;
+                                    break;
+                                } 
+                                j++;
+                            }
+                            if(!notNumeric && Integer.parseInt(values.get(0)) < 1750){
+                                notNumeric = true;
+                                break;
+                            }
+                        } else if(values.get(0).length() > 4){
+                            notNumeric = true;
+                            break;
+                        }
+                    }
+                    i++;
+                }
+                i = 0;
+                if(notNumeric && firstWord){
+                    StationDataColumns.add(values.get(0));
+                    values.remove(0);
+                    firstWord = false;
+                } else if(notNumeric) {
+                    StationDataColumns.set(StationDataColumns.size() - 1, StationDataColumns.get(StationDataColumns.size() - 1) + " " + values.get(0));
+                    values.remove(0);
+                }
+
+            }
+
+            //Process "Start" column
+            if(Integer.parseInt(values.get(0)) > 1750){
+                StationDataColumns.add(values.get(0));
+                values.remove(0);
+            }
+
+            //Process "End" column
+            notNumeric = true;
+            i = 0;
+            while(notNumeric && i < values.get(0).length()){
+                if(Character.isDigit(values.get(0).charAt(i))){
+                    notNumeric = false;
+                    if(values.get(0).length() < 4){
+                        notNumeric = true;
                     }
                 }
+                i++;
             }
-            System.out.println("complete");
+
+            if(notNumeric){
+                StationDataColumns.add(values.get(0));
+                values.remove(0);
+            } else if(Integer.parseInt(values.get(0)) > 1750){
+                StationDataColumns.add(values.get(0));
+                values.remove(0);
+            }
+
+
+            //Process "Lat" column
+            StationDataColumns.add(values.get(0));
+            values.remove(0);
+
+            //Process "Lon" column
+            StationDataColumns.add(values.get(0));
+            values.remove(0);
+
+            //Process "Source" column
+            //check for and remove MAP and DEM values
+            if(values.get(0).equals("MAP")){
+                for(i = 0; i < 3; i++){
+                    values.remove(0);
+                }
+                StationDataColumns.add("...");
+            } else if(values.get(0).equals("DEM")){
+                for(i = 0; i < 4; i++){
+                    values.remove(0);
+                }
+                StationDataColumns.add("...");
+            }  else {
+                StationDataColumns.add(values.get(0));
+                values.remove(0);
+            }
+            
+            //Process "State" column
+            StationDataColumns.add(values.get(0));
+            values.remove(0);
+
+            //Process "Height" column
+            StationDataColumns.add(values.get(0));
+            values.remove(0);
+
+            //Process "Bar_ht" column
+            StationDataColumns.add(values.get(0));
+            values.remove(0);
+
+            //Process "WMO" column
+            StationDataColumns.add(values.get(0));
+            values.remove(0);
+            
+            //add column array to row and clear
+            StationDataRows.add(new ArrayList<String>(StationDataColumns));
+            StationDataColumns.clear();
+
+            } catch(Exception e){
+                System.out.println(e + " " + StationDataRows.size()); 
+                System.exit(0);
+            }
         }
+        System.out.println("complete");
+    }
 }
 
-class TwoDimentionalArrayList<T> extends ArrayList<ArrayList<T>> {
-    public void addToInnerArray(int index, T element) {
-        while (index >= this.size()) {
-            this.add(new ArrayList<T>());
-        }
-        this.get(index).add(element);
-    }
-
-    public void addToInnerArray(int index, int index2, T element) {
-        while (index >= this.size()) {
-            this.add(new ArrayList<T>());
-        }
-
-        ArrayList<T> inner = this.get(index);
-        while (index2 >= inner.size()) {
-            inner.add(null);
-        }
-
-        inner.set(index2, element);
-    }
-}

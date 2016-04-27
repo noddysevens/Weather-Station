@@ -93,7 +93,7 @@ public class WeatherStation implements ActionListener{
     
     private static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
     public static int NUMBER_OF_STATION_ROWS = 20116;
-    public static int NUMBER_OF_STATION_COLUMNS = 12;
+    public static int NUMBER_OF_STATION_COLUMNS = 11;
     public static String[][] stationData = new String[NUMBER_OF_STATION_ROWS][NUMBER_OF_STATION_COLUMNS];
     
     public static void main(String[] Args) throws IOException{
