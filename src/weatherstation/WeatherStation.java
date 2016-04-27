@@ -16,8 +16,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -72,6 +70,15 @@ public class WeatherStation implements ActionListener{
             ,"Date Time"};
     private String[] dataIndexes = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14"};
     public static String[] dataUnits = {"","°C","°C","","%","","","","","","","","","mm",""};
+    public static String[] stateJSONcodes = {"IDN60800","IDV60800","IDQ60800", "IDW60800","IDS60800","IDT60800","IDN60800","IDD60800"};
+    private int nsw = 0;
+    private int vic = 1;
+    private int qld = 2;
+    private int wa = 3;
+    private int sa = 4;
+    private int tas = 5;
+    private int act = 6;
+    private int nt = 7;
 
     public int sortOrder = 0;
     public int air = 1;
@@ -135,16 +142,20 @@ public class WeatherStation implements ActionListener{
                 button[NAVIGATION_BUTTON].requestFocus();
             }
         });
+        
+        prepareData();
+        
+    }
+    private static void prepareData(){
         //run the zip reader
         try {
             ZipReader.readZip();
             PrepareStationData.removeNthLine("C:/Users/David/Downloads/stations.txt", 20118);
             PrepareStationData.parseWords();
-            System.out.println("parsewords complete");
+            System.out.println("Parsing complete");
         } catch (Exception ex) {
             System.out.println(ex);
         }
-        
     }
     private void addCardsToDeck(MainPanelDriver driver){
         cards.add(driver.mainPanel, "Main");

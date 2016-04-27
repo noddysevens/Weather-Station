@@ -38,4 +38,19 @@ public class CollectInput{
         results = obj1.getJsonArray("data");
   
     }
+    
+    public void getPostcodeInfo(String postcode) {
+        try
+        {
+            url = new URL("http://v0.postcodeapi.com.au/suburbs/" + postcode + ".json");
+        }catch(MalformedURLException ex){};
+        try {
+            inputStream = url.openStream();
+        } catch(IOException ex){}
+        rdr = Json.createReader(inputStream);
+        obj = rdr.readObject();
+        obj1 = obj.getJsonObject("observations");
+        results = obj1.getJsonArray("data");
+  
+    }
 }

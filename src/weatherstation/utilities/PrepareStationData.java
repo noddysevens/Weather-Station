@@ -20,8 +20,8 @@ import java.util.Scanner;
  */
 public class PrepareStationData {
 
-    static ArrayList<String> StationDataColumns = new ArrayList<>();
-    static ArrayList<ArrayList<String>> StationDataRows = new ArrayList<>();
+    static ArrayList<String> stationDataColumns = new ArrayList<>();
+    static ArrayList<ArrayList<String>> stationDataRows = new ArrayList<>();
     
     public static void removeNthLine(String f, int toRemove) throws IOException {
         File directory = new File("C:/Users/David/Downloads");
@@ -68,7 +68,7 @@ public class PrepareStationData {
             }
             try{
             //Process "Site" column
-            StationDataColumns.add(values.get(0));
+            stationDataColumns.add(values.get(0));
             values.remove(0);
 
             //Process "Dist" column
@@ -114,7 +114,8 @@ public class PrepareStationData {
                         } else if(values.get(0).indexOf(".") > 0){
                             notNumeric = true;
                             break;
-                        } else if(values.get(0).charAt(0) == '(' || values.get(0).charAt(values.get(0).length() - 1) == ')'){
+                        } else if(values.get(0).charAt(0) == '(' 
+                                || values.get(0).charAt(values.get(0).length() - 1) == ')'){
                             notNumeric = true;
                             break;
                         } else if(values.get(0).length() == 4){
@@ -139,11 +140,13 @@ public class PrepareStationData {
                 }
                 i = 0;
                 if(notNumeric && firstWord){
-                    StationDataColumns.add(values.get(0));
+                    stationDataColumns.add(values.get(0));
                     values.remove(0);
                     firstWord = false;
                 } else if(notNumeric) {
-                    StationDataColumns.set(StationDataColumns.size() - 1, StationDataColumns.get(StationDataColumns.size() - 1) + " " + values.get(0));
+                    stationDataColumns.set(stationDataColumns.size() - 1
+                            , stationDataColumns.get(stationDataColumns.size() - 1) 
+                            + " " + values.get(0));
                     values.remove(0);
                 }
 
@@ -151,7 +154,7 @@ public class PrepareStationData {
 
             //Process "Start" column
             if(Integer.parseInt(values.get(0)) > 1750){
-                StationDataColumns.add(values.get(0));
+                stationDataColumns.add(values.get(0));
                 values.remove(0);
             }
 
@@ -169,20 +172,20 @@ public class PrepareStationData {
             }
 
             if(notNumeric){
-                StationDataColumns.add(values.get(0));
+                stationDataColumns.add(values.get(0));
                 values.remove(0);
             } else if(Integer.parseInt(values.get(0)) > 1750){
-                StationDataColumns.add(values.get(0));
+                stationDataColumns.add(values.get(0));
                 values.remove(0);
             }
 
 
             //Process "Lat" column
-            StationDataColumns.add(values.get(0));
+            stationDataColumns.add(values.get(0));
             values.remove(0);
 
             //Process "Lon" column
-            StationDataColumns.add(values.get(0));
+            stationDataColumns.add(values.get(0));
             values.remove(0);
 
             //Process "Source" column
@@ -191,39 +194,39 @@ public class PrepareStationData {
                 for(i = 0; i < 3; i++){
                     values.remove(0);
                 }
-                StationDataColumns.add("...");
+                stationDataColumns.add("...");
             } else if(values.get(0).equals("DEM")){
                 for(i = 0; i < 4; i++){
                     values.remove(0);
                 }
-                StationDataColumns.add("...");
+                stationDataColumns.add("...");
             }  else {
-                StationDataColumns.add(values.get(0));
+                stationDataColumns.add(values.get(0));
                 values.remove(0);
             }
             
             //Process "State" column
-            StationDataColumns.add(values.get(0));
+            stationDataColumns.add(values.get(0));
             values.remove(0);
 
             //Process "Height" column
-            StationDataColumns.add(values.get(0));
+            stationDataColumns.add(values.get(0));
             values.remove(0);
 
             //Process "Bar_ht" column
-            StationDataColumns.add(values.get(0));
+            stationDataColumns.add(values.get(0));
             values.remove(0);
 
             //Process "WMO" column
-            StationDataColumns.add(values.get(0));
+            stationDataColumns.add(values.get(0));
             values.remove(0);
             
             //add column array to row and clear
-            StationDataRows.add(new ArrayList<String>(StationDataColumns));
-            StationDataColumns.clear();
+            stationDataRows.add(new ArrayList<String>(stationDataColumns));
+            stationDataColumns.clear();
 
             } catch(Exception e){
-                System.out.println(e + " " + StationDataRows.size()); 
+                System.out.println(e + " " + stationDataRows.size()); 
                 System.exit(0);
             }
         }
