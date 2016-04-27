@@ -21,7 +21,7 @@ public class MainDashboardPanel extends JPanel{
     
     private final String FONT_FACE = "verdana";
     private final int FONT_STYLE = Font.BOLD;
-    public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
+    public enum FONT_SIZE {SMALL(10), MEDIUM(20), MED_MED_LARGE(25), MEDIUM_LARGE(30), LARGE(45);
         private int value;
         private FONT_SIZE(int value) {
                 this.value = value;
@@ -30,13 +30,13 @@ public class MainDashboardPanel extends JPanel{
     
     private final int NUMBER_OF_PANELS = 3;
     private final int NUMBER_OF_LABEL_PANELS = 15;
-    private final int NUMBER_OF_LABELS = 15;
-    private final int NUMBER_OF_LABELS2 = 15;
+    private static final int NUMBER_OF_LABELS = 15;
+    private static final int NUMBER_OF_LABELS2 = 15;
     
     private JPanel[] panel = new JPanel[NUMBER_OF_PANELS];
     public JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
-    public JLabel[] label = new JLabel[NUMBER_OF_LABELS];
-    public JLabel[] label2 = new JLabel[NUMBER_OF_LABELS2];
+    public static JLabel[] label = new JLabel[NUMBER_OF_LABELS];
+    public static JLabel[] label2 = new JLabel[NUMBER_OF_LABELS2];
 
     public int sortOrder = 0;
     public int air = 1;
@@ -53,7 +53,7 @@ public class MainDashboardPanel extends JPanel{
     public int pressMsl = 12;
     public int rainSince = 13;
     public int dateTime = 14;
-    public int topLabel = 14;
+    public static int topLabel = 14;
     
     public MainDashboardPanel(MainPanelDriver driver) throws IOException {
         initialiseComponents();
@@ -87,7 +87,7 @@ public class MainDashboardPanel extends JPanel{
         
         for(int index = 0; index < NUMBER_OF_LABELS2; index++){
             label2[index] = new JLabel("NULL");
-            label2[index].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM_LARGE.value));
+            label2[index].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MED_MED_LARGE.value));
             label2[index].setForeground(WeatherStation.mainTextColor);
         }
         

@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import weatherstation.WeatherStation;
 
 /**
  * Program info: This class processes the Stations.txt file into an arraylist 
@@ -21,7 +22,7 @@ import java.util.Scanner;
 public class PrepareStationData {
 
     static ArrayList<String> stationDataColumns = new ArrayList<>();
-    static ArrayList<ArrayList<String>> stationDataRows = new ArrayList<>();
+
     
     public static void removeNthLine(String f, int toRemove) throws IOException {
         File directory = new File("C:/Users/David/Downloads");
@@ -222,11 +223,11 @@ public class PrepareStationData {
             values.remove(0);
             
             //add column array to row and clear
-            stationDataRows.add(new ArrayList<String>(stationDataColumns));
+            WeatherStation.stationDataRows.add(new ArrayList<String>(stationDataColumns));
             stationDataColumns.clear();
 
             } catch(Exception e){
-                System.out.println(e + " " + stationDataRows.size()); 
+                System.out.println(e + " " + WeatherStation.stationDataRows.size()); 
                 System.exit(0);
             }
         }

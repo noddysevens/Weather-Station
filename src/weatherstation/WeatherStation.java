@@ -16,11 +16,13 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import weatherstation.panels.GraphPanel;
+import weatherstation.panels.PostcodeSelectPanel;
 import weatherstation.utilities.PrepareStationData;
 import weatherstation.utilities.ZipReader;
 
@@ -36,7 +38,7 @@ public class WeatherStation implements ActionListener{
     private static int HEIGHT = 600;
     private static int WIDTH = 650;
     private final static int NUMBER_OF_BUTTONS = 3;
-    private final static int NAVIGATION_BUTTON = 0;
+    public static final int NAVIGATION_BUTTON = 0;
     private final int MINIMIZE = 1;
     private final int CLOSE = 2;
     
@@ -59,8 +61,9 @@ public class WeatherStation implements ActionListener{
     public static DrawingPanel drawingPanel = new DrawingPanel();
     GraphPanel graphPanel = new GraphPanel();
     MainPanelDriver driver;
+    static PostcodeSelectPanel postCodePanel = new PostcodeSelectPanel();
     
-    static JFrame frame = new JFrame("Json Test");
+    public static JFrame frame = new JFrame("Json Test");
     
     private static Point point = new Point();
     public static String[] weatherMeasurements = {"Sort Order", "Air Temp","Apparent Temp"
@@ -70,15 +73,15 @@ public class WeatherStation implements ActionListener{
             ,"Date Time"};
     private String[] dataIndexes = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14"};
     public static String[] dataUnits = {"","°C","°C","","%","","","","","","","","","mm",""};
-    public static String[] stateJSONcodes = {"IDN60800","IDV60800","IDQ60800", "IDW60800","IDS60800","IDT60800","IDN60800","IDD60800"};
-    private int nsw = 0;
-    private int vic = 1;
-    private int qld = 2;
-    private int wa = 3;
-    private int sa = 4;
-    private int tas = 5;
-    private int act = 6;
-    private int nt = 7;
+    public static String[] stateJSONcodes = {"IDN60801","IDV60801","IDQ60801", "IDW60801","IDS60801","IDT60801","IDN60801","IDD60801"};
+    public static int nsw = 0;
+    public static int vic = 1;
+    public static int qld = 2;
+    public static int wa = 3;
+    public static int sa = 4;
+    public static int tas = 5;
+    public static int act = 6;
+    public static int nt = 7;
 
     public int sortOrder = 0;
     public int air = 1;
@@ -98,11 +101,18 @@ public class WeatherStation implements ActionListener{
     
     static Timer timer;
     
-    private static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
+    public static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
     public static int NUMBER_OF_STATION_ROWS = 20116;
     public static int NUMBER_OF_STATION_COLUMNS = 11;
     public static String[][] stationData = new String[NUMBER_OF_STATION_ROWS][NUMBER_OF_STATION_COLUMNS];
     
+    public static boolean mainComplete = false;
+    
+    public static JPanel navigationPanel;
+    public static JPanel conditionsTimePanel;
+    
+    public static ArrayList<ArrayList<String>> stationDataRows = new ArrayList<>();
+     
     public static void main(String[] Args) throws IOException{
         frame.addMouseListener(new MouseAdapter() {
             @Override
@@ -138,8 +148,8 @@ public class WeatherStation implements ActionListener{
         frame.setVisible(true);
         frame.addWindowFocusListener(new WindowAdapter() {
             public void windowGainedFocus(WindowEvent e) {
-                button[NAVIGATION_BUTTON].grabFocus();
-                button[NAVIGATION_BUTTON].requestFocus();
+                postCodePanel.goButton.grabFocus();
+                postCodePanel.goButton.requestFocus();
             }
         });
         
@@ -158,6 +168,7 @@ public class WeatherStation implements ActionListener{
         }
     }
     private void addCardsToDeck(MainPanelDriver driver){
+        cards.add(postCodePanel, "Postcode");
         cards.add(driver.mainPanel, "Main");
         cards.add(graphPanel, "Graph");
     }
@@ -178,16 +189,20 @@ public class WeatherStation implements ActionListener{
     private void addComponentToPane(Container pane) throws IOException {
         initializeButtons(); 
         
+        
         timer = new Timer(60000, new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 try {
-                    driver.initializeArrays();
-                    driver.displayOutputToLabel();
+                    MainPanelDriver.initializeArrays();
+                    MainPanelDriver.displayOutputToLabel();
                 } catch (IOException ex) {}
             }
         });
         timer.setInitialDelay(1000);
         timer.start(); 
+        
+        conditionsTimePanel = new JPanel();
+        conditionsTimePanel.setBackground(darkBlue);
         
         driver = new MainPanelDriver();
         
@@ -196,8 +211,8 @@ public class WeatherStation implements ActionListener{
 
         JPanel topSub = new JPanel();
         topSub.setLayout(new BorderLayout());
-        topSub.setBackground(WeatherStation.BACKGROUND_COLOUR);
-        topSub.add(driver.mainPanel.labelPanel[driver.mainPanel.dateTime], BorderLayout.CENTER);
+        topSub.setBackground(BACKGROUND_COLOUR);
+        topSub.add(conditionsTimePanel, BorderLayout.CENTER);
         topSub.add(button[MINIMIZE], BorderLayout.LINE_END);
         
         JPanel controls = new JPanel();
@@ -206,13 +221,15 @@ public class WeatherStation implements ActionListener{
         controls.add(topSub, BorderLayout.CENTER);
         controls.add(button[CLOSE], BorderLayout.LINE_END);
         
-        JPanel navigationPanel = new JPanel();
+        navigationPanel = new JPanel();
         navigationPanel.add(button[NAVIGATION_BUTTON]);
-        navigationPanel.setBackground(WeatherStation.BACKGROUND_COLOUR);
+        navigationPanel.setBackground(BACKGROUND_COLOUR);
         
         pane.add(controls , BorderLayout.NORTH);
         pane.add(cards, BorderLayout.CENTER);
-        pane.add(navigationPanel, BorderLayout.SOUTH);
+        if(mainComplete){
+            pane.add(navigationPanel, BorderLayout.SOUTH);
+        }
     }
 
     @Override
@@ -235,6 +252,6 @@ public class WeatherStation implements ActionListener{
                     button[NAVIGATION_BUTTON].requestFocus();
                     button[NAVIGATION_BUTTON].setText("Back");
                 }
-        }
+        } 
     }
 }

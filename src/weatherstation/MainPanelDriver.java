@@ -12,35 +12,35 @@ import weatherstation.utilities.CollectInput;
  * Last Changed: 26-Apr-2016
  */
 public class MainPanelDriver{
-    CollectInput input = new CollectInput();
+    static CollectInput input = new CollectInput();
 
-    public MainDashboardPanel mainPanel;
+    public static MainDashboardPanel mainPanel;
     
-    public int sortOrder = 0;
-    public int air = 1;
-    public int apparentTemp = 2;
-    public int dewPoint = 3;
-    public int relativeHumidity = 4;
-    public int deltaT = 5;
-    public int windDirection = 6;
-    public int windSpeedKmh = 7;
-    public int windGustsKmh = 8;
-    public int windSpeedKnots = 9;
-    public int windGustsKnots = 10;
-    public int pressQnh = 11;
-    public int pressMsl = 12;
-    public int rainSince = 13;
-    public int dateTime = 14;
+    public static int sortOrder = 0;
+    public static int air = 1;
+    public static int apparentTemp = 2;
+    public static int dewPoint = 3;
+    public static int relativeHumidity = 4;
+    public static int deltaT = 5;
+    public static int windDirection = 6;
+    public static int windSpeedKmh = 7;
+    public static int windGustsKmh = 8;
+    public static int windSpeedKnots = 9;
+    public static int windGustsKnots = 10;
+    public static int pressQnh = 11;
+    public static int pressMsl = 12;
+    public static int rainSince = 13;
+    public static int dateTime = 14;
 
     public static String[][] bomData;
 
     public MainPanelDriver() throws IOException {
         mainPanel = new MainDashboardPanel(this);
-        initializeArrays();
-        displayOutputToLabel();
+        //initializeArrays();
+        //displayOutputToLabel();
     }
 
-    public void initializeArrays() throws IOException{
+    public static void initializeArrays() throws IOException{
        input.getInput();
 
        int numberOfEntries = input.results.size();
@@ -70,9 +70,10 @@ public class MainPanelDriver{
             index++;
             }
         }
+       displayOutputToLabel();
     }
     
-    public void displayOutputToLabel(){
+    public static void displayOutputToLabel(){
         String time = String.valueOf(bomData[0][dateTime]);
         
         mainPanel.label2[sortOrder].setText(String.valueOf(bomData[0][sortOrder]));
@@ -90,5 +91,7 @@ public class MainPanelDriver{
         mainPanel.label2[pressQnh].setText(String.valueOf(bomData[0][pressQnh]));
         mainPanel.label2[pressMsl].setText(String.valueOf(bomData[0][pressMsl]));
         mainPanel.label2[rainSince].setText(String.valueOf(bomData[0][rainSince]));
+        System.out.println("displayed");
     }
+    
 }
