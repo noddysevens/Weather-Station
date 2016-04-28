@@ -56,15 +56,16 @@ public class WeatherStation implements ActionListener{
     public static Color mainTextColor = new Color(30,56,91);
         
     public static JPanel cards;
-    
     public static DrawingPanel drawingPanel = new DrawingPanel();
-    GraphPanel graphPanel = new GraphPanel();
+    public static PostcodeSelectPanel postCodePanel = new PostcodeSelectPanel();
+    private GraphPanel graphPanel = new GraphPanel();
     MainPanelDriver driver;
-    static PostcodeSelectPanel postCodePanel = new PostcodeSelectPanel();
     
-    public static JFrame frame = new JFrame("Json Test");
+    
+    public static JFrame frame = new JFrame("Oz Weather");
     
     private static Point point = new Point();
+    
     public static String[] weatherMeasurements = {"Sort Order", "Air Temp","Apparent Temp"
             ,"Dew Point","Relative Humidity","Delta T","Wind Direction"
             ,"Wind Speed(km/h)", "Wind Gusts(km/h)", "Wind Speed(knots)"
@@ -73,6 +74,7 @@ public class WeatherStation implements ActionListener{
     private String[] dataIndexes = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14"};
     public static String[] dataUnits = {"","°C","°C","","%","","","","","","","","","mm",""};
     public static String[] stateJSONcodes = {"IDN60801","IDV60801","IDQ60801", "IDW60801","IDS60801","IDT60801","IDN60801","IDD60801"};
+    
     public static int nsw = 0;
     public static int vic = 1;
     public static int qld = 2;
@@ -101,9 +103,6 @@ public class WeatherStation implements ActionListener{
     static Timer timer;
     
     public static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
-    public static int NUMBER_OF_STATION_ROWS = 20116;
-    public static int NUMBER_OF_STATION_COLUMNS = 11;
-    public static String[][] stationData = new String[NUMBER_OF_STATION_ROWS][NUMBER_OF_STATION_COLUMNS];
     
     public static JPanel navigationPanel;
     public static JPanel conditionsTimePanel;
