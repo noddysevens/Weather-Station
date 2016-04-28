@@ -32,7 +32,6 @@ import weatherstation.utilities.ZipReader;
  * Class info: This class is the main Driver for the Program
  * Author: David (NoddySevens) Java Developer
  * E-mail Address: noddysevens@gmail.com
- * Last Changed: 26 - April - 2016
  */
 public class WeatherStation implements ActionListener{
     private static int HEIGHT = 600;
@@ -105,8 +104,6 @@ public class WeatherStation implements ActionListener{
     public static int NUMBER_OF_STATION_ROWS = 20116;
     public static int NUMBER_OF_STATION_COLUMNS = 11;
     public static String[][] stationData = new String[NUMBER_OF_STATION_ROWS][NUMBER_OF_STATION_COLUMNS];
-    
-    public static boolean mainComplete = false;
     
     public static JPanel navigationPanel;
     public static JPanel conditionsTimePanel;
@@ -227,9 +224,6 @@ public class WeatherStation implements ActionListener{
         
         pane.add(controls , BorderLayout.NORTH);
         pane.add(cards, BorderLayout.CENTER);
-        if(mainComplete){
-            pane.add(navigationPanel, BorderLayout.SOUTH);
-        }
     }
 
     @Override
