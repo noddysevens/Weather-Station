@@ -6,9 +6,9 @@ This Java application can be run on any system where the JVM is welcome and can 
 I designed this program to be clear and simple in displaying Bureau Of Meteorology weather information. 
 
 #How it works
-This application downloads a JSON file of weather observations, extracts the data into arrays and then displays the most recent observations on the main dashboard and the past 24 hours of observations on the graph panel.
+The application first requests the user's postcode. It then searches for the closest weather station on the BOM webiste, then downloads the JSON file containing the latest observations and displays the results as both a most recent dashboard and 24 hr graph. 
 
 On the graph panel, the observation set can be selected and viewed, for example: air temperature, wind speed and humidity.
 
 #Getting Started
-Getting started is easy with this application, just run the WeatherStation.jar from either the command line or double click to run. 
+Download the Zip and build using your favourite IDE or compiler. 
