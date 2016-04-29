@@ -11,37 +11,30 @@ import java.util.zip.ZipInputStream;
  * Program info: This class collects the station list zip file from the BOM website
  * and extracts the text file
  * Author: David (NoddySevens) Programmer
- * E-mail Address: noddysevens@gmail.com
+ * E-mail Address: noddysevens@gmail.com 
  * Last Changed: 
  */
 public class ZipReader
 {
-    static URL url;
-    static String[] args = new String[]{"ftp://ftp.bom.gov.au/anon2/home/ncc/metadata/sitelists/stations.zip","C:/Users/David/Downloads"};
+    private static URL url;
     
     public static void main(String[] args) throws Exception {
-        if(args.length != 2)
-        {
-            System.err.println("zipreader zipfile outputdir");
-            return;
-        }
-
+        readZip();
+    }
+    
+    public static void readZip() throws Exception{
         // create a buffer to improve copy performance later.
         byte[] buffer = new byte[2048];
         
-        try
-        {
-            url = new URL(args[0]);
+        try {
+            url = new URL("ftp://ftp.bom.gov.au/anon2/home/ncc/metadata/sitelists/stations.zip");
         } catch(MalformedURLException ex){}
-        
-        // open the zip file stream
+
         InputStream theFile = url.openStream();
         ZipInputStream stream = new ZipInputStream(theFile);
-        String outdir = args[1];
+        String outdir = "C:/Users/David/Downloads";
 
-        try
-        {
-
+        try {
             // now iterate through each item in the stream. The get next
             // entry call will return a ZipEntry for each file in the
             // stream
@@ -58,30 +51,24 @@ public class ZipReader
                 // reading until read returns 0 or less.
                 String outpath = outdir + "/" + entry.getName();
                 FileOutputStream output = null;
-                try
-                {
+                try {
                     output = new FileOutputStream(outpath);
                     int len = 0;
-                    while ((len = stream.read(buffer)) > 0)
-                    {
+                    while ((len = stream.read(buffer)) > 0){
                         output.write(buffer, 0, len);
                     }
                 }
-                finally
-                {
+                finally {
                     // we must always close the output file
-                    if(output!=null) output.close();
+                    if(output!=null){
+                        output.close();
+                    }
                 }
             }
         }
-        finally
-        {
+        finally {
             // we must always close the zip file.
             stream.close();
         }
-    }
-    
-    public static void readZip() throws Exception{
-        main(args);
     }
 }

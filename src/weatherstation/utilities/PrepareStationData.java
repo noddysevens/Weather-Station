@@ -22,7 +22,7 @@ import weatherstation.WeatherStation;
 public class PrepareStationData {
 
     static ArrayList<String> stationDataColumns = new ArrayList<>();
-
+    private static final int OLDEST_STATION = 1750;
     
     public static void removeNthLine(String f, int toRemove) throws IOException {
         File directory = new File("C:/Users/David/Downloads");
@@ -38,8 +38,6 @@ public class PrepareStationData {
                 bw.write(String.format("%s%n", br.readLine()));
             }
         }
-
-        br.readLine();
         
         br.close();
         bw.close();
@@ -51,7 +49,7 @@ public class PrepareStationData {
         }
 
         System.out.println("removed nth ");
-        }
+    }
     
     public static void parseWords(){
         Scanner sc2 = null;
@@ -67,7 +65,7 @@ public class PrepareStationData {
             while (s2.hasNext()) {
                 values.add(s2.next());
             }
-            try{
+            try {
             //Process "Site" column
             stationDataColumns.add(values.get(0));
             values.remove(0);
@@ -96,86 +94,86 @@ public class PrepareStationData {
                 twoDigitAndNextIsAlpha = true;
             }
 
-
             if(twoDigitAndTwoAlpha || twoDigitAndAlpha || twoDigitAndNextIsAlpha){
                 values.remove(0);
             }
 
             //Process "Station Name" column
             boolean firstWord = true;
-            boolean notNumeric = true;
+            boolean isWord = true;
             int i = 0;
-            while(notNumeric){
+            while(isWord){
                 while(i < values.get(0).length()){
                     if(Character.isDigit(values.get(0).charAt(i))){
-                        notNumeric = false;
+                        isWord = false;
                         if(values.get(0).length() < 4){
-                            notNumeric = true;
+                            isWord = true;
                             break;
                         } else if(values.get(0).indexOf(".") > 0){
-                            notNumeric = true;
+                            isWord = true;
                             break;
                         } else if(values.get(0).charAt(0) == '(' 
                                 || values.get(0).charAt(values.get(0).length() - 1) == ')'){
-                            notNumeric = true;
+                            isWord = true;
                             break;
                         } else if(values.get(0).length() == 4){
                             int j = 0;
                             while(j < values.get(0).length()){
                                 if(Character.isAlphabetic(values.get(0).charAt(j))){
-                                    notNumeric = true;
+                                    isWord = true;
                                     break;
                                 } 
                                 j++;
                             }
-                            if(!notNumeric && Integer.parseInt(values.get(0)) < 1750){
-                                notNumeric = true;
+                            if(!isWord && Integer.parseInt(values.get(0)) < OLDEST_STATION){
+                                isWord = true;
                                 break;
                             }
                         } else if(values.get(0).length() > 4){
-                            notNumeric = true;
+                            isWord = true;
                             break;
                         }
                     }
                     i++;
                 }
+                
                 i = 0;
-                if(notNumeric && firstWord){
+                
+                if(isWord && firstWord){
                     stationDataColumns.add(values.get(0));
                     values.remove(0);
                     firstWord = false;
-                } else if(notNumeric) {
+                } else if(isWord) {
                     stationDataColumns.set(stationDataColumns.size() - 1
                             , stationDataColumns.get(stationDataColumns.size() - 1) 
                             + " " + values.get(0));
                     values.remove(0);
                 }
-
             }
 
             //Process "Start" column
-            if(Integer.parseInt(values.get(0)) > 1750){
+            if(Integer.parseInt(values.get(0)) > OLDEST_STATION){
                 stationDataColumns.add(values.get(0));
                 values.remove(0);
             }
 
             //Process "End" column
-            notNumeric = true;
+            isWord = true;
             i = 0;
-            while(notNumeric && i < values.get(0).length()){
+            while(isWord && i < values.get(0).length()){
                 if(Character.isDigit(values.get(0).charAt(i))){
-                    notNumeric = false;
+                    isWord = false;
                     if(values.get(0).length() < 4){
-                        notNumeric = true;
+                        isWord = true;
                     }
                 }
                 i++;
             }
 
-            if(notNumeric){
+            if(isWord){
                 stationDataColumns.add(values.get(0));
                 values.remove(0);
-            } else if(Integer.parseInt(values.get(0)) > 1750){
+            } else if(Integer.parseInt(values.get(0)) > OLDEST_STATION){
                 stationDataColumns.add(values.get(0));
                 values.remove(0);
             }
@@ -206,21 +204,11 @@ public class PrepareStationData {
                 values.remove(0);
             }
             
-            //Process "State" column
-            stationDataColumns.add(values.get(0));
-            values.remove(0);
-
-            //Process "Height" column
-            stationDataColumns.add(values.get(0));
-            values.remove(0);
-
-            //Process "Bar_ht" column
-            stationDataColumns.add(values.get(0));
-            values.remove(0);
-
-            //Process "WMO" column
-            stationDataColumns.add(values.get(0));
-            values.remove(0);
+            //Process State , Height, bar_ht and wmo columns
+            for(i = 0; i < 4; i++){
+                stationDataColumns.add(values.get(0));
+                values.remove(0);
+            }
             
             //add column array to row and clear
             WeatherStation.stationDataRows.add(new ArrayList<String>(stationDataColumns));
@@ -233,5 +221,6 @@ public class PrepareStationData {
         }
         System.out.println("complete");
     }
+    
 }
 

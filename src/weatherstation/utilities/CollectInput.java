@@ -39,35 +39,38 @@ public class CollectInput{
     
     
     public void getInput() {
-        
-        
         String wmoCode = "";
         if(validWMO.size() == 1){
             wmoCode = validWMO.get(0);
         } else {
             System.out.println("Error: incorrect number of WMOs");
-           wmoCode = "95551";
+            wmoCode = "95551";
         }
-        try
-        {
-            url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" + stateCode + "." + wmoCode + ".json");
-        }catch(MalformedURLException ex){};
+        
         try {
-            inputStream = url.openStream();
+            url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" 
+                    + stateCode + "." + wmoCode + ".json");
+        }catch(MalformedURLException ex){};
+        
+        try {
+            HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
+            httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
+
+            inputStream = httpcon.getInputStream();
+            //inputStream = url.openStream();
         } catch(IOException ex){}
+        
         rdr = Json.createReader(inputStream);
         obj = rdr.readObject();
         obj1 = obj.getJsonObject("observations");
         results = obj1.getJsonArray("data");
-        
-        
     }
     
     public static void getPostcodeInfo(String postcode) {
-        try
-        {
+        try {
             url = new URL("http://v0.postcodeapi.com.au/suburbs/" + postcode + ".json");
-        }catch(MalformedURLException ex){};
+        } catch(MalformedURLException ex){};
+        
         try {
             HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
             httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
@@ -77,14 +80,13 @@ public class CollectInput{
         } catch(IOException ex){
             System.out.println(ex);
         }
+        
         rdr = Json.createReader(inputStream);
         results = rdr.readArray();
         
         ArrayList<JsonString> jstring = new ArrayList<>();
         ArrayList<String> nameString = new ArrayList<>();
         
-        boolean valueFound = false;
-        boolean wmoFound = false;
         for(int i = 0; i < results.size(); i++){
             obj = results.getJsonObject(i);
             jstring.add(obj.getJsonString("name"));
@@ -95,10 +97,8 @@ public class CollectInput{
                 String value = list.get(1);
                 CharSequence ch = s.toUpperCase().subSequence(0, s.length()-1);
                 if(value.equalsIgnoreCase(s) || value.contains(ch)){
-                    valueFound = true; //not needed
                     String WMO = list.get(10);
                     if(!WMO.equalsIgnoreCase("..")){
-                        wmoFound = true; //not needed
                         System.out.println(WMO);
                         String state = list.get(7);
                         System.out.println(state);
@@ -112,6 +112,7 @@ public class CollectInput{
                 }
             }
         }
+        
         url = null;
         inputStream = null;
         rdr = null;
