@@ -16,11 +16,12 @@ The program then requests the user's postcode.
 
 The postcode search starts at the user's postcode and then if there are no stations with that postcode then a new search is done for the next postcode up and down. 
 Eg 4605 - no match --> 4606 - no match --> 4604 - match
-And the process continues until a match can be found.
+
+The process continues until a match can be found.
 
 The matching process firsts gets suburb names from online and then checks each one to find a station with a similar name. It then checks if that station has a JSON observation file. 
 
-The matching file is then downloaded, parsed and output to the dashboard and graph panels.
+The matching file is then downloaded and checked for Null obseravations. If some are found the station is blacklisted and the program searches for another station. When a good station is found the data is parsed and output to the dashboard and graph panels.
 
 On the graph panel, the observation set can be selected and viewed, for example: air temperature, wind speed and humidity.
 
