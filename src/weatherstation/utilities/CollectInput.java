@@ -36,34 +36,41 @@ public class CollectInput{
     public static ArrayList<String> validWMO = new ArrayList<>();
     public static String stationName = "";
     public static String stateCode = "IDQ60801";
+    private static StationBlacklist blacklist;
     
-    
+    public CollectInput(){
+        blacklist = new StationBlacklist();
+    }
     public void getInput() {
         String wmoCode = "";
-        if(validWMO.size() == 1){
-            wmoCode = validWMO.get(0);
+        if(validWMO.size() > 0){
+            int index = 0;
+            for(String code : validWMO){
+                results = getObservations(code);
+                if(containsNullObservations(results)){
+                    blacklist.addToBlacklist(Integer.parseInt(code));
+                    validWMO.remove(index);
+                }
+                index++;
+            }
         } else {
-            System.out.println("Error: incorrect number of WMOs");
+            System.out.println("No WMOs");
             wmoCode = "95551";
+            results = getObservations(wmoCode);
+        }
+        if(validWMO.size() > 1){
+            System.out.println("More than one valid station");
+            results = getObservations(validWMO.get(0));
+            //add feature to get user to seklecet which station they want
+        } else if(validWMO.size() == 1){
+            results = getObservations(validWMO.get(0));
+        } else {
+            System.out.println("No WMOs");
+            wmoCode = "95551";
+            results = getObservations(wmoCode);
         }
         
-        try {
-            url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" 
-                    + stateCode + "." + wmoCode + ".json");
-        }catch(MalformedURLException ex){};
         
-        try {
-            HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
-            httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
-
-            inputStream = httpcon.getInputStream();
-            //inputStream = url.openStream();
-        } catch(IOException ex){}
-        
-        rdr = Json.createReader(inputStream);
-        obj = rdr.readObject();
-        obj1 = obj.getJsonObject("observations");
-        results = obj1.getJsonArray("data");
     }
     
     public static void getPostcodeInfo(String postcode) {
@@ -104,9 +111,13 @@ public class CollectInput{
                         System.out.println(state);
                         String sta = checkState(postcode);
                         if(sta.equals(state)){
-                            validWMO.add(WMO);
-                            stationName = list.get(1);
-                            System.out.println(stationName);
+                            if(blacklist.isOnBlacklist(Integer.parseInt(WMO))){
+                                System.out.println("This station is on the blacklist");
+                            } else {
+                                validWMO.add(WMO);
+                                stationName = list.get(1);
+                                System.out.println(stationName);
+                            }
                         }
                     }               
                 }
@@ -193,7 +204,43 @@ public class CollectInput{
         
         return state;
     }
-    public static void main(String[] args){
-        getPostcodeInfo("3066");
+    private boolean containsNullObservations(JsonArray observations){
+        boolean containsNull = false;
+        for(JsonObject result : observations.getValuesAs(JsonObject.class)){
+            try {
+                result.getJsonNumber("air_temp");
+            } catch (Exception e){
+                containsNull = true;
+                break;
+            }
+
+        }
+        return containsNull;
+    }
+    private JsonArray getObservations(String WMOCode){
+        try {
+            url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" 
+                    + stateCode + "." + WMOCode + ".json");
+        }catch(MalformedURLException ex){
+        
+        };
+        
+        try {
+            HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
+            httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
+
+            inputStream = httpcon.getInputStream();
+            //inputStream = url.openStream();
+        } catch(IOException ex){
+            
+            validWMO.remove(WMOCode);
+            blacklist.addToBlacklist(Integer.parseInt(WMOCode));
+            System.out.println(ex);
+        }
+    
+        JsonReader reader = Json.createReader(inputStream);
+        JsonObject object = reader.readObject();
+        JsonObject object1 = object.getJsonObject("observations");
+        return object1.getJsonArray("data");
     }
 }

@@ -24,6 +24,7 @@ import javax.swing.Timer;
 import weatherstation.panels.GraphPanel;
 import weatherstation.panels.PostcodeSelectPanel;
 import weatherstation.utilities.PrepareStationData;
+import weatherstation.utilities.StationBlacklist;
 import weatherstation.utilities.ZipReader;
 
 /**
@@ -108,6 +109,7 @@ public class WeatherStation implements ActionListener{
     public static JPanel conditionsTimePanel;
     
     public static ArrayList<ArrayList<String>> stationDataRows = new ArrayList<>();
+
      
     public static void main(String[] Args) throws IOException{
         frame.addMouseListener(new MouseAdapter() {
@@ -153,6 +155,8 @@ public class WeatherStation implements ActionListener{
         
     }
     private static void prepareData(){
+        
+
         //run the zip reader
         try {
             ZipReader.readZip();
@@ -187,6 +191,7 @@ public class WeatherStation implements ActionListener{
         
         
         timer = new Timer(60000, new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     MainPanelDriver.initializeArrays();
