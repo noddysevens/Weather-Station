@@ -27,3 +27,5 @@ On the graph panel, the observation set can be selected and viewed, for example:
 
 #Getting Started
 Download the Zip and build using your favourite IDE or compiler. 
+
+Or navigate to the WeatherStation.jar file then download and run.
