@@ -24,7 +24,7 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
     private final String FONT_FACE = "verdana";
     private final int FONT_STYLE = Font.BOLD;
     public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
-        private int value;
+        private final int value;
         private FONT_SIZE(int value) {
                 this.value = value;
         }
@@ -38,7 +38,7 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
     private final int NUMBER_OF_COMBOBOX_PANELS = 1;
     private final int NUMBER_OF_LABELS = 1;
     
-    private JPanel[] panel = new JPanel[NUMBER_OF_PANELS];
+    private final JPanel[] panel = new JPanel[NUMBER_OF_PANELS];
     public JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
     public JPanel[] comboBoxPanel = new JPanel[NUMBER_OF_COMBOBOX_PANELS];
     
