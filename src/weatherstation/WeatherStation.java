@@ -22,9 +22,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import weatherstation.panels.GraphPanel;
-import weatherstation.panels.PostcodeSelectPanel;
+import weatherstation.panels.PostcodePanel;
 import weatherstation.utilities.PrepareStationData;
-import weatherstation.utilities.StationBlacklist;
 import weatherstation.utilities.ZipReader;
 
 /**
@@ -58,7 +57,7 @@ public class WeatherStation implements ActionListener{
         
     public static JPanel cards;
     public static DrawingPanel drawingPanel = new DrawingPanel();
-    public static PostcodeSelectPanel postCodePanel = new PostcodeSelectPanel();
+    public static PostcodePanel postCodePanel = new PostcodePanel();
     private GraphPanel graphPanel = new GraphPanel();
     MainPanelDriver driver;
     
@@ -195,7 +194,6 @@ public class WeatherStation implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 try {
                     MainPanelDriver.initializeArrays();
-                    MainPanelDriver.displayOutputToLabel();
                 } catch (IOException ex) {}
             }
         });

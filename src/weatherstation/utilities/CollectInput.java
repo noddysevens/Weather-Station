@@ -1,7 +1,5 @@
 package weatherstation.utilities;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -13,9 +11,6 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonString;
-import javax.json.JsonValue;
-import javax.swing.Timer;
-import weatherstation.MainPanelDriver;
 import weatherstation.WeatherStation;
 
 
@@ -41,7 +36,7 @@ public class CollectInput{
     public CollectInput(){
         blacklist = new StationBlacklist();
     }
-    public void getInput() {
+    public static void getInput() {
         String wmoCode = "";
         if(validWMO.size() > 0){
             int index = 0;
@@ -61,6 +56,7 @@ public class CollectInput{
         if(validWMO.size() > 1){
             System.out.println("More than one valid station");
             results = getObservations(validWMO.get(0));
+            System.out.println("");
             //add feature to get user to seklecet which station they want
         } else if(validWMO.size() == 1){
             results = getObservations(validWMO.get(0));
@@ -137,74 +133,74 @@ public class CollectInput{
         int code = Integer.parseInt(postcode);
         
         //nsw
-        if(1000 < code && code < 2599){
+        if(1000 <= code && code <= 2599){
             state = "NSW";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.nsw];
-        } else if(2620 < code && code < 2899){
+        } else if(2620 <= code && code <= 2899){
             state = "NSW";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.nsw];
-        } else if(2921 < code && code < 2999){
+        } else if(2921 <= code && code <= 2999){
             state = "NSW";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.nsw];
         }
         
         //qld
-        if(4000 < code && code < 4999){
+        if(4000 <= code && code <= 4999){
             state = "QLD";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.qld];
-        } else if(9000 < code && code < 9999){
+        } else if(9000 <= code && code <= 9999){
             state = "QLD";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.qld];
         } 
         
         //sa
-        if(5000 < code && code < 5999){
+        if(5000 <= code && code <= 5999){
             state = "SA";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.sa];
         } 
         
         //tas
-        if(7000 < code && code < 7999){
+        if(7000 <= code && code <= 7999){
             state = "TAS";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.tas];
         } 
         
         //wa
-        if(6000 < code && code < 6999){
+        if(6000 <= code && code <= 6999){
             state = "WA";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.wa];
         }
         
         //act
-        if(200 < code && code < 299){
+        if(200 <= code && code <= 299){
             state = "ACT";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.act];
-        } else if(2600 < code && code < 2619){
+        } else if(2600 <= code && code <= 2619){
             state = "ACT";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.act];
-        } else if(2900 < code && code < 2920){
+        } else if(2900 <= code && code <= 2920){
             state = "ACT";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.act];
         }
         
         //vic
-        if(3000 < code && code < 3999){
+        if(3000 <= code && code <= 3999){
             state = "VIC";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.vic];
-        } else if(8000 < code && code < 8999){
+        } else if(8000 <= code && code <= 8999){
             state = "VIC";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.vic];
         }
         
         //nt
-        if(800 < code && code < 999){
+        if(800 <= code && code <= 999){
             state = "NT";
             stateCode = WeatherStation.stateJSONcodes[WeatherStation.nt];
         }
         
         return state;
     }
-    private boolean containsNullObservations(JsonArray observations){
+    private static boolean containsNullObservations(JsonArray observations){
         boolean containsNull = false;
         for(JsonObject result : observations.getValuesAs(JsonObject.class)){
             try {
@@ -217,13 +213,13 @@ public class CollectInput{
         }
         return containsNull;
     }
-    private JsonArray getObservations(String WMOCode){
+    private static JsonArray getObservations(String WMOCode){
         try {
             url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" 
                     + stateCode + "." + WMOCode + ".json");
         }catch(MalformedURLException ex){
-        
-        };
+            System.out.println("");
+        }
         
         try {
             HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
@@ -232,7 +228,7 @@ public class CollectInput{
             inputStream = httpcon.getInputStream();
             //inputStream = url.openStream();
         } catch(IOException ex){
-            
+            System.out.println("");            
             validWMO.remove(WMOCode);
             blacklist.addToBlacklist(Integer.parseInt(WMOCode));
             System.out.println(ex);

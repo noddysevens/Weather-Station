@@ -1,15 +1,30 @@
 package weatherstation.panels;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.io.IOException;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.Timer;
 import weatherstation.MainPanelDriver;
+import static weatherstation.MainPanelDriver.dateTime;
 import weatherstation.WeatherStation;
+import static weatherstation.WeatherStation.cards;
+import static weatherstation.WeatherStation.postCodePanel;
+import weatherstation.utilities.CollectInput;
 
 /**
  * Class info: This class is the main dashboard panel
@@ -21,6 +36,8 @@ public class MainDashboardPanel extends JPanel{
     
     private final String FONT_FACE = "verdana";
     private final int FONT_STYLE = Font.BOLD;
+
+    
     public enum FONT_SIZE {SMALL(10), MEDIUM(20), MED_MED_LARGE(25), MEDIUM_LARGE(30), LARGE(45);
         private int value;
         private FONT_SIZE(int value) {
@@ -28,16 +45,20 @@ public class MainDashboardPanel extends JPanel{
         }
     };
     
+    private Icon menu;
+    
     private final int NUMBER_OF_PANELS = 3;
-    private final int NUMBER_OF_LABEL_PANELS = 15;
+    private static final int NUMBER_OF_LABEL_PANELS = 15;
     private static final int NUMBER_OF_LABELS = 15;
     private static final int NUMBER_OF_LABELS2 = 15;
+    private static final int NUMBER_OF_BUTTONS = 3;
     
     private JPanel[] panel = new JPanel[NUMBER_OF_PANELS];
-    public JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
+    public static JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
     public static JLabel[] label = new JLabel[NUMBER_OF_LABELS];
     public static JLabel[] label2 = new JLabel[NUMBER_OF_LABELS2];
-
+    public static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
+    
     public int sortOrder = 0;
     public int air = 1;
     public int apparentTemp = 2;
@@ -55,12 +76,21 @@ public class MainDashboardPanel extends JPanel{
     public int dateTime = 14;
     public static int topLabel = 14;
     
+    private int imageButton = 0;
+    private int changeHomeCode = 1;
+    private int viewNewCode = 2;
+
+    private JPopupMenu popupMenu;
+    
     public MainDashboardPanel(MainPanelDriver driver) throws IOException {
         initialiseComponents();
+        
+        System.out.println("");
     }
 
     private void initialiseComponents(){
         initializeLabels();
+        initializeButtons();
         createPanels();
     }
     public void initializeLabels(){
@@ -97,6 +127,42 @@ public class MainDashboardPanel extends JPanel{
         label2[dateTime].setForeground(Color.WHITE);
         label2[air].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.LARGE.value));
         
+    }
+    private void initializeButtons() {
+        button[imageButton] = new JButton();
+        button[changeHomeCode] = new JButton("Change Home Station");
+        button[viewNewCode] = new JButton("View different Station");
+        
+        for (int i = 0; i < NUMBER_OF_BUTTONS; i++){
+            button[i].setBackground(WeatherStation.darkBlue);
+            button[i].setForeground(Color.WHITE);
+            button[i].addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    if(e.getSource() == button[viewNewCode]){
+                        CardLayout cl = (CardLayout)(cards.getLayout());
+                        cl.show(cards, "Postcode");
+                        CollectInput.validWMO.clear();
+                        WeatherStation.navigationPanel.setVisible(false);
+                        MainDashboardPanel.labelPanel[dateTime].setVisible(false);
+                        popupMenu.setVisible(false);
+                        postCodePanel.postcodeInputField.setText("Postcode: eg. 3066");
+                        postCodePanel.goButton.grabFocus();
+                        postCodePanel.goButton.requestFocus();
+                    }
+                }
+            });
+        }
+        
+        menu = new ImageIcon("menu.png");
+        button[imageButton].setIcon(menu);
+        button[imageButton].setMargin(new Insets(0,0,0,0));
+        button[imageButton].setContentAreaFilled(false);
+        button[imageButton].addMouseListener(new MouseAdapter(){
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                showPopupMenu(button[imageButton]);
+            }
+        });
     }
     public void createPanels(){
         for(int index = 0; index < NUMBER_OF_LABEL_PANELS; index++){
@@ -136,6 +202,12 @@ public class MainDashboardPanel extends JPanel{
         labelPanel[pressQnh].add(label2[pressQnh]);
         labelPanel[pressMsl].add(label2[pressMsl]);
         labelPanel[rainSince].add(label2[rainSince]);
+        try{
+            labelPanel[dateTime].add(button[imageButton]);
+        } catch (Exception e){
+            System.out.println(e);
+        }
+        
         labelPanel[dateTime].add(label[topLabel]);
         labelPanel[dateTime].add(label2[dateTime]);
 
@@ -185,4 +257,30 @@ public class MainDashboardPanel extends JPanel{
         this.setBackground(WeatherStation.BACKGROUND_COLOUR);
         this.add(dataLabels, BorderLayout.NORTH);
     }
+    private void showPopupMenu(JButton invoker) {
+    popupMenu = new JPopupMenu();
+    popupMenu.setLayout(new GridLayout(2, 1));
+    popupMenu.add(button[changeHomeCode]);
+    popupMenu.add(button[viewNewCode]);
+    popupMenu.setBackground(WeatherStation.darkBlue);
+    popupMenu.show(invoker, 0, invoker.getHeight());
+    popupMenu.addMouseListener(new MouseAdapter(){
+        public void mouseEntered(java.awt.event.MouseEvent evt){
+            showPopupMenu(button[imageButton]);
+        }
+        public void mouseExited(java.awt.event.MouseEvent evt) {
+            Timer timer = new Timer(1000, new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    popupMenu.setVisible(false);
+                }
+            });
+            timer.start();
+            timer.setRepeats(false);
+                
+        }
+    });
+    
+}
+
 }

@@ -36,42 +36,45 @@ public class MainPanelDriver{
 
     public MainPanelDriver() throws IOException {
         mainPanel = new MainDashboardPanel(this);
+        input.getInput();
     }
     
-    public static void initializeArrays() throws IOException{
-       input.getInput();
-
-       int numberOfEntries = input.results.size();
-       int index = 0;
+    public static void initializeArrays(){
+        int numberOfEntries = input.results.size();
+        int index = 0;
        
-       bomData = new String[numberOfEntries][15]; 
+        bomData = new String[numberOfEntries][15]; 
         
-       for(JsonObject result : input.results.getValuesAs(JsonObject.class)){
+        for(JsonObject result : input.results.getValuesAs(JsonObject.class)){
             String time = String.valueOf(result.getString("local_date_time"));
             String sub = time.substring(7, 8);
+            //Only observations that are recorder at a time multiple of 10 eg. 11:20
+            //will be stored.
+            //This could be refined to be ending in 30 or 00 for half hour 
+            //interval records only
             if(sub.equals("0")){
                 bomData[index][sortOrder] = String.valueOf(result.getInt("sort_order"));
-                bomData[index][air] = String.valueOf(result.getJsonNumber("air_temp").doubleValue());
-                bomData[index][apparentTemp] = String.valueOf(result.getJsonNumber("apparent_t").doubleValue());
-                bomData[index][dewPoint] = String.valueOf(result.getJsonNumber("dewpt").doubleValue());
-                bomData[index][relativeHumidity] = String.valueOf(result.getJsonNumber("rel_hum").doubleValue());
-                bomData[index][deltaT] = String.valueOf(result.getJsonNumber("delta_t").doubleValue());
-                bomData[index][windDirection] = String.valueOf(result.getString("wind_dir"));
-                bomData[index][windSpeedKmh] = String.valueOf(result.getJsonNumber("wind_spd_kmh").doubleValue());
-                bomData[index][windGustsKmh] = String.valueOf(result.getJsonNumber("gust_kmh").doubleValue());
-                bomData[index][windSpeedKnots] = String.valueOf(result.getJsonNumber("wind_spd_kt").doubleValue());
-                bomData[index][windGustsKnots] = String.valueOf(result.getJsonNumber("gust_kt").doubleValue());
-                bomData[index][pressQnh] = String.valueOf(result.getJsonNumber("press_qnh").doubleValue());
-                bomData[index][pressMsl] = String.valueOf(result.getJsonNumber("press_msl").doubleValue());
-                bomData[index][rainSince] = String.valueOf(result.getString("rain_trace"));
-                bomData[index][dateTime] = String.valueOf(result.getString("local_date_time"));
+                processJsonDoubleValue(index, result, "air_temp", air);
+                processJsonDoubleValue(index, result, "apparent_t", apparentTemp);
+                processJsonDoubleValue(index, result, "dewpt", dewPoint);
+                processJsonDoubleValue(index, result, "rel_hum", relativeHumidity);
+                processJsonDoubleValue(index, result, "delta_t", deltaT);
+                processJsonString(index, result, "wind_dir", windDirection);
+                processJsonDoubleValue(index, result, "wind_spd_kmh", windSpeedKmh);
+                processJsonDoubleValue(index, result, "gust_kmh", windGustsKmh);
+                processJsonDoubleValue(index, result, "wind_spd_kt", windSpeedKnots);
+                processJsonDoubleValue(index, result, "gust_kt", windGustsKnots);
+                processJsonDoubleValue(index, result, "press_qnh", pressQnh);
+                processJsonDoubleValue(index, result, "press_msl", pressMsl);
+                processJsonString(index, result, "rain_trace", rainSince);
+                processJsonString(index, result, "local_date_time", dateTime);
             index++;
             }
         }
        displayOutputToLabel();
     }
     
-    public static void displayOutputToLabel(){
+    private static void displayOutputToLabel(){
         String time = String.valueOf(bomData[0][dateTime]);
         
         mainPanel.label2[sortOrder].setText(String.valueOf(bomData[0][sortOrder]));
@@ -92,4 +95,23 @@ public class MainPanelDriver{
         System.out.println("displayed");
     }
     
+    //Checks for null values and replaces them with a zero
+    private static void processJsonDoubleValue(int index, JsonObject result, String observationName, int observationIndex){
+        if(result.isNull(observationName)){
+            System.out.println("Warning value is null");
+            bomData[index][observationIndex] = "0";
+        } else {
+            bomData[index][observationIndex] = String.valueOf(result.getJsonNumber(observationName).doubleValue());
+        }
+    }
+    
+    //Checks for null values and replaces them with ""
+    private static void processJsonString(int index, JsonObject result, String observationName, int observationIndex){
+        if(result.isNull(observationName) || result.getString(observationName).equals("-")){
+            System.out.println("Warning value is null");
+            bomData[index][observationIndex] = "0";
+        } else {
+            bomData[index][observationIndex] = String.valueOf(result.getString(observationName));
+        }
+    }
 }
