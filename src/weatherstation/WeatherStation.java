@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import weatherstation.panels.GraphPanel;
 import weatherstation.panels.PostcodePanel;
+import weatherstation.utilities.HomePostCodeStorage;
 import weatherstation.utilities.PrepareStationData;
 import weatherstation.utilities.ZipReader;
 
@@ -107,6 +108,8 @@ public class WeatherStation implements ActionListener{
     public static JPanel navigationPanel;
     public static JPanel conditionsTimePanel;
     
+    public static HomePostCodeStorage postcodeStore;
+    
     public static ArrayList<ArrayList<String>> stationDataRows = new ArrayList<>();
 
      
@@ -139,6 +142,7 @@ public class WeatherStation implements ActionListener{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(HEIGHT,WIDTH));
         WeatherStation calcSuite = new WeatherStation();
+        prepareData();
         calcSuite.addComponentToPane(frame.getContentPane());
         frame.pack();
         frame.setLocationRelativeTo( null );
@@ -150,11 +154,11 @@ public class WeatherStation implements ActionListener{
             }
         });
         
-        prepareData();
+        
         
     }
     private static void prepareData(){
-        
+        postcodeStore = new HomePostCodeStorage();
 
         //run the zip reader
         try {
@@ -167,9 +171,16 @@ public class WeatherStation implements ActionListener{
         }
     }
     private void addCardsToDeck(MainPanelDriver driver){
-        cards.add(postCodePanel, "Postcode");
-        cards.add(driver.mainPanel, "Main");
-        cards.add(graphPanel, "Graph");
+        if(postcodeStore.getHomePostcode().equals("none")){
+            cards.add(postCodePanel, "Postcode");
+            cards.add(driver.mainPanel, "Main");
+            cards.add(graphPanel, "Graph");
+        } else {
+            cards.add(driver.mainPanel, "Main");
+            cards.add(graphPanel, "Graph");
+            cards.add(postCodePanel, "Postcode");
+        }
+        
     }
     private void initializeButtons(){
         button[NAVIGATION_BUTTON] = new JButton("Graphs");

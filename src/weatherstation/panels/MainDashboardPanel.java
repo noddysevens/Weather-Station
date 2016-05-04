@@ -25,6 +25,7 @@ import weatherstation.WeatherStation;
 import static weatherstation.WeatherStation.cards;
 import static weatherstation.WeatherStation.postCodePanel;
 import weatherstation.utilities.CollectInput;
+import weatherstation.utilities.HomePostCodeStorage;
 
 /**
  * Class info: This class is the main dashboard panel
@@ -130,7 +131,7 @@ public class MainDashboardPanel extends JPanel{
     }
     private void initializeButtons() {
         button[imageButton] = new JButton();
-        button[changeHomeCode] = new JButton("Change Home Station");
+        button[changeHomeCode] = new JButton("Set this station as home");
         button[viewNewCode] = new JButton("View different Station");
         
         for (int i = 0; i < NUMBER_OF_BUTTONS; i++){
@@ -149,6 +150,9 @@ public class MainDashboardPanel extends JPanel{
                         postCodePanel.postcodeInputField.setText("Postcode: eg. 3066");
                         postCodePanel.goButton.grabFocus();
                         postCodePanel.goButton.requestFocus();
+                    }
+                    if(e.getSource() == button[changeHomeCode]){
+                        HomePostCodeStorage.setHomePostcode(postCodePanel.postcodeInputField.getText());
                     }
                 }
             });
