@@ -190,13 +190,11 @@ public class WeatherStation implements ActionListener{
         
         
         timer = new Timer(60000, new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
+                @Override
+                public void actionPerformed(ActionEvent e) {
                     MainPanelDriver.initializeArrays();
-                } catch (IOException ex) {}
-            }
-        });
+                }
+            });
         timer.setInitialDelay(1000);
         timer.start(); 
         
