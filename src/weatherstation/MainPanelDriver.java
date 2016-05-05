@@ -37,6 +37,7 @@ public class MainPanelDriver{
     public MainPanelDriver() throws IOException {
         mainPanel = new MainDashboardPanel(this);
         input.getInput();
+        initializeArrays();
     }
     
     public static void initializeArrays(){

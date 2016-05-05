@@ -19,7 +19,7 @@ public class StationBlacklist {
     static File file;
     static ArrayList<Integer> list;
     
-    public StationBlacklist(){
+    public StationBlacklist() {
         file = new File("blacklist.txt");
         list = new ArrayList<>();
         readBlacklist();
@@ -30,6 +30,9 @@ public class StationBlacklist {
     }
     private void readBlacklist(){
         try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = reader.readLine();
             while (line != null) {
@@ -49,6 +52,9 @@ public class StationBlacklist {
     public static void addToBlacklist(int WMO){
         list.add(WMO);
         try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
             BufferedWriter fileOutput = new BufferedWriter(new FileWriter(file, true));
             fileOutput.newLine();
             fileOutput.append("" + WMO);

@@ -32,7 +32,7 @@ public class PostcodePanel extends JPanel {
     public static JTextField postcodeInputField;                 
     private Point point = new Point();
     private int maxStringLength;
-    private boolean firstRun = true;
+    public boolean firstRun = true;
     
     public PostcodePanel() {
         initComponents();

@@ -24,6 +24,7 @@ import static weatherstation.MainPanelDriver.dateTime;
 import weatherstation.WeatherStation;
 import static weatherstation.WeatherStation.cards;
 import static weatherstation.WeatherStation.postCodePanel;
+import static weatherstation.WeatherStation.progressPanel;
 import weatherstation.utilities.CollectInput;
 import weatherstation.utilities.HomePostCodeStorage;
 
@@ -81,7 +82,7 @@ public class MainDashboardPanel extends JPanel{
     private int changeHomeCode = 1;
     private int viewNewCode = 2;
 
-    private JPopupMenu popupMenu;
+    public static JPopupMenu popupMenu;
     
     public MainDashboardPanel(MainPanelDriver driver) throws IOException {
         initialiseComponents();
@@ -153,12 +154,17 @@ public class MainDashboardPanel extends JPanel{
                     }
                     if(e.getSource() == button[changeHomeCode]){
                         HomePostCodeStorage.setHomePostcode(postCodePanel.postcodeInputField.getText());
+                        MainDashboardPanel.popupMenu.setVisible(false);
+                        CardLayout cl = (CardLayout)(cards.getLayout());
+                        progressPanel = new CircularProgressBar();
+                        cards.add(progressPanel, "Progress");
+                        cl.show(cards, "Progress");
                     }
                 }
             });
         }
         
-        menu = new ImageIcon("menu.png");
+        menu = new ImageIcon("src/weatherstation/img/menu.png");
         button[imageButton].setIcon(menu);
         button[imageButton].setMargin(new Insets(0,0,0,0));
         button[imageButton].setContentAreaFilled(false);

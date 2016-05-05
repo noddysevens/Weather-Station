@@ -12,6 +12,7 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonString;
 import weatherstation.WeatherStation;
+import static weatherstation.WeatherStation.postcodeStore;
 
 
 /**
@@ -40,8 +41,10 @@ public class CollectInput{
         String wmoCode = "";
         if(validWMO.size() > 0){
             int index = 0;
+            
+            //throws excetion due to remove item. create a copy and modify this the assign copy over original to solve. 
             for(String code : validWMO){
-                results = getObservations(code);
+                getObservations(code);
                 if(containsNullObservations(results)){
                     blacklist.addToBlacklist(Integer.parseInt(code));
                     validWMO.remove(index);
@@ -49,21 +52,8 @@ public class CollectInput{
                 index++;
             }
         } else {
-            System.out.println("No WMOs");
-            wmoCode = "95551";
-            results = getObservations(wmoCode);
-        }
-        if(validWMO.size() > 1){
-            System.out.println("More than one valid station");
-            results = getObservations(validWMO.get(0));
-            System.out.println("");
-            //add feature to get user to seklecet which station they want
-        } else if(validWMO.size() == 1){
-            results = getObservations(validWMO.get(0));
-        } else {
-            System.out.println("No WMOs");
-            wmoCode = "95551";
-            results = getObservations(wmoCode);
+            getPostcodeInfo(postcodeStore.getHomePostcode());
+            getObservations(validWMO.get(0));
         }
         
         
@@ -213,7 +203,7 @@ public class CollectInput{
         }
         return containsNull;
     }
-    private static JsonArray getObservations(String WMOCode){
+    private static void getObservations(String WMOCode){
         try {
             url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" 
                     + stateCode + "." + WMOCode + ".json");
@@ -227,16 +217,17 @@ public class CollectInput{
 
             inputStream = httpcon.getInputStream();
             //inputStream = url.openStream();
+            JsonReader reader = Json.createReader(inputStream);
+            JsonObject object = reader.readObject();
+            JsonObject object1 = object.getJsonObject("observations");
+            results = object1.getJsonArray("data");
         } catch(IOException ex){
             System.out.println("");            
             validWMO.remove(WMOCode);
             blacklist.addToBlacklist(Integer.parseInt(WMOCode));
             System.out.println(ex);
         }
-    
-        JsonReader reader = Json.createReader(inputStream);
-        JsonObject object = reader.readObject();
-        JsonObject object1 = object.getJsonObject("observations");
-        return object1.getJsonArray("data");
+        
+        
     }
 }

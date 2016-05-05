@@ -21,8 +21,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import weatherstation.panels.CircularProgressBar;
 import weatherstation.panels.GraphPanel;
+import weatherstation.panels.MainDashboardPanel;
 import weatherstation.panels.PostcodePanel;
+import weatherstation.utilities.CollectInput;
 import weatherstation.utilities.HomePostCodeStorage;
 import weatherstation.utilities.PrepareStationData;
 import weatherstation.utilities.ZipReader;
@@ -61,6 +64,7 @@ public class WeatherStation implements ActionListener{
     public static PostcodePanel postCodePanel = new PostcodePanel();
     private GraphPanel graphPanel = new GraphPanel();
     MainPanelDriver driver;
+    public static CircularProgressBar progressPanel;
     
     
     public static JFrame frame = new JFrame("Oz Weather");
@@ -110,8 +114,12 @@ public class WeatherStation implements ActionListener{
     
     public static HomePostCodeStorage postcodeStore;
     
-    public static ArrayList<ArrayList<String>> stationDataRows = new ArrayList<>();
-
+    public static ArrayList<ArrayList<String>> stationDataRows;
+    
+    public WeatherStation() throws IOException{
+        postcodeStore = new HomePostCodeStorage();
+        stationDataRows = new ArrayList<>();
+    }
      
     public static void main(String[] Args) throws IOException{
         frame.addMouseListener(new MouseAdapter() {
@@ -153,13 +161,8 @@ public class WeatherStation implements ActionListener{
                 postCodePanel.goButton.requestFocus();
             }
         });
-        
-        
-        
     }
     private static void prepareData(){
-        postcodeStore = new HomePostCodeStorage();
-
         //run the zip reader
         try {
             ZipReader.readZip();
@@ -170,35 +173,11 @@ public class WeatherStation implements ActionListener{
             System.out.println(ex);
         }
     }
-    private void addCardsToDeck(MainPanelDriver driver){
-        if(postcodeStore.getHomePostcode().equals("none")){
-            cards.add(postCodePanel, "Postcode");
-            cards.add(driver.mainPanel, "Main");
-            cards.add(graphPanel, "Graph");
-        } else {
-            cards.add(driver.mainPanel, "Main");
-            cards.add(graphPanel, "Graph");
-            cards.add(postCodePanel, "Postcode");
-        }
-        
-    }
-    private void initializeButtons(){
-        button[NAVIGATION_BUTTON] = new JButton("Graphs");
-        button[MINIMIZE] = new JButton("-");
-        button[CLOSE] = new JButton("X");
-        
-        for(int i = 0; i < NUMBER_OF_BUTTONS; i++){
-            button[i].setBackground(darkBlue);
-            button[i].setForeground(Color.WHITE);
-            button[i].setBorderPainted(false);
-            button[i].addActionListener(this);
-            button[i].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
-        }
-        button[MINIMIZE].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM_LARGE.value));
-    }
+    
     private void addComponentToPane(Container pane) throws IOException {
         initializeButtons(); 
         
+        driver = new MainPanelDriver();
         
         timer = new Timer(60000, new ActionListener(){
                 @Override
@@ -206,13 +185,14 @@ public class WeatherStation implements ActionListener{
                     MainPanelDriver.initializeArrays();
                 }
             });
-        timer.setInitialDelay(1000);
         timer.start(); 
         
         conditionsTimePanel = new JPanel();
         conditionsTimePanel.setBackground(darkBlue);
         
-        driver = new MainPanelDriver();
+        navigationPanel = new JPanel();
+        navigationPanel.add(button[NAVIGATION_BUTTON]);
+        navigationPanel.setBackground(BACKGROUND_COLOUR);
         
         cards = new JPanel(new CardLayout());
         addCardsToDeck(driver);
@@ -229,12 +209,51 @@ public class WeatherStation implements ActionListener{
         controls.add(topSub, BorderLayout.CENTER);
         controls.add(button[CLOSE], BorderLayout.LINE_END);
         
-        navigationPanel = new JPanel();
-        navigationPanel.add(button[NAVIGATION_BUTTON]);
-        navigationPanel.setBackground(BACKGROUND_COLOUR);
-        
         pane.add(controls , BorderLayout.NORTH);
         pane.add(cards, BorderLayout.CENTER);
+    }
+    
+    private void initializeButtons(){
+        button[NAVIGATION_BUTTON] = new JButton("Graphs");
+        button[MINIMIZE] = new JButton("-");
+        button[CLOSE] = new JButton("X");
+        
+        for(int i = 0; i < NUMBER_OF_BUTTONS; i++){
+            button[i].setBackground(darkBlue);
+            button[i].setForeground(Color.WHITE);
+            button[i].setBorderPainted(false);
+            button[i].addActionListener(this);
+            button[i].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
+        }
+        button[MINIMIZE].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM_LARGE.value));
+    }
+    
+    
+    private void addCardsToDeck(MainPanelDriver driver){
+        if(postcodeStore.getHomePostcode().equals("none")){
+            cards.add(postCodePanel, "Postcode");
+            cards.add(driver.mainPanel, "Main");
+            cards.add(graphPanel, "Graph");
+        } else {
+            cards.add(driver.mainPanel, "Main");
+            cards.add(graphPanel, "Graph");
+            cards.add(postCodePanel, "Postcode");
+            
+            conditionsTimePanel.add(MainDashboardPanel.labelPanel[dateTime]);
+            frame.getContentPane().add(navigationPanel, BorderLayout.SOUTH);
+            button[NAVIGATION_BUTTON].grabFocus();
+            button[NAVIGATION_BUTTON].requestFocus();
+            button[NAVIGATION_BUTTON].setText("Graph");
+            
+            if(CollectInput.stationName.length() > 25){
+                CollectInput.stationName = CollectInput.stationName.substring(0, 25);
+            }
+
+            MainDashboardPanel.label[MainDashboardPanel.topLabel].setText(CollectInput.stationName + " at ");
+            
+            postCodePanel.firstRun = false;
+        }
+        
     }
 
     @Override
