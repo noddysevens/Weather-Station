@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import static weatherstation.MainPanelDriver.dateTime;
+import weatherstation.WeatherStation;
 import static weatherstation.WeatherStation.cards;
 
 /**
@@ -77,6 +79,8 @@ public class CircularProgressBar extends JPanel{
                 timer.stop();
                 CardLayout cl = (CardLayout)(cards.getLayout());
                 cl.show(cards, "Main");
+                WeatherStation.navigationPanel.setVisible(true);
+                MainDashboardPanel.labelPanel[dateTime].setVisible(true);
             }
             
         }

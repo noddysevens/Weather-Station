@@ -22,7 +22,7 @@ public class HomePostCodeStorage {
         readHomePostCode();
     }
     
-    public String getHomePostcode(){
+    public static String getHomePostcode(){
         return homePostcode;
     }
     private void readHomePostCode(){

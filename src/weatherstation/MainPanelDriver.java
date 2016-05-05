@@ -9,7 +9,6 @@ import weatherstation.utilities.CollectInput;
  * Class info: This class drives the MainDashboardPanel
  * Author: David (NoddySevens) Programmer
  * E-mail Address: noddysevens@gmail.com
- * Last Changed: 26-Apr-2016
  */
 public class MainPanelDriver{
     static CollectInput input = new CollectInput();

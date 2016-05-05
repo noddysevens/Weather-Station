@@ -154,8 +154,15 @@ public class MainDashboardPanel extends JPanel{
                         postCodePanel.goButton.requestFocus();
                     }
                     if(e.getSource() == button[changeHomeCode]){
-                        HomePostCodeStorage.setHomePostcode(postCodePanel.postcodeInputField.getText());
+                        if(postCodePanel.postcodeInputField.getText().equals("Postcode: eg. 3066")){
+                            HomePostCodeStorage.setHomePostcode(HomePostCodeStorage.getHomePostcode());
+                        } else {
+                            HomePostCodeStorage.setHomePostcode(postCodePanel.postcodeInputField.getText());
+                        }
                         MainDashboardPanel.popupMenu.setVisible(false);
+                        WeatherStation.navigationPanel.setVisible(false);
+                        MainDashboardPanel.labelPanel[dateTime].setVisible(false);
+                        
                         CardLayout cl = (CardLayout)(cards.getLayout());
                         progressPanel = new CircularProgressBar();
                         cards.add(progressPanel, "Progress");
