@@ -30,7 +30,7 @@ public class CollectInput{
     public static JsonArray results;
     static URL url;
     public static ArrayList<String> validWMO = new ArrayList<>();
-    public static String stationName = "";
+    public static ArrayList<String> stationName = new ArrayList<>();
     public static String stateCode = "IDQ60801";
     private static StationBlacklist blacklist;
     
@@ -41,15 +41,18 @@ public class CollectInput{
         String wmoCode = "";
         if(validWMO.size() > 0){
             int index = 0;
-            
-            //throws excetion due to remove item. create a copy and modify this the assign copy over original to solve. 
+            ArrayList<String> tempList = new ArrayList<>();
+            //Copy the list
             for(String code : validWMO){
-                getObservations(code);
-                if(containsNullObservations(results)){
-                    blacklist.addToBlacklist(Integer.parseInt(code));
-                    validWMO.remove(index);
-                }
+                tempList.add(code);
+            }
+            for(String code : validWMO){
+                getObservations(code, tempList, index);
                 index++;
+            }
+            validWMO.clear();
+            for(String code : tempList){
+                validWMO.add(code);
             }
         } else {
             getPostcodeInfo(postcodeStore.getHomePostcode());
@@ -100,9 +103,11 @@ public class CollectInput{
                             if(blacklist.isOnBlacklist(Integer.parseInt(WMO))){
                                 System.out.println("This station is on the blacklist");
                             } else {
-                                validWMO.add(WMO);
-                                stationName = list.get(1);
-                                System.out.println(stationName);
+                                if(isValidWMO(WMO)){
+                                    validWMO.add(WMO);
+                                    stationName.add(list.get(1));
+                                    System.out.println(stationName.get(stationName.size() - 1));
+                                }
                             }
                         }
                     }               
@@ -203,6 +208,7 @@ public class CollectInput{
         }
         return containsNull;
     }
+    
     private static void getObservations(String WMOCode){
         try {
             url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" 
@@ -224,10 +230,70 @@ public class CollectInput{
         } catch(IOException ex){
             System.out.println("");            
             validWMO.remove(WMOCode);
+            stationName.remove(0);
             blacklist.addToBlacklist(Integer.parseInt(WMOCode));
             System.out.println(ex);
         }
-        
-        
     }
+    
+    private static void getObservations(String WMOCode, ArrayList<String> tempList, int index){
+        try {
+            url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" 
+                    + stateCode + "." + WMOCode + ".json");
+        }catch(MalformedURLException ex){
+            System.out.println("");
+        }
+        
+        try {
+            HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
+            httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
+
+            inputStream = httpcon.getInputStream();
+            //inputStream = url.openStream();
+            JsonReader reader = Json.createReader(inputStream);
+            JsonObject object = reader.readObject();
+            JsonObject object1 = object.getJsonObject("observations");
+            results = object1.getJsonArray("data");
+        } catch(IOException ex){
+            System.out.println("");            
+            tempList.remove(WMOCode);
+            stationName.remove(index);
+            blacklist.addToBlacklist(Integer.parseInt(WMOCode));
+            System.out.println(ex);
+        }
+    }
+    
+    private static boolean isValidWMO(String WMOCode){
+        boolean validity = true;
+        //check observations
+        try {
+            url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" 
+                    + stateCode + "." + WMOCode + ".json");
+        }catch(MalformedURLException ex){
+            System.out.println("");
+        }
+        
+        try {
+            HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
+            httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
+
+            inputStream = httpcon.getInputStream();
+            //inputStream = url.openStream();
+            JsonReader reader = Json.createReader(inputStream);
+            JsonObject object = reader.readObject();
+            JsonObject object1 = object.getJsonObject("observations");
+            results = object1.getJsonArray("data");
+        } catch(IOException ex){          
+            blacklist.addToBlacklist(Integer.parseInt(WMOCode));
+            System.out.println(ex);
+            validity = false;
+        }
+        if(containsNullObservations(results)){
+            blacklist.addToBlacklist(Integer.parseInt(WMOCode));
+            validity = false;
+        } 
+        return validity;
+    }
+    
+    
 }

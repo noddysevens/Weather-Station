@@ -188,11 +188,11 @@ public class PostcodePanel extends JPanel {
         MainPanelDriver.initializeArrays();
 
         
-        if(CollectInput.stationName.length() > maxStringLength){
-            CollectInput.stationName = CollectInput.stationName.substring(0, maxStringLength);
+        if(CollectInput.stationName.get(0).length() > maxStringLength){
+            CollectInput.stationName.set(0, CollectInput.stationName.get(0).substring(0, maxStringLength));
         }
         
-        MainDashboardPanel.label[topLabel].setText(CollectInput.stationName + " at ");
+        MainDashboardPanel.label[topLabel].setText(CollectInput.stationName.get(0) + " at ");
     }
     
     private void repeatingAction(){
@@ -220,10 +220,10 @@ public class PostcodePanel extends JPanel {
         CollectInput.getInput();
         MainPanelDriver.initializeArrays();
 
-        if(CollectInput.stationName.length() > maxStringLength){
-            CollectInput.stationName = CollectInput.stationName.substring(0, maxStringLength);
+        if(CollectInput.stationName.get(0).length() > maxStringLength){
+            CollectInput.stationName.set(0, CollectInput.stationName.get(0).substring(0, maxStringLength));
         }
         
-        MainDashboardPanel.label[topLabel].setText(CollectInput.stationName + " at ");
+        MainDashboardPanel.label[topLabel].setText(CollectInput.stationName.get(0) + " at ");
     }
 }

@@ -245,11 +245,11 @@ public class WeatherStation implements ActionListener{
             button[NAVIGATION_BUTTON].requestFocus();
             button[NAVIGATION_BUTTON].setText("Graph");
             
-            if(CollectInput.stationName.length() > 25){
-                CollectInput.stationName = CollectInput.stationName.substring(0, 25);
-            }
+            if(CollectInput.stationName.get(0).length() > 20){
+            CollectInput.stationName.set(0, CollectInput.stationName.get(0).substring(0, 20));
+        }
 
-            MainDashboardPanel.label[MainDashboardPanel.topLabel].setText(CollectInput.stationName + " at ");
+            MainDashboardPanel.label[MainDashboardPanel.topLabel].setText(CollectInput.stationName.get(0) + " at ");
             
             postCodePanel.firstRun = false;
         }

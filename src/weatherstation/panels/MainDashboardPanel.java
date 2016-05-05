@@ -145,6 +145,7 @@ public class MainDashboardPanel extends JPanel{
                         CardLayout cl = (CardLayout)(cards.getLayout());
                         cl.show(cards, "Postcode");
                         CollectInput.validWMO.clear();
+                        CollectInput.stationName.clear();
                         WeatherStation.navigationPanel.setVisible(false);
                         MainDashboardPanel.labelPanel[dateTime].setVisible(false);
                         popupMenu.setVisible(false);
