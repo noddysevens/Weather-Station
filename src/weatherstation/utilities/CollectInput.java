@@ -12,7 +12,6 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonString;
 import weatherstation.WeatherStation;
-import static weatherstation.WeatherStation.postcodeStore;
 
 
 /**
@@ -37,30 +36,6 @@ public class CollectInput{
     public CollectInput(){
         blacklist = new StationBlacklist();
     }
-    public static void getInput() {
-        String wmoCode = "";
-        if(validWMO.size() > 0){
-            int index = 0;
-            ArrayList<String> tempList = new ArrayList<>();
-            //Copy the list
-            for(String code : validWMO){
-                tempList.add(code);
-            }
-            for(String code : validWMO){
-                getObservations(code, tempList, index);
-                index++;
-            }
-            validWMO.clear();
-            for(String code : tempList){
-                validWMO.add(code);
-            }
-        } else {
-            getPostcodeInfo(postcodeStore.getHomePostcode());
-            getObservations(validWMO.get(0));
-        }
-        
-        
-    }
     
     public static void getPostcodeInfo(String postcode) {
         try {
@@ -72,7 +47,7 @@ public class CollectInput{
             httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 
             inputStream = httpcon.getInputStream();
-            //inputStream = url.openStream();
+
         } catch(IOException ex){
             System.out.println(ex);
         }
@@ -120,8 +95,6 @@ public class CollectInput{
         rdr = null;
         obj = null;
         results = null;
-      
-        //System.out.println("");
     }
     private static String checkState(String postcode){
         String state = "";
@@ -209,7 +182,7 @@ public class CollectInput{
         return containsNull;
     }
     
-    private static void getObservations(String WMOCode){
+    public static void getObservations(String WMOCode){
         try {
             url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" 
                     + stateCode + "." + WMOCode + ".json");
@@ -222,7 +195,7 @@ public class CollectInput{
             httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 
             inputStream = httpcon.getInputStream();
-            //inputStream = url.openStream();
+
             JsonReader reader = Json.createReader(inputStream);
             JsonObject object = reader.readObject();
             JsonObject object1 = object.getJsonObject("observations");
@@ -231,33 +204,6 @@ public class CollectInput{
             System.out.println("");            
             validWMO.remove(WMOCode);
             stationName.remove(0);
-            blacklist.addToBlacklist(Integer.parseInt(WMOCode));
-            System.out.println(ex);
-        }
-    }
-    
-    private static void getObservations(String WMOCode, ArrayList<String> tempList, int index){
-        try {
-            url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" 
-                    + stateCode + "." + WMOCode + ".json");
-        }catch(MalformedURLException ex){
-            System.out.println("");
-        }
-        
-        try {
-            HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
-            httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
-
-            inputStream = httpcon.getInputStream();
-            //inputStream = url.openStream();
-            JsonReader reader = Json.createReader(inputStream);
-            JsonObject object = reader.readObject();
-            JsonObject object1 = object.getJsonObject("observations");
-            results = object1.getJsonArray("data");
-        } catch(IOException ex){
-            System.out.println("");            
-            tempList.remove(WMOCode);
-            stationName.remove(index);
             blacklist.addToBlacklist(Integer.parseInt(WMOCode));
             System.out.println(ex);
         }
@@ -278,7 +224,7 @@ public class CollectInput{
             httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 
             inputStream = httpcon.getInputStream();
-            //inputStream = url.openStream();
+            
             JsonReader reader = Json.createReader(inputStream);
             JsonObject object = reader.readObject();
             JsonObject object1 = object.getJsonObject("observations");

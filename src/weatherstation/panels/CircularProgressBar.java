@@ -24,19 +24,29 @@ import static weatherstation.WeatherStation.cards;
  */
 public class CircularProgressBar extends JPanel{
     private final static int MAX_PROGRESS_AMOUNT = 100;
-    private static final int DELAY = 15;
+    private static int delay = 15;
     private static final double FRACTION = 0.9;
-    private Timer timer;
+    public static Timer timer;
     private int prgValue = 0;
     private int width = 200;
     private int height = 200;
-    
+    private String displayString;
 
     public CircularProgressBar() {
-          timer = new Timer(DELAY, new MyChangeListener());
+          timer = new Timer(delay, new MyChangeListener());
           timer.setInitialDelay(100);
           timer.start();
+          displayString = "Setting Home PostCode";
           setBackground(new Color(0,86,150));
+    }
+    
+    public CircularProgressBar(String display, int delay) {
+        CircularProgressBar.delay = delay;
+        timer = new Timer(CircularProgressBar.delay, new MyChangeListener());
+        timer.setInitialDelay(100);
+        timer.start();
+        displayString = display;
+        setBackground(new Color(0,86,150));
     }
 
     @Override
@@ -64,12 +74,12 @@ public class CircularProgressBar extends JPanel{
         g.setColor(Color.WHITE);
         g.setFont(new Font("Century Gothic", Font.BOLD, 12));
         FontMetrics metrics = g.getFontMetrics();
-        int labelWidth = metrics.stringWidth("Setting Home PostCode");
-        g.drawString("Setting Home PostCode", getWidth() / 2 - labelWidth / 2, getHeight() / 2 + 150);
+        int labelWidth = metrics.stringWidth(displayString);
+        g.drawString(displayString, getWidth() / 2 - labelWidth / 2, getHeight() / 2 + 150);
           
 
     }
-
+    
     class MyChangeListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent arg0) {

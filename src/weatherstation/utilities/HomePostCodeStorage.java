@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import weatherstation.panels.MainDashboardPanel;
 
 /**
  * Program info: This class stores and modifies the home postcode
@@ -27,10 +26,12 @@ public class HomePostCodeStorage {
     }
     private void readHomePostCode(){
         try {
+            /*
             if (!file.exists()) {
                 file.createNewFile();
                 setHomePostcode("4350");
             }
+            */
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = reader.readLine();
             while (line != null) {
@@ -38,6 +39,7 @@ public class HomePostCodeStorage {
                 line = reader.readLine();
             }
             reader.close();
+            //PostcodePanel.firstRun = false;
         } catch (IOException ex) {
             homePostcode = "none";
         }

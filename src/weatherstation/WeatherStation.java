@@ -21,11 +21,16 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import static weatherstation.MainPanelDriver.dateTime;
 import weatherstation.panels.CircularProgressBar;
 import weatherstation.panels.GraphPanel;
 import weatherstation.panels.MainDashboardPanel;
+import static weatherstation.panels.MainDashboardPanel.topLabel;
+import weatherstation.panels.MultiPostCodeSelectPanel;
 import weatherstation.panels.PostcodePanel;
+import static weatherstation.panels.PostcodePanel.postcodeInputField;
 import weatherstation.utilities.CollectInput;
+import static weatherstation.utilities.CollectInput.validWMO;
 import weatherstation.utilities.HomePostCodeStorage;
 import weatherstation.utilities.PrepareStationData;
 import weatherstation.utilities.ZipReader;
@@ -62,6 +67,7 @@ public class WeatherStation implements ActionListener{
     public static JPanel cards;
     public static DrawingPanel drawingPanel = new DrawingPanel();
     public static PostcodePanel postCodePanel = new PostcodePanel();
+    public static MultiPostCodeSelectPanel postCodeSelectPanel;
     private GraphPanel graphPanel = new GraphPanel();
     MainPanelDriver driver;
     public static CircularProgressBar progressPanel;
@@ -234,26 +240,47 @@ public class WeatherStation implements ActionListener{
             cards.add(postCodePanel, "Postcode");
             cards.add(driver.mainPanel, "Main");
             cards.add(graphPanel, "Graph");
+            cards.add(postCodeSelectPanel, "postCodeSelect");
         } else {
             cards.add(driver.mainPanel, "Main");
             cards.add(graphPanel, "Graph");
             cards.add(postCodePanel, "Postcode");
-            
+            postCodeSelectPanel = new MultiPostCodeSelectPanel();
+            cards.add(postCodeSelectPanel, "postCodeSelect");
             conditionsTimePanel.add(MainDashboardPanel.labelPanel[dateTime]);
             frame.getContentPane().add(navigationPanel, BorderLayout.SOUTH);
-            button[NAVIGATION_BUTTON].grabFocus();
-            button[NAVIGATION_BUTTON].requestFocus();
-            button[NAVIGATION_BUTTON].setText("Graph");
             
-            if(CollectInput.stationName.get(0).length() > 20){
-            CollectInput.stationName.set(0, CollectInput.stationName.get(0).substring(0, 20));
-        }
-
-            MainDashboardPanel.label[MainDashboardPanel.topLabel].setText(CollectInput.stationName.get(0) + " at ");
-            
-            postCodePanel.firstRun = false;
-        }
+            String postCode = postcodeStore.getHomePostcode();
         
+            int codeUp = Integer.parseInt(postCode);
+            int codeDown = codeUp;
+            CollectInput.getPostcodeInfo(postCode);
+            while(CollectInput.validWMO.isEmpty()){
+                codeUp++;
+                CollectInput.getPostcodeInfo(String.valueOf(codeUp));
+                codeDown--;
+                CollectInput.getPostcodeInfo(String.valueOf(codeDown));
+            }
+            if(validWMO.size() > 1){
+                CardLayout cl = (CardLayout)(cards.getLayout());
+                
+                cl.show(cards, "postCodeSelect");
+                WeatherStation.navigationPanel.setVisible(false);
+                MainDashboardPanel.labelPanel[dateTime].setVisible(false);
+            } else {
+
+                CollectInput.getObservations(validWMO.get(0));
+                MainPanelDriver.initializeArrays();
+
+                if(CollectInput.stationName.get(0).length() > 20){
+                    CollectInput.stationName.set(0, CollectInput.stationName.get(0).substring(0, 20));
+                }
+
+                MainDashboardPanel.label[topLabel].setText(CollectInput.stationName.get(0) + " at ");
+
+                postCodePanel.firstRun = false;
+            }
+        }
     }
 
     @Override
