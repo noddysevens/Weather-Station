@@ -61,7 +61,7 @@ public class MultiPostCodeSelectPanel extends JPanel {
             }
         });
 
-        jLabel2.setFont(new Font("Verdana", 1, 14)); // NOI18N
+        jLabel2.setFont(new Font("Verdana", 1, 14)); 
         jLabel2.setForeground(new Color(255, 255, 255));
         jLabel2.setText("Please select which station to view:");
 
@@ -176,11 +176,6 @@ public class MultiPostCodeSelectPanel extends JPanel {
         
         jComboBox1.setModel(model);
         
-    }                                          
-
-
-    // Variables declaration - do not modify                     
-    
-    // End of variables declaration                   
+    }                       
 }
 

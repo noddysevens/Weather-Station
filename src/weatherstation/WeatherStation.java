@@ -240,6 +240,7 @@ public class WeatherStation implements ActionListener{
             cards.add(postCodePanel, "Postcode");
             cards.add(driver.mainPanel, "Main");
             cards.add(graphPanel, "Graph");
+            postCodeSelectPanel = new MultiPostCodeSelectPanel();
             cards.add(postCodeSelectPanel, "postCodeSelect");
         } else {
             cards.add(driver.mainPanel, "Main");
