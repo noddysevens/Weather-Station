@@ -183,6 +183,7 @@ public class PostcodePanel extends JPanel {
     
     private void repeatingAction(){
         String postCode = postcodeInputField.getText();
+        CollectInput.checkState(postCode);
         
         int codeUp = Integer.parseInt(postCode);
         int codeDown = codeUp;

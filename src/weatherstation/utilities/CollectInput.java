@@ -116,7 +116,7 @@ public class CollectInput{
         }
         
         //qld
-        if(4000 <= code && code <= 4999){
+        else if(4000 <= code && code <= 4999){
             state = "QLD";
             stateCode = STATE_JSON_CODES[QLD];
         } else if(9000 <= code && code <= 9999){
@@ -125,25 +125,25 @@ public class CollectInput{
         } 
         
         //sa
-        if(5000 <= code && code <= 5999){
+        else if(5000 <= code && code <= 5999){
             state = "SA";
             stateCode = STATE_JSON_CODES[SA];
         } 
         
         //tas
-        if(7000 <= code && code <= 7999){
+        else if(7000 <= code && code <= 7999){
             state = "TAS";
             stateCode = STATE_JSON_CODES[TAS];
         } 
         
         //wa
-        if(6000 <= code && code <= 6999){
+        else if(6000 <= code && code <= 6999){
             state = "WA";
             stateCode = STATE_JSON_CODES[WA];
         }
         
         //act
-        if(200 <= code && code <= 299){
+        else if(200 <= code && code <= 299){
             state = "ACT";
             stateCode = STATE_JSON_CODES[ACT];
         } else if(2600 <= code && code <= 2619){
@@ -155,7 +155,7 @@ public class CollectInput{
         }
         
         //vic
-        if(3000 <= code && code <= 3999){
+        else if(3000 <= code && code <= 3999){
             state = "VIC";
             stateCode = STATE_JSON_CODES[VIC];
         } else if(8000 <= code && code <= 8999){
@@ -164,11 +164,14 @@ public class CollectInput{
         }
         
         //nt
-        if(800 <= code && code <= 999){
+        else if(800 <= code && code <= 999){
             state = "NT";
             stateCode = STATE_JSON_CODES[NT];
         }
         
+        else {
+            System.exit(0);
+        }
         return state;
     }
     private static boolean containsNullObservations(JsonArray observations){
