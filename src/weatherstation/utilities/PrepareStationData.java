@@ -16,7 +16,6 @@ import java.util.Scanner;
  * extracted in the next update.
  * Author: David (NoddySevens) Programmer
  * E-mail Address: noddysevens@gmail.com
- * Last Changed: 
  */
 public class PrepareStationData {
 
@@ -24,7 +23,6 @@ public class PrepareStationData {
     
     public static ArrayList<String> stationDataColumns = new ArrayList<>();
     public static ArrayList<ArrayList<String>> stationDataRows = new ArrayList<>();
-    
     
     public static void removeNthLine(String f, int toRemove) throws IOException {
         File directory = new File(System.getProperty("user.dir"));
@@ -65,7 +63,6 @@ public class PrepareStationData {
             while (s2.hasNext()) {
                 values.add(s2.next());
             }
-            try {
             //Process "Site" column
             stationDataColumns.add(values.get(0));
             values.remove(0);
@@ -213,12 +210,6 @@ public class PrepareStationData {
             //add column array to row and clear
             stationDataRows.add(new ArrayList<>(stationDataColumns));
             stationDataColumns.clear();
-
-            } catch(Exception e){
-                System.out.println(e + " " + stationDataRows.size()); 
-                e.printStackTrace();
-                System.exit(0);
-            }
         }
     }
     

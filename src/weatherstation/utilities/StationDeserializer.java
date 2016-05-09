@@ -60,10 +60,8 @@ public class StationDeserializer {
             sd = (StationData) in.readObject();
             in.close();
             fileIn.close();
-        } catch (IOException i){
+        } catch (IOException | ClassNotFoundException i){
             System.out.println(i);
-        } catch (ClassNotFoundException c){
-            System.out.println(c);
         }
         
         System.out.println("Deserialzied station data");

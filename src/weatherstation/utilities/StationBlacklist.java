@@ -19,9 +19,11 @@ public class StationBlacklist {
     public static ArrayList<Integer> getBlacklist(){
         return list;
     }
+    
     public static void addToBlacklist(int WMO){
         list.add(WMO);
     }
+    
     public static boolean isOnBlacklist(int WMO){
         boolean isOnList = false;
         for(int item : list){

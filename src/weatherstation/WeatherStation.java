@@ -24,7 +24,6 @@ import javax.swing.Timer;
 import weatherstation.panels.CircularProgressBar;
 import weatherstation.panels.GraphPanel;
 import weatherstation.panels.MainDashboardPanel;
-import static weatherstation.panels.MainDashboardPanel.topLabel;
 import weatherstation.panels.MultiPostCodeSelectPanel;
 import weatherstation.panels.PostcodePanel;
 import weatherstation.utilities.CollectInput;
@@ -86,21 +85,8 @@ public class WeatherStation implements ActionListener{
     public static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
     public static String[] dataUnits = {"","°C","°C","","%","","","","","","","","","mm",""};
 
-    public int sortOrder = 0;
-    public int air = 1;
-    public int apparentTemp = 2;
-    public int dewPoint = 3;
-    public int relativeHumidity = 4;
-    public int deltaT = 5;
-    public int windDirection = 6;
-    public int windSpeedKmh = 7;
-    public int windGustsKmh = 8;
-    public int windSpeedKnots = 9;
-    public int windGustsKnots = 10;
-    public int pressQnh = 11;
-    public int pressMsl = 12;
-    public int rainSince = 13;
-    public int dateTime = 14;
+    public final int DATETIME_INDEX = 14;
+    public final int TOPLABEL_INDEX = 14;
     
     public WeatherStation() throws IOException{
         point = new Point();
@@ -235,7 +221,7 @@ public class WeatherStation implements ActionListener{
             cards.add(postCodePanel, "Postcode");
             postCodeSelectPanel = new MultiPostCodeSelectPanel();
             cards.add(postCodeSelectPanel, "postCodeSelect");
-            conditionsTimePanel.add(MainDashboardPanel.labelPanel[dateTime]);
+            conditionsTimePanel.add(MainDashboardPanel.labelPanel[DATETIME_INDEX]);
             frame.getContentPane().add(navigationPanel, BorderLayout.SOUTH);
             
             CollectInput.checkState(HomePostCodeStorage.getHomePostcode());
@@ -248,7 +234,7 @@ public class WeatherStation implements ActionListener{
                 homeStationName = homeStationName.substring(0, 20);
             }
 
-            MainDashboardPanel.label[topLabel].setText(homeStationName + " at ");
+            MainDashboardPanel.label[TOPLABEL_INDEX].setText(homeStationName + " at ");
 
             PostcodePanel.firstRun = false;
         }

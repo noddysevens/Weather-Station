@@ -14,9 +14,7 @@ import weatherstation.MainPanelDriver;
 import static weatherstation.MainPanelDriver.dateTime;
 import weatherstation.WeatherStation;
 import static weatherstation.WeatherStation.cards;
-import static weatherstation.WeatherStation.postCodePanel;
 import static weatherstation.WeatherStation.progressPanel;
-import static weatherstation.panels.MainDashboardPanel.topLabel;
 import weatherstation.utilities.CollectInput;
 import static weatherstation.utilities.CollectInput.validWMO;
 import weatherstation.utilities.HomePostCodeStorage;
@@ -28,19 +26,19 @@ import weatherstation.utilities.HomePostCodeStorage;
  * E-mail Address: noddysevens@gmail.com
  */
 public class MultiPostCodeSelectPanel extends JPanel {
-    private JButton jButton1;
-    public static JComboBox jComboBox1;
+    
     private JLabel jLabel1;
     private JLabel jLabel2;
+    private JButton jButton1;
     private int selectedIndex = 0;
+    public static JComboBox jComboBox1;
+    private final int TOPLABEL_INDEX = 14;
+    
     public MultiPostCodeSelectPanel() {
         initComponents();
     }
     
     private void initComponents() {
-        
-
-        
         jLabel1 = new JLabel();
         jComboBox1 = new JComboBox();
         jLabel2 = new JLabel();
@@ -114,14 +112,13 @@ public class MultiPostCodeSelectPanel extends JPanel {
         MainDashboardPanel.labelPanel[dateTime].setVisible(false);
         
         CardLayout cl = (CardLayout)(cards.getLayout());
-        cl = (CardLayout)(cards.getLayout());
         progressPanel = new CircularProgressBar("Preparing Data", 10);
         cards.add(progressPanel, "Progress");
         cl.show(cards, "Progress");
         
-        selectedIndex = WeatherStation.postCodeSelectPanel.jComboBox1.getSelectedIndex();
+        selectedIndex = MultiPostCodeSelectPanel.jComboBox1.getSelectedIndex();
         CollectInput.getObservations(validWMO.get(selectedIndex));
-        HomePostCodeStorage.setCurrentPostcode(postCodePanel.postcodeInputField.getText());
+        HomePostCodeStorage.setCurrentPostcode(PostcodePanel.postcodeInputField.getText());
         HomePostCodeStorage.setCurrentWMO(validWMO.get(selectedIndex));
         HomePostCodeStorage.setCurrentStationName(CollectInput.stationName.get(selectedIndex));
         
@@ -131,7 +128,7 @@ public class MultiPostCodeSelectPanel extends JPanel {
             HomePostCodeStorage.setCurrentStationName(HomePostCodeStorage.getCurrentStationName().substring(0, 20));
         }
         
-        MainDashboardPanel.label[topLabel].setText(HomePostCodeStorage.getCurrentStationName() + " at ");
+        MainDashboardPanel.label[TOPLABEL_INDEX].setText(HomePostCodeStorage.getCurrentStationName() + " at ");
     }                                        
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           

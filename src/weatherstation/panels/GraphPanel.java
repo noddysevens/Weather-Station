@@ -17,19 +17,9 @@ import weatherstation.WeatherStation;
  * Class info: This class drives the drawing panel
  * Author: David (NoddySevens) Java Developer
  * E-mail Address: noddysevens@gmail.com
- * Last Changed: 26 - April - 2016
  */
 
 public class GraphPanel extends JPanel implements ActionListener, PopupMenuListener{
-    
-    private final int FONT_STYLE = Font.BOLD;
-    private final String FONT_FACE = "verdana";
-    public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
-        private final int value;
-        private FONT_SIZE(int value) {
-                this.value = value;
-        }
-    };
     
     public int dataSelectBox = 0;
     public int sortOrder = 0;
@@ -50,12 +40,21 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
     public int topLabel = 14;
     public int graphHeading = 0;
     
-    public static DrawingPanel drawingPanel = new DrawingPanel();
+    private final int FONT_STYLE = Font.BOLD;
+    private final String FONT_FACE = "verdana";
+    public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
+        private final int value;
+        private FONT_SIZE(int value) {
+                this.value = value;
+        }
+    };
 
     private final int NUMBER_OF_LABELS = 1;
     private final int NUMBER_OF_COMBOBOXES = 1;
     private final int NUMBER_OF_LABEL_PANELS = 1;
     private final int NUMBER_OF_COMBOBOX_PANELS = 1;
+    
+    public static DrawingPanel drawingPanel = new DrawingPanel();
     
     public ComboBoxModel[] models = new ComboBoxModel[1];
     public JLabel[] label = new JLabel[NUMBER_OF_LABELS];

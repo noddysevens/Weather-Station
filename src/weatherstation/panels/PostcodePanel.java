@@ -19,13 +19,15 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.LayoutStyle;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.SoftBevelBorder;
 import weatherstation.MainPanelDriver;
 import static weatherstation.MainPanelDriver.dateTime;
 import weatherstation.WeatherStation;
 import static weatherstation.WeatherStation.cards;
 import static weatherstation.WeatherStation.frame;
 import static weatherstation.WeatherStation.progressPanel;
-import static weatherstation.panels.MainDashboardPanel.topLabel;
 import static weatherstation.panels.MultiPostCodeSelectPanel.jComboBox1;
 import weatherstation.utilities.CollectInput;
 import static weatherstation.utilities.CollectInput.validWMO;
@@ -36,12 +38,14 @@ public class PostcodePanel extends JPanel {
     private JLabel title;
     private JLabel instructions;
     private Point point = new Point();
+    public static boolean firstRun = true;
     
     public static JButton goButton;
-    public static boolean firstRun = true;
-    public static JTextField postcodeInputField;                 
+    public static JTextField postcodeInputField;
     
+    private final int TOPLABEL_INDEX = 14;
     private final int MAX_STRING_LENGTH = 20;
+    
     
     public PostcodePanel() {
         initComponents();
@@ -77,7 +81,7 @@ public class PostcodePanel extends JPanel {
         postcodeInputField.setFont(new Font("Verdana", 3, 24)); 
         postcodeInputField.setForeground(new Color(153, 153, 153));
         postcodeInputField.setText("Postcode: eg. 3066");
-        postcodeInputField.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        postcodeInputField.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
         postcodeInputField.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 jTextField1MouseClicked(evt);
@@ -112,7 +116,7 @@ public class PostcodePanel extends JPanel {
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(postcodeInputField, GroupLayout.PREFERRED_SIZE, 276, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(goButton, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
                     .addComponent(instructions, GroupLayout.PREFERRED_SIZE, 286, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -125,9 +129,9 @@ public class PostcodePanel extends JPanel {
             .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(title, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
                 .addComponent(instructions, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addComponent(postcodeInputField)
                     .addComponent(goButton, GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE))
@@ -227,7 +231,7 @@ public class PostcodePanel extends JPanel {
                 HomePostCodeStorage.setCurrentStationName(HomePostCodeStorage.getCurrentStationName().substring(0, MAX_STRING_LENGTH));
             }
 
-            MainDashboardPanel.label[topLabel].setText(HomePostCodeStorage.getCurrentStationName() + " at ");
+            MainDashboardPanel.label[TOPLABEL_INDEX].setText(HomePostCodeStorage.getCurrentStationName() + " at ");
         }
 
     }

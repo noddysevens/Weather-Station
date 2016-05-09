@@ -34,25 +34,25 @@ import weatherstation.utilities.HomePostCodeStorage;
  */
 public class MainDashboardPanel extends JPanel{
     
-    public int sortOrder = 0;
-    public int air = 1;
-    public int apparentTemp = 2;
-    public int dewPoint = 3;
-    public int relativeHumidity = 4;
-    public int deltaT = 5;
-    public int windDirection = 6;
-    public int windSpeedKmh = 7;
-    public int windGustsKmh = 8;
-    public int windSpeedKnots = 9;
-    public int windGustsKnots = 10;
-    public int pressQnh = 11;
-    public int pressMsl = 12;
-    public int rainSince = 13;
-    public int dateTime = 14;
-    private int imageButton = 0;
-    private int changeHomeCode = 1;
-    private int viewNewCode = 2;
-    public static int topLabel = 14;
+    public final int SORT_ORDER_INDEX = 0;
+    public final int AIR_TEMP_INDEX = 1;
+    public final int APPARENT_TEMP_INDEX = 2;
+    public final int DEW_POINT_INDEX = 3;
+    public final int REL_HUMIDITY_INDEX = 4;
+    public final int DELTAT_INDEX = 5;
+    public final int WIND_DIR_INDEX = 6;
+    public final int WIND_SPEED_KMH_INDEX = 7;
+    public final int WIND_GUSTS_KMH_INDEX = 8;
+    public final int WIND_SPEED_KNOTS_INDEX = 9;
+    public final int WIND_GUSTS_KNOTS_INDEX = 10;
+    public final int PRESS_QNH_INDEX = 11;
+    public final int PRESS_MSL_INDEX = 12;
+    public final int RAIN_SINCE_INDEX = 13;
+    public final int DATE_TIME_INDEX = 14;
+    private final int IMAGE_BUTTON_INDEX = 0;
+    private final int CHANGE_HOMECODE_INDEX = 1;
+    private final int VIEW_NEWCODE_INDEX = 2;
+    public final static int TOPLABEL_INDEX = 14;
     
     private final int FONT_STYLE = Font.BOLD;
     private final String FONT_FACE = "verdana";
@@ -72,7 +72,6 @@ public class MainDashboardPanel extends JPanel{
     private static final int NUMBER_OF_LABELS2 = 15;
     private static final int NUMBER_OF_LABEL_PANELS = 15;
     
-    
     public static JLabel[] label = new JLabel[NUMBER_OF_LABELS];
     public static JLabel[] label2 = new JLabel[NUMBER_OF_LABELS2];
     public static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
@@ -88,21 +87,21 @@ public class MainDashboardPanel extends JPanel{
         createPanels();
     }
     public void initializeLabels(){
-        label[sortOrder] = new JLabel("Sort Order:");
-        label[air] = new JLabel("Air Temp:");
-        label[apparentTemp] = new JLabel("Apparent Temp:");
-        label[dewPoint] = new JLabel("Dew Point:");
-        label[relativeHumidity] = new JLabel("Relative Humidity:");
-        label[deltaT] = new JLabel("Delta T:");
-        label[windDirection] = new JLabel("Wind Dir:");
-        label[windSpeedKmh] = new JLabel("Wind Speed(kmh):");
-        label[windGustsKmh] = new JLabel("Wind Gusts(kmh):");
-        label[windSpeedKnots] = new JLabel("Wind Speed(knots):");
-        label[windGustsKnots] = new JLabel("Wind Gusts(knots):");
-        label[pressQnh] = new JLabel("Press QNH:");
-        label[pressMsl] = new JLabel("Press MSL:");
-        label[rainSince] = new JLabel("Rain since 9am mm:");
-        label[topLabel] = new JLabel("Weather conditions at:");
+        label[SORT_ORDER_INDEX] = new JLabel("Sort Order:");
+        label[AIR_TEMP_INDEX] = new JLabel("Air Temp:");
+        label[APPARENT_TEMP_INDEX] = new JLabel("Apparent Temp:");
+        label[DEW_POINT_INDEX] = new JLabel("Dew Point:");
+        label[REL_HUMIDITY_INDEX] = new JLabel("Relative Humidity:");
+        label[DELTAT_INDEX] = new JLabel("Delta T:");
+        label[WIND_DIR_INDEX] = new JLabel("Wind Dir:");
+        label[WIND_SPEED_KMH_INDEX] = new JLabel("Wind Speed(kmh):");
+        label[WIND_GUSTS_KMH_INDEX] = new JLabel("Wind Gusts(kmh):");
+        label[WIND_SPEED_KNOTS_INDEX] = new JLabel("Wind Speed(knots):");
+        label[WIND_GUSTS_KNOTS_INDEX] = new JLabel("Wind Gusts(knots):");
+        label[PRESS_QNH_INDEX] = new JLabel("Press QNH:");
+        label[PRESS_MSL_INDEX] = new JLabel("Press MSL:");
+        label[RAIN_SINCE_INDEX] = new JLabel("Rain since 9am mm:");
+        label[TOPLABEL_INDEX] = new JLabel("Weather conditions at:");
 
         for(int index = 0; index < NUMBER_OF_LABELS; index++){
             label[index].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.SMALL.value));
@@ -115,17 +114,17 @@ public class MainDashboardPanel extends JPanel{
             label2[index].setForeground(WeatherStation.MAIN_TEXT_COLOUR);
         }
         
-        label[topLabel].setForeground(Color.WHITE);
-        label[topLabel].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
+        label[TOPLABEL_INDEX].setForeground(Color.WHITE);
+        label[TOPLABEL_INDEX].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
         
-        label2[dateTime].setForeground(Color.WHITE);
-        label2[air].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.LARGE.value));
+        label2[DATE_TIME_INDEX].setForeground(Color.WHITE);
+        label2[AIR_TEMP_INDEX].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.LARGE.value));
         
     }
     private void initializeButtons() {
-        button[imageButton] = new JButton();
-        button[changeHomeCode] = new JButton("Set this station as home");
-        button[viewNewCode] = new JButton("View different Station");
+        button[IMAGE_BUTTON_INDEX] = new JButton();
+        button[CHANGE_HOMECODE_INDEX] = new JButton("Set this station as home");
+        button[VIEW_NEWCODE_INDEX] = new JButton("View different Station");
         
         for (int i = 0; i < NUMBER_OF_BUTTONS; i++){
             button[i].setBackground(WeatherStation.DARK_BLUE);
@@ -133,30 +132,29 @@ public class MainDashboardPanel extends JPanel{
             button[i].addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e){
-                    if(e.getSource() == button[viewNewCode]){
+                    if(e.getSource() == button[VIEW_NEWCODE_INDEX]){
                         CardLayout cl = (CardLayout)(cards.getLayout());
                         cl.show(cards, "Postcode");
                         CollectInput.validWMO.clear();
                         CollectInput.stationName.clear();
                         WeatherStation.navigationPanel.setVisible(false);
-                        MainDashboardPanel.labelPanel[dateTime].setVisible(false);
+                        MainDashboardPanel.labelPanel[DATE_TIME_INDEX].setVisible(false);
                         popupMenu.setVisible(false);
                         PostcodePanel.postcodeInputField.setText("Postcode: eg. 3066");
                         PostcodePanel.goButton.grabFocus();
                         PostcodePanel.goButton.requestFocus();
                     }
-                    if(e.getSource() == button[changeHomeCode]){
+                    if(e.getSource() == button[CHANGE_HOMECODE_INDEX]){
                         if(PostcodePanel.postcodeInputField.getText().equals("Postcode: eg. 3066")){
                             HomePostCodeStorage.setHomePostcode(HomePostCodeStorage.getHomePostcode());
                         } else {
-                            //this needs to set the rest
                             HomePostCodeStorage.setHomePostcode(HomePostCodeStorage.getCurrentPostcode());
                             HomePostCodeStorage.setHomeStationName(HomePostCodeStorage.getCurrentStationName());
                             HomePostCodeStorage.setHomeWMO(HomePostCodeStorage.getCurrentWMO());
                         }
                         MainDashboardPanel.popupMenu.setVisible(false);
                         WeatherStation.navigationPanel.setVisible(false);
-                        MainDashboardPanel.labelPanel[dateTime].setVisible(false);
+                        MainDashboardPanel.labelPanel[DATE_TIME_INDEX].setVisible(false);
                         
                         CardLayout cl = (CardLayout)(cards.getLayout());
                         progressPanel = new CircularProgressBar();
@@ -171,13 +169,13 @@ public class MainDashboardPanel extends JPanel{
         } catch (IOException ex) {
             System.out.println(ex);
         }
-        button[imageButton].setIcon(menu);
-        button[imageButton].setMargin(new Insets(0,0,0,0));
-        button[imageButton].setContentAreaFilled(false);
-        button[imageButton].addMouseListener(new MouseAdapter(){
+        button[IMAGE_BUTTON_INDEX].setIcon(menu);
+        button[IMAGE_BUTTON_INDEX].setMargin(new Insets(0,0,0,0));
+        button[IMAGE_BUTTON_INDEX].setContentAreaFilled(false);
+        button[IMAGE_BUTTON_INDEX].addMouseListener(new MouseAdapter(){
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                showPopupMenu(button[imageButton]);
+                showPopupMenu(button[IMAGE_BUTTON_INDEX]);
             }
         });
     }
@@ -195,41 +193,41 @@ public class MainDashboardPanel extends JPanel{
             labelPanel[index].setBackground(WeatherStation.BACKGROUND_COLOUR);
         }
         
-        labelPanel[dateTime].setBackground(WeatherStation.DARK_BLUE);
+        labelPanel[DATE_TIME_INDEX].setBackground(WeatherStation.DARK_BLUE);
         
-        labelPanel[sortOrder].add(label[sortOrder]);
-        labelPanel[air].add(label[air]);
-        labelPanel[apparentTemp].add(label[apparentTemp]);
-        labelPanel[dewPoint].add(label[dewPoint]);
-        labelPanel[relativeHumidity].add(label[relativeHumidity]);
-        labelPanel[deltaT].add(label[deltaT]);
-        labelPanel[windDirection].add(label[windDirection]);
-        labelPanel[windSpeedKmh].add(label[windSpeedKmh]);
-        labelPanel[windGustsKmh].add(label[windGustsKmh]);
-        labelPanel[windSpeedKnots].add(label[windSpeedKnots]);
-        labelPanel[windGustsKnots].add(label[windGustsKnots]);
-        labelPanel[pressQnh].add(label[pressQnh]);
-        labelPanel[pressMsl].add(label[pressMsl]);
-        labelPanel[rainSince].add(label[rainSince]);
+        labelPanel[SORT_ORDER_INDEX].add(label[SORT_ORDER_INDEX]);
+        labelPanel[AIR_TEMP_INDEX].add(label[AIR_TEMP_INDEX]);
+        labelPanel[APPARENT_TEMP_INDEX].add(label[APPARENT_TEMP_INDEX]);
+        labelPanel[DEW_POINT_INDEX].add(label[DEW_POINT_INDEX]);
+        labelPanel[REL_HUMIDITY_INDEX].add(label[REL_HUMIDITY_INDEX]);
+        labelPanel[DELTAT_INDEX].add(label[DELTAT_INDEX]);
+        labelPanel[WIND_DIR_INDEX].add(label[WIND_DIR_INDEX]);
+        labelPanel[WIND_SPEED_KMH_INDEX].add(label[WIND_SPEED_KMH_INDEX]);
+        labelPanel[WIND_GUSTS_KMH_INDEX].add(label[WIND_GUSTS_KMH_INDEX]);
+        labelPanel[WIND_SPEED_KNOTS_INDEX].add(label[WIND_SPEED_KNOTS_INDEX]);
+        labelPanel[WIND_GUSTS_KNOTS_INDEX].add(label[WIND_GUSTS_KNOTS_INDEX]);
+        labelPanel[PRESS_QNH_INDEX].add(label[PRESS_QNH_INDEX]);
+        labelPanel[PRESS_MSL_INDEX].add(label[PRESS_MSL_INDEX]);
+        labelPanel[RAIN_SINCE_INDEX].add(label[RAIN_SINCE_INDEX]);
 
-        labelPanel[sortOrder].add(label2[sortOrder]);
-        labelPanel[air].add(label2[air]);
-        labelPanel[apparentTemp].add(label2[apparentTemp]);
-        labelPanel[dewPoint].add(label2[dewPoint]);
-        labelPanel[relativeHumidity].add(label2[relativeHumidity]);
-        labelPanel[deltaT].add(label2[deltaT]);
-        labelPanel[windDirection].add(label2[windDirection]);
-        labelPanel[windSpeedKmh].add(label2[windSpeedKmh]);
-        labelPanel[windGustsKmh].add(label2[windGustsKmh]);
-        labelPanel[windSpeedKnots].add(label2[windSpeedKnots]);
-        labelPanel[windGustsKnots].add(label2[windGustsKnots]);
-        labelPanel[pressQnh].add(label2[pressQnh]);
-        labelPanel[pressMsl].add(label2[pressMsl]);
-        labelPanel[rainSince].add(label2[rainSince]);
+        labelPanel[SORT_ORDER_INDEX].add(label2[SORT_ORDER_INDEX]);
+        labelPanel[AIR_TEMP_INDEX].add(label2[AIR_TEMP_INDEX]);
+        labelPanel[APPARENT_TEMP_INDEX].add(label2[APPARENT_TEMP_INDEX]);
+        labelPanel[DEW_POINT_INDEX].add(label2[DEW_POINT_INDEX]);
+        labelPanel[REL_HUMIDITY_INDEX].add(label2[REL_HUMIDITY_INDEX]);
+        labelPanel[DELTAT_INDEX].add(label2[DELTAT_INDEX]);
+        labelPanel[WIND_DIR_INDEX].add(label2[WIND_DIR_INDEX]);
+        labelPanel[WIND_SPEED_KMH_INDEX].add(label2[WIND_SPEED_KMH_INDEX]);
+        labelPanel[WIND_GUSTS_KMH_INDEX].add(label2[WIND_GUSTS_KMH_INDEX]);
+        labelPanel[WIND_SPEED_KNOTS_INDEX].add(label2[WIND_SPEED_KNOTS_INDEX]);
+        labelPanel[WIND_GUSTS_KNOTS_INDEX].add(label2[WIND_GUSTS_KNOTS_INDEX]);
+        labelPanel[PRESS_QNH_INDEX].add(label2[PRESS_QNH_INDEX]);
+        labelPanel[PRESS_MSL_INDEX].add(label2[PRESS_MSL_INDEX]);
+        labelPanel[RAIN_SINCE_INDEX].add(label2[RAIN_SINCE_INDEX]);
         
-        labelPanel[dateTime].add(button[imageButton]);
-        labelPanel[dateTime].add(label[topLabel]);
-        labelPanel[dateTime].add(label2[dateTime]);
+        labelPanel[DATE_TIME_INDEX].add(button[IMAGE_BUTTON_INDEX]);
+        labelPanel[DATE_TIME_INDEX].add(label[TOPLABEL_INDEX]);
+        labelPanel[DATE_TIME_INDEX].add(label2[DATE_TIME_INDEX]);
 
         JPanel[] mainPanel = new JPanel[6];
         for (int i = 0; i < 6; i++){
@@ -244,23 +242,23 @@ public class MainDashboardPanel extends JPanel{
         int panelE = 4;
         int panelF = 5;
         
-        mainPanel[panelA].add(labelPanel[air]);
+        mainPanel[panelA].add(labelPanel[AIR_TEMP_INDEX]);
         
-        mainPanel[panelB].add(labelPanel[apparentTemp]);
-        mainPanel[panelB].add(labelPanel[dewPoint]);
+        mainPanel[panelB].add(labelPanel[APPARENT_TEMP_INDEX]);
+        mainPanel[panelB].add(labelPanel[DEW_POINT_INDEX]);
         
-        mainPanel[panelC].add(labelPanel[relativeHumidity]);
-        mainPanel[panelC].add(labelPanel[deltaT]);
+        mainPanel[panelC].add(labelPanel[REL_HUMIDITY_INDEX]);
+        mainPanel[panelC].add(labelPanel[DELTAT_INDEX]);
         
-        mainPanel[panelD].add(labelPanel[windDirection]);
-        mainPanel[panelD].add(labelPanel[windSpeedKmh]);
-        mainPanel[panelD].add(labelPanel[windGustsKmh]);
+        mainPanel[panelD].add(labelPanel[WIND_DIR_INDEX]);
+        mainPanel[panelD].add(labelPanel[WIND_SPEED_KMH_INDEX]);
+        mainPanel[panelD].add(labelPanel[WIND_GUSTS_KMH_INDEX]);
         
-        mainPanel[panelE].add(labelPanel[windSpeedKnots]);
-        mainPanel[panelE].add(labelPanel[windGustsKnots]);
+        mainPanel[panelE].add(labelPanel[WIND_SPEED_KNOTS_INDEX]);
+        mainPanel[panelE].add(labelPanel[WIND_GUSTS_KNOTS_INDEX]);
         
-        mainPanel[panelF].add(labelPanel[pressQnh]);
-        mainPanel[panelF].add(labelPanel[pressMsl]);
+        mainPanel[panelF].add(labelPanel[PRESS_QNH_INDEX]);
+        mainPanel[panelF].add(labelPanel[PRESS_MSL_INDEX]);
         
         JPanel dataLabels = new JPanel();
         dataLabels.setBackground(WeatherStation.BACKGROUND_COLOUR);
@@ -271,7 +269,7 @@ public class MainDashboardPanel extends JPanel{
         dataLabels.add(mainPanel[panelD]);
         dataLabels.add(mainPanel[panelE]);
         dataLabels.add(mainPanel[panelF]);
-        dataLabels.add(labelPanel[rainSince]);
+        dataLabels.add(labelPanel[RAIN_SINCE_INDEX]);
         
         this.setLayout(new BorderLayout());
         this.setBackground(WeatherStation.BACKGROUND_COLOUR);
@@ -280,13 +278,13 @@ public class MainDashboardPanel extends JPanel{
     private void showPopupMenu(JButton invoker) {
     popupMenu = new JPopupMenu();
     popupMenu.setLayout(new GridLayout(2, 1));
-    popupMenu.add(button[changeHomeCode]);
-    popupMenu.add(button[viewNewCode]);
+    popupMenu.add(button[CHANGE_HOMECODE_INDEX]);
+    popupMenu.add(button[VIEW_NEWCODE_INDEX]);
     popupMenu.setBackground(WeatherStation.DARK_BLUE);
     popupMenu.show(invoker, 0, invoker.getHeight());
     popupMenu.addMouseListener(new MouseAdapter(){
         public void mouseEntered(java.awt.event.MouseEvent evt){
-            showPopupMenu(button[imageButton]);
+            showPopupMenu(button[IMAGE_BUTTON_INDEX]);
         }
         public void mouseExited(java.awt.event.MouseEvent evt) {
             Timer timer = new Timer(1000, new ActionListener(){

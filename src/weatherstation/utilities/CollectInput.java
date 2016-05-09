@@ -3,7 +3,6 @@ package weatherstation.utilities;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import javax.json.Json;
@@ -11,29 +10,19 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonString;
-import weatherstation.WeatherStation;
-
 
 /**
  * Program info: This class collects the data from the BOM website
  * Author: David (NoddySevens) Programmer
  * E-mail Address: noddysevens@gmail.com
- * Last Changed: 26-Apr-2016
  */
-
 public class CollectInput{
+    
     private static URL url;
     private static JsonReader rdr;
     private static JsonObject obj;
     private static InputStream inputStream;
     
-    public static JsonArray results;
-    public static ArrayList<String> validWMO;
-    public static ArrayList<String> stationName;
-    public static String stateCode = "IDQ60801";
-    
-    private static final String[] STATE_JSON_CODES = {"IDN60801","IDV60801","IDQ60801", 
-            "IDW60801","IDS60801","IDT60801","IDN60801","IDD60801"};
     private static final int NSW = 0;
     private static final int VIC = 1;
     private static final int QLD = 2;
@@ -43,6 +32,14 @@ public class CollectInput{
     private static final int ACT = 6;
     private static final int NT = 7;
     
+    public static JsonArray results;
+    public static ArrayList<String> validWMO;
+    public static ArrayList<String> stationName;
+    public static String stateCode = "IDQ60801";
+    
+    private static final String[] STATE_JSON_CODES = {"IDN60801","IDV60801","IDQ60801", 
+            "IDW60801","IDS60801","IDT60801","IDN60801","IDD60801"};
+    
     public CollectInput(){
         validWMO = new ArrayList<>();
         stationName = new ArrayList<>();
@@ -51,18 +48,12 @@ public class CollectInput{
     public static void getPostcodeInfo(String postcode) {
         try {
             url = new URL("http://v0.postcodeapi.com.au/suburbs/" + postcode + ".json");
-        } catch(MalformedURLException ex){
-            ex.printStackTrace();
-        }
-        
-        try {
+            
             HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
             httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 
             inputStream = httpcon.getInputStream();
-
         } catch(IOException ex){
-            System.out.println(ex);
             ex.printStackTrace();
         }
         
@@ -199,12 +190,7 @@ public class CollectInput{
         try {
             url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" 
                     + stateCode + "." + WMOCode + ".json");
-        }catch(MalformedURLException ex){
-            System.out.println("");
-            ex.printStackTrace();
-        }
-        
-        try {
+            
             HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
             httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 
@@ -230,12 +216,7 @@ public class CollectInput{
         try {
             url = new URL("http://www.bom.gov.au/fwo/" + stateCode + "/" 
                     + stateCode + "." + WMOCode + ".json");
-        }catch(MalformedURLException ex){
-            System.out.println("");
-            ex.printStackTrace();
-        }
-        
-        try {
+            
             HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
             httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 

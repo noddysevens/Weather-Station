@@ -17,38 +17,38 @@ import weatherstation.MainPanelDriver;
 import weatherstation.WeatherStation;
 
 /**
- * Program info: 
+ * Class info: This class creates and modifies the graph sub panel
  * Author: David (NoddySevens) Programmer
  * E-mail Address: noddysevens@gmail.com
- * Last Changed: 
  */
 public class DrawingPanel extends JPanel {
-    private final int DIVISIONS_PER_LABEL = 4;
-    private final int width = 550;
-    private final int height = 500;
-    private final int dateTime = 14;
-    private final int padding = 30;
-    private final int labelPadding = 30;
-    private final int pointWidth = 4;
-    private final int numberYDivisions = 12;
     
-    private final Color lineColor = new Color(44, 102, 230, 180);
-    private final Color pointColor = new Color(100, 100, 100, 180);
-    private final Color gridColor = new Color(200, 200, 200, 200);
+    private List<String> times;
+    private List<Double> values;
+    
+    public int selectedIndex = 0;
+    public String selectedLabel = "";
+    
+    private final int PADDING = 30;
+    private final int POINT_WIDTH = 4;
+    private final int PANEL_WIDTH = 550;
+    private final int PANEL_HEIGHT = 500;
+    private final int LABEL_PADDING = 30;
+    private final int DATE_TIME_INDEX = 14;
+    private final int DIVISIONS_PER_LABEL = 4;
+    private final int NUMBER_OF_Y_DIVISIONS = 12;
     
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
+    
+    private final Color LINE_COLOUR = new Color(44, 102, 230, 180);
+    private final Color GRID_COLOUR = new Color(200, 200, 200, 200);
+    private final Color POINT_COLOUR = new Color(100, 100, 100, 180);
     
     private String[] weatherMeasurements = {"Sort Order", "Air Temp","Apparent Temp"
             ,"Dew Point","Relative Humidity","Delta T","Wind Direction"
             ,"Wind Speed(km/h)", "Wind Gusts(km/h)", "Wind Speed(knots)"
             , "Wind Gusts(knots)", "Pressure(Qnh)", "Pressure(MSL)","Rain Since"
             ,"Date Time"};
-    
-    public  List<Double> values;
-    public  List<String> times;
-    
-    public int selectedIndex = 0;
-    public String selectedLabel = "";
     
     public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
         private int value;
@@ -58,14 +58,15 @@ public class DrawingPanel extends JPanel {
     };
     
     public DrawingPanel(){
-        setPreferredSize(new Dimension(width, height));
-        setBackground(WeatherStation.BACKGROUND_COLOUR);
         values = new ArrayList<>();
         times = new ArrayList<>();
     }
+    
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        setBackground(WeatherStation.BACKGROUND_COLOUR);
         
         for(int i = 0; i < weatherMeasurements.length; i++){
             if(selectedLabel.equals(weatherMeasurements[i])){
@@ -77,7 +78,7 @@ public class DrawingPanel extends JPanel {
         times.clear();
         for(int k = 49; k >=0; k--){
             values.add(Double.parseDouble(MainPanelDriver.bomData[k][selectedIndex]));
-            times.add(MainPanelDriver.bomData[k][dateTime].substring(3));
+            times.add(MainPanelDriver.bomData[k][DATE_TIME_INDEX].substring(3));
         }
         
         Graphics2D g2 = (Graphics2D) g;
@@ -87,7 +88,7 @@ public class DrawingPanel extends JPanel {
 
         // draw white background
         g2.setColor(Color.WHITE);
-        g2.fillRect(padding + labelPadding, padding, getWidth() - (2 * padding) - labelPadding, getHeight() - 2 * padding - labelPadding);
+        g2.fillRect(PADDING + LABEL_PADDING, PADDING, getWidth() - (2 * PADDING) - LABEL_PADDING, getHeight() - 2 * PADDING - LABEL_PADDING);
         g2.setColor(Color.BLACK);
 
         // create hatch marks and grid lines for y axis.
@@ -97,8 +98,8 @@ public class DrawingPanel extends JPanel {
         createHashAndGridForX(g2);
 
         // create x and y axes 
-        g2.drawLine(padding + labelPadding, getHeight() - padding - labelPadding, padding + labelPadding, padding);
-        g2.drawLine(padding + labelPadding, getHeight() - padding - labelPadding, getWidth() - padding, getHeight() - padding - labelPadding);
+        g2.drawLine(PADDING + LABEL_PADDING, getHeight() - PADDING - LABEL_PADDING, PADDING + LABEL_PADDING, PADDING);
+        g2.drawLine(PADDING + LABEL_PADDING, getHeight() - PADDING - LABEL_PADDING, getWidth() - PADDING, getHeight() - PADDING - LABEL_PADDING);
 
         createLinesAndPoints(g2, graphPoints);
     }
@@ -121,29 +122,29 @@ public class DrawingPanel extends JPanel {
     
     //convert raw data into a list of graph points
     private List<Point> getGraphPoints(){
-        double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (values.size() - 1);
-        double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (getMaxScore() - getMinScore());
+        double xScale = ((double) getWidth() - (2 * PADDING) - LABEL_PADDING) / (values.size() - 1);
+        double yScale = ((double) getHeight() - 2 * PADDING - LABEL_PADDING) / (getMaxScore() - getMinScore());
         
         List<Point> graphPoints = new ArrayList<>();
         for (int i = 0; i < values.size(); i++) {
-            int x1 = (int) (i * xScale + padding + labelPadding);
-            int y1 = (int) ((getMaxScore() - values.get(i)) * yScale + padding);
+            int x1 = (int) (i * xScale + PADDING + LABEL_PADDING);
+            int y1 = (int) ((getMaxScore() - values.get(i)) * yScale + PADDING);
             graphPoints.add(new Point(x1, y1));
         }
         return graphPoints;
     }
     
     private void createHashAndGridForY(Graphics2D g2){
-        for (int i = 0; i < numberYDivisions + 1; i++) {
-            int x0 = padding + labelPadding;
-            int x1 = pointWidth + padding + labelPadding;
-            int y0 = getHeight() - ((i * (getHeight() - padding * 2 - labelPadding)) / numberYDivisions + padding + labelPadding);
+        for (int i = 0; i < NUMBER_OF_Y_DIVISIONS + 1; i++) {
+            int x0 = PADDING + LABEL_PADDING;
+            int x1 = POINT_WIDTH + PADDING + LABEL_PADDING;
+            int y0 = getHeight() - ((i * (getHeight() - PADDING * 2 - LABEL_PADDING)) / NUMBER_OF_Y_DIVISIONS + PADDING + LABEL_PADDING);
             int y1 = y0;
             if (values.size() > 0) {
-                g2.setColor(gridColor);
-                g2.drawLine(padding + labelPadding + 1 + pointWidth, y0, getWidth() - padding, y1);
+                g2.setColor(GRID_COLOUR);
+                g2.drawLine(PADDING + LABEL_PADDING + 1 + POINT_WIDTH, y0, getWidth() - PADDING, y1);
                 g2.setColor(Color.BLACK);
-                String yLabel = ((int) ((getMinScore() + (getMaxScore() - getMinScore()) * ((i * 1.0) / numberYDivisions)) * 100)) / 100.0 + WeatherStation.dataUnits[selectedIndex];
+                String yLabel = ((int) ((getMinScore() + (getMaxScore() - getMinScore()) * ((i * 1.0) / NUMBER_OF_Y_DIVISIONS)) * 100)) / 100.0 + WeatherStation.dataUnits[selectedIndex];
                 g2.setFont(new Font("Century Gothic", Font.PLAIN, 11));
                 FontMetrics metrics = g2.getFontMetrics();
                 int labelWidth = metrics.stringWidth(yLabel);
@@ -157,12 +158,12 @@ public class DrawingPanel extends JPanel {
         int timeCounter = 0;
         for (int i = 0; i < values.size(); i++) {
             if (values.size() > 1) {
-                int x0 = i * (getWidth() - padding * 2 - labelPadding) / (values.size() - 1) + padding + labelPadding;
+                int x0 = i * (getWidth() - PADDING * 2 - LABEL_PADDING) / (values.size() - 1) + PADDING + LABEL_PADDING;
                 int x1 = x0;
-                int y0 = getHeight() - padding - labelPadding;
-                int y1 = y0 - pointWidth;
+                int y0 = getHeight() - PADDING - LABEL_PADDING;
+                int y1 = y0 - POINT_WIDTH;
                 if ((i % ((int) ((values.size() / 24.0)) + 0)) == 0) {  
-                    g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth, x1, padding);
+                    g2.drawLine(x0, getHeight() - PADDING - LABEL_PADDING - 1 - POINT_WIDTH, x1, PADDING);
                     g2.setColor(Color.BLACK);
                     if(i % DIVISIONS_PER_LABEL == 0){    
                         String xLabel = times.get(timeCounter);
@@ -183,7 +184,7 @@ public class DrawingPanel extends JPanel {
     
     private void createLinesAndPoints(Graphics2D g2, List<Point> graphPoints){
         Stroke oldStroke = g2.getStroke();
-        g2.setColor(lineColor);
+        g2.setColor(LINE_COLOUR);
         g2.setStroke(GRAPH_STROKE);
         for (int i = 0; i < graphPoints.size() - 1; i++) {
             int x1 = graphPoints.get(i).x;
@@ -194,12 +195,12 @@ public class DrawingPanel extends JPanel {
         }
 
         g2.setStroke(oldStroke);
-        g2.setColor(pointColor);
+        g2.setColor(POINT_COLOUR);
         for (int i = 0; i < graphPoints.size(); i++) {
-            int x = graphPoints.get(i).x - pointWidth / 2;
-            int y = graphPoints.get(i).y - pointWidth / 2;
-            int ovalW = pointWidth;
-            int ovalH = pointWidth;
+            int x = graphPoints.get(i).x - POINT_WIDTH / 2;
+            int y = graphPoints.get(i).y - POINT_WIDTH / 2;
+            int ovalW = POINT_WIDTH;
+            int ovalH = POINT_WIDTH;
             g2.fillOval(x, y, ovalW, ovalH);
         }
     }
