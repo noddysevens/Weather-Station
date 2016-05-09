@@ -20,12 +20,12 @@ public class StationBlacklist {
     static ArrayList<Integer> list;
     
     public StationBlacklist() {
-        file = new File("blacklist.txt");
+        //file = new File("blacklist.txt");
         list = new ArrayList<>();
-        readBlacklist();
+        //readBlacklist();
     }
     
-    public ArrayList<Integer> getBlacklist(){
+    public static ArrayList<Integer> getBlacklist(){
         return list;
     }
     private void readBlacklist(){
@@ -51,6 +51,7 @@ public class StationBlacklist {
     }
     public static void addToBlacklist(int WMO){
         list.add(WMO);
+        /*
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -63,6 +64,7 @@ public class StationBlacklist {
         } catch (IOException ex1) {
             System.out.printf("ERROR writing to file: %s\n", ex1);
         }
+    */
     }
     public static boolean isOnBlacklist(int WMO){
         boolean isOnList = false;

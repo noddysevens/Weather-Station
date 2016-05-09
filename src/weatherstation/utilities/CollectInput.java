@@ -40,7 +40,9 @@ public class CollectInput{
     public static void getPostcodeInfo(String postcode) {
         try {
             url = new URL("http://v0.postcodeapi.com.au/suburbs/" + postcode + ".json");
-        } catch(MalformedURLException ex){};
+        } catch(MalformedURLException ex){
+            ex.printStackTrace();
+        };
         
         try {
             HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
@@ -50,6 +52,7 @@ public class CollectInput{
 
         } catch(IOException ex){
             System.out.println(ex);
+            ex.printStackTrace();
         }
         
         rdr = Json.createReader(inputStream);
@@ -174,6 +177,7 @@ public class CollectInput{
             try {
                 result.getJsonNumber("air_temp");
             } catch (Exception e){
+                e.printStackTrace();
                 containsNull = true;
                 break;
             }
@@ -188,6 +192,7 @@ public class CollectInput{
                     + stateCode + "." + WMOCode + ".json");
         }catch(MalformedURLException ex){
             System.out.println("");
+            ex.printStackTrace();
         }
         
         try {
@@ -206,6 +211,7 @@ public class CollectInput{
             stationName.remove(0);
             blacklist.addToBlacklist(Integer.parseInt(WMOCode));
             System.out.println(ex);
+            ex.printStackTrace();
         }
     }
     
@@ -217,6 +223,7 @@ public class CollectInput{
                     + stateCode + "." + WMOCode + ".json");
         }catch(MalformedURLException ex){
             System.out.println("");
+            ex.printStackTrace();
         }
         
         try {
@@ -232,6 +239,7 @@ public class CollectInput{
         } catch(IOException ex){          
             blacklist.addToBlacklist(Integer.parseInt(WMOCode));
             System.out.println(ex);
+            ex.printStackTrace();
             validity = false;
         }
         if(containsNullObservations(results)){

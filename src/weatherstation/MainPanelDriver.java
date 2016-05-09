@@ -90,7 +90,7 @@ public class MainPanelDriver{
         mainPanel.label2[pressQnh].setText(String.valueOf(bomData[0][pressQnh]));
         mainPanel.label2[pressMsl].setText(String.valueOf(bomData[0][pressMsl]));
         mainPanel.label2[rainSince].setText(String.valueOf(bomData[0][rainSince]));
-        System.out.println("displayed");
+        //System.out.println("displayed");
     }
     
     //Checks for null values and replaces them with a zero

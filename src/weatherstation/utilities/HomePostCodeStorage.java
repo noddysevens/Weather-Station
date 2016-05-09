@@ -17,8 +17,8 @@ public class HomePostCodeStorage {
     static String homePostcode;
     
     public HomePostCodeStorage(){
-        file = new File("homePostCode.txt");
-        readHomePostCode();
+        //file = new File("homePostCode.txt");
+        //readHomePostCode();
     }
     
     public static String getHomePostcode(){
@@ -42,10 +42,14 @@ public class HomePostCodeStorage {
             //PostcodePanel.firstRun = false;
         } catch (IOException ex) {
             homePostcode = "none";
+            ex.printStackTrace();
         }
         
     }
     public static void setHomePostcode(String postcode){
+        
+        homePostcode = postcode;
+        /*
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -57,7 +61,8 @@ public class HomePostCodeStorage {
 
         } catch (IOException ex1) {
             System.out.printf("ERROR writing to file: %s\n", ex1);
+            ex1.printStackTrace();
         }
-        
+        */
     }
 }

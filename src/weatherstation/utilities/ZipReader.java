@@ -28,11 +28,13 @@ public class ZipReader
         
         try {
             url = new URL("ftp://ftp.bom.gov.au/anon2/home/ncc/metadata/sitelists/stations.zip");
-        } catch(MalformedURLException ex){}
+        } catch(MalformedURLException ex){
+            ex.printStackTrace();
+        }
 
         InputStream theFile = url.openStream();
         ZipInputStream stream = new ZipInputStream(theFile);
-        String outdir = "C:/Users/David/Downloads";
+        String outdir = "src/weatherstation/data/";
 
         try {
             // now iterate through each item in the stream. The get next
@@ -44,7 +46,7 @@ public class ZipReader
                 String s = String.format("Entry: %s len %d added %TD",
                                 entry.getName(), entry.getSize(),
                                 new Date(entry.getTime()));
-                System.out.println(s);
+                //System.out.println(s);
 
                 // Once we get the entry from the stream, the stream is
                 // positioned read to read the raw data, and we keep

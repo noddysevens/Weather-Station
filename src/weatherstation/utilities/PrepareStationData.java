@@ -25,7 +25,7 @@ public class PrepareStationData {
     private static final int OLDEST_STATION = 1750;
     
     public static void removeNthLine(String f, int toRemove) throws IOException {
-        File directory = new File("C:/Users/David/Downloads");
+        File directory = new File("src/weatherstation/data/");
         File tmp = File.createTempFile("tmp", null, directory);
 
         BufferedReader br = new BufferedReader(new FileReader(f));
@@ -33,7 +33,8 @@ public class PrepareStationData {
         
         for (int i = 0; i < toRemove; i++){
             if(i < 4){
-                System.out.println((String.format("%s%n", br.readLine())));
+                br.readLine();
+                //System.out.println((String.format("%s%n", br.readLine())));
             } else {
                 bw.write(String.format("%s%n", br.readLine()));
             }
@@ -48,13 +49,13 @@ public class PrepareStationData {
             tmp.renameTo(oldFile);
         }
 
-        System.out.println("removed nth ");
+        //System.out.println("removed nth ");
     }
     
     public static void parseWords(){
         Scanner sc2 = null;
         try {
-            sc2 = new Scanner(new File("C:/Users/David/Downloads/stations.txt"));
+            sc2 = new Scanner(new File("src/weatherstation/data/stations.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();  
         }
@@ -216,10 +217,11 @@ public class PrepareStationData {
 
             } catch(Exception e){
                 System.out.println(e + " " + WeatherStation.stationDataRows.size()); 
+                e.printStackTrace();
                 System.exit(0);
             }
         }
-        System.out.println("complete");
+        //System.out.println("complete");
     }
     
 }

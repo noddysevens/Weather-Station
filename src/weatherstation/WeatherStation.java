@@ -15,24 +15,25 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import static weatherstation.MainPanelDriver.dateTime;
 import weatherstation.panels.CircularProgressBar;
 import weatherstation.panels.GraphPanel;
 import weatherstation.panels.MainDashboardPanel;
 import static weatherstation.panels.MainDashboardPanel.topLabel;
 import weatherstation.panels.MultiPostCodeSelectPanel;
 import weatherstation.panels.PostcodePanel;
-import static weatherstation.panels.PostcodePanel.postcodeInputField;
 import weatherstation.utilities.CollectInput;
 import static weatherstation.utilities.CollectInput.validWMO;
 import weatherstation.utilities.HomePostCodeStorage;
 import weatherstation.utilities.PrepareStationData;
+import weatherstation.utilities.StationDeserializer;
+import weatherstation.utilities.StationSerializer;
 import weatherstation.utilities.ZipReader;
 
 /**
@@ -69,7 +70,7 @@ public class WeatherStation implements ActionListener{
     public static PostcodePanel postCodePanel = new PostcodePanel();
     public static MultiPostCodeSelectPanel postCodeSelectPanel;
     private GraphPanel graphPanel = new GraphPanel();
-    MainPanelDriver driver;
+    static MainPanelDriver driver;
     public static CircularProgressBar progressPanel;
     
     
@@ -122,6 +123,8 @@ public class WeatherStation implements ActionListener{
     
     public static ArrayList<ArrayList<String>> stationDataRows;
     
+    public static boolean hasRun;
+    
     public WeatherStation() throws IOException{
         postcodeStore = new HomePostCodeStorage();
         stationDataRows = new ArrayList<>();
@@ -156,7 +159,14 @@ public class WeatherStation implements ActionListener{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(HEIGHT,WIDTH));
         WeatherStation calcSuite = new WeatherStation();
-        prepareData();
+        driver = new MainPanelDriver();
+        
+        //File file = new File();
+        
+        StationDeserializer.retrieveData();
+        //if !hasRun
+        //prepareData();
+        
         calcSuite.addComponentToPane(frame.getContentPane());
         frame.pack();
         frame.setLocationRelativeTo( null );
@@ -172,9 +182,9 @@ public class WeatherStation implements ActionListener{
         //run the zip reader
         try {
             ZipReader.readZip();
-            PrepareStationData.removeNthLine("C:/Users/David/Downloads/stations.txt", 20118);
+            PrepareStationData.removeNthLine("src/weatherstation/data/stations.txt", 20118);
             PrepareStationData.parseWords();
-            System.out.println("Parsing complete");
+            //System.out.println("Parsing complete");
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -183,7 +193,7 @@ public class WeatherStation implements ActionListener{
     private void addComponentToPane(Container pane) throws IOException {
         initializeButtons(); 
         
-        driver = new MainPanelDriver();
+        
         
         timer = new Timer(60000, new ActionListener(){
                 @Override
@@ -287,6 +297,7 @@ public class WeatherStation implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == button[CLOSE]){
+            StationSerializer.saveData();
             System.exit(0);
         } else if(e.getSource() == button[MINIMIZE]){
             frame.setState(frame.ICONIFIED);

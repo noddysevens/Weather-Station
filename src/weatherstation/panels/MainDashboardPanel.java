@@ -10,7 +10,13 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -45,7 +51,7 @@ public class MainDashboardPanel extends JPanel{
         }
     };
     
-    private Icon menu;
+    private ImageIcon menu;
     
     private final int NUMBER_OF_PANELS = 3;
     private static final int NUMBER_OF_LABEL_PANELS = 15;
@@ -169,8 +175,11 @@ public class MainDashboardPanel extends JPanel{
                 }
             });
         }
-        
-        menu = new ImageIcon("src/weatherstation/img/menu.png");
+        try {
+            menu = new ImageIcon(ImageIO.read(getResource("weatherstation/img/menu.png")));
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
         button[imageButton].setIcon(menu);
         button[imageButton].setMargin(new Insets(0,0,0,0));
         button[imageButton].setContentAreaFilled(false);
@@ -179,6 +188,14 @@ public class MainDashboardPanel extends JPanel{
                 showPopupMenu(button[imageButton]);
             }
         });
+    }
+    private InputStream getResource(String ref) throws IOException {
+		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(ref);
+		if (in != null) {
+			return in;
+		}
+		
+		return new FileInputStream(ref);
     }
     public void createPanels(){
         for(int index = 0; index < NUMBER_OF_LABEL_PANELS; index++){
