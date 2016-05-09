@@ -21,8 +21,9 @@ import weatherstation.WeatherStation;
  */
 
 public class GraphPanel extends JPanel implements ActionListener, PopupMenuListener{
-    private final String FONT_FACE = "verdana";
+    
     private final int FONT_STYLE = Font.BOLD;
+    private final String FONT_FACE = "verdana";
     public enum FONT_SIZE {SMALL(10), MEDIUM(20), MEDIUM_LARGE(30), LARGE(45);
         private final int value;
         private FONT_SIZE(int value) {
@@ -30,23 +31,7 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
         }
     };
     
-    public static DrawingPanel drawingPanel = new DrawingPanel();
-
-    private final int NUMBER_OF_COMBOBOXES = 1;
-    private final int NUMBER_OF_PANELS = 2;
-    private final int NUMBER_OF_LABEL_PANELS = 1;
-    private final int NUMBER_OF_COMBOBOX_PANELS = 1;
-    private final int NUMBER_OF_LABELS = 1;
-    
-    private final JPanel[] panel = new JPanel[NUMBER_OF_PANELS];
-    public JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
-    public JPanel[] comboBoxPanel = new JPanel[NUMBER_OF_COMBOBOX_PANELS];
-    
-    public JLabel[] label = new JLabel[NUMBER_OF_LABELS];
-    
-    public JComboBox[] comboBox = new JComboBox[NUMBER_OF_COMBOBOXES];
-    public ComboBoxModel[] models = new ComboBoxModel[1];
-
+    public int dataSelectBox = 0;
     public int sortOrder = 0;
     public int air = 1;
     public int apparentTemp = 2;
@@ -65,9 +50,24 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
     public int topLabel = 14;
     public int graphHeading = 0;
     
-    public int dataSelectBox = 0;
+    public static DrawingPanel drawingPanel = new DrawingPanel();
+
+    private final int NUMBER_OF_LABELS = 1;
+    private final int NUMBER_OF_COMBOBOXES = 1;
+    private final int NUMBER_OF_LABEL_PANELS = 1;
+    private final int NUMBER_OF_COMBOBOX_PANELS = 1;
     
-    public String graphHeading2 = "air temp";
+    public ComboBoxModel[] models = new ComboBoxModel[1];
+    public JLabel[] label = new JLabel[NUMBER_OF_LABELS];
+    public JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
+    public JComboBox[] comboBox = new JComboBox[NUMBER_OF_COMBOBOXES];
+    public JPanel[] comboBoxPanel = new JPanel[NUMBER_OF_COMBOBOX_PANELS];
+    private String[] weatherMeasurements = {"Sort Order", "Air Temp","Apparent Temp"
+            ,"Dew Point","Relative Humidity","Delta T","Wind Direction"
+            ,"Wind Speed(km/h)", "Wind Gusts(km/h)", "Wind Speed(knots)"
+            , "Wind Gusts(knots)", "Pressure(Qnh)", "Pressure(MSL)","Rain Since"
+            ,"Date Time"};
+    
     
     public GraphPanel(){
         initialiseComponents();
@@ -83,12 +83,12 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
 
         for(int index = 0; index < NUMBER_OF_LABELS; index++){
             label[index].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM.value));
-            label[index].setForeground(WeatherStation.mainTextColor);
+            label[index].setForeground(WeatherStation.MAIN_TEXT_COLOUR);
         }
     }
     
     private void initializeComboBoxes(){
-        comboBox[dataSelectBox] = new JComboBox(WeatherStation.weatherMeasurements);
+        comboBox[dataSelectBox] = new JComboBox(weatherMeasurements);
         models[0] = new DefaultComboBoxModel(new String[]{
             "Air Temp","Apparent Temp","Dew Point","Relative Humidity","Delta T"
             ,"Wind Speed(km/h)", "Wind Gusts(km/h)", "Wind Speed(knots)"
@@ -100,7 +100,7 @@ public class GraphPanel extends JPanel implements ActionListener, PopupMenuListe
             comboBox[index].addActionListener(this);
             comboBox[index].addPopupMenuListener(this);
             comboBox[index].setBackground(WeatherStation.BACKGROUND_COLOUR);
-            comboBox[index].setForeground(WeatherStation.mainTextColor);
+            comboBox[index].setForeground(WeatherStation.MAIN_TEXT_COLOUR);
             comboBox[index].setModel(models[0]);
             comboBox[index].setSelectedIndex(0);
         }

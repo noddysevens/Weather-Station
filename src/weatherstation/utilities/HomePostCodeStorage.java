@@ -1,7 +1,7 @@
 package weatherstation.utilities;
 
 /**
- * Program info: This class stores and modifies the home postcode
+ * Program info: This class stores and modifies the home and current station info
  * Author: David (NoddySevens) Programmer
  * E-mail Address: noddysevens@gmail.com
  */

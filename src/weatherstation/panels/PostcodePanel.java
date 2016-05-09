@@ -24,8 +24,6 @@ import static weatherstation.MainPanelDriver.dateTime;
 import weatherstation.WeatherStation;
 import static weatherstation.WeatherStation.cards;
 import static weatherstation.WeatherStation.frame;
-import static weatherstation.WeatherStation.postCodePanel;
-import static weatherstation.WeatherStation.postcodeStore;
 import static weatherstation.WeatherStation.progressPanel;
 import static weatherstation.panels.MainDashboardPanel.topLabel;
 import static weatherstation.panels.MultiPostCodeSelectPanel.jComboBox1;
@@ -34,26 +32,26 @@ import static weatherstation.utilities.CollectInput.validWMO;
 import weatherstation.utilities.HomePostCodeStorage;
 
 public class PostcodePanel extends JPanel {
-    public static JButton goButton;
+    
     private JLabel title;
     private JLabel instructions;
-    public static JTextField postcodeInputField;                 
     private Point point = new Point();
-    private int maxStringLength;
+    
+    public static JButton goButton;
     public static boolean firstRun = true;
+    public static JTextField postcodeInputField;                 
+    
+    private final int MAX_STRING_LENGTH = 20;
     
     public PostcodePanel() {
         initComponents();
     }
                    
     private void initComponents() {
-
         title = new JLabel();
         postcodeInputField = new JTextField();
         goButton = new JButton();
         instructions = new JLabel();
-        
-        maxStringLength = 20;
 
         setBackground(new Color(0, 86, 150));
         setToolTipText("");
@@ -141,11 +139,9 @@ public class PostcodePanel extends JPanel {
         WeatherStation.navigationPanel.setVisible(false);
         MainDashboardPanel.labelPanel[dateTime].setVisible(false);
         CardLayout cl = (CardLayout)(cards.getLayout());
-        cl = (CardLayout)(cards.getLayout());
         progressPanel = new CircularProgressBar("Preparing Data", 10);
         cards.add(progressPanel, "Progress");
         cl.show(cards, "Progress");
-        
         
         if(firstRun){
             initialisingAction();
@@ -156,20 +152,7 @@ public class PostcodePanel extends JPanel {
     }                                           
 
     private void goButtonActionPerformed(ActionEvent evt) {     
-        WeatherStation.navigationPanel.setVisible(false);
-        MainDashboardPanel.labelPanel[dateTime].setVisible(false);
-        CardLayout cl = (CardLayout)(cards.getLayout());
-        cl = (CardLayout)(cards.getLayout());
-        progressPanel = new CircularProgressBar("Preparing Data", 10);
-        cards.add(progressPanel, "Progress");
-        cl.show(cards, "Progress");
-        
-        if(firstRun){
-            initialisingAction();
-            firstRun = false;
-        } else{
-            repeatingAction();
-        }
+        jTextField1ActionPerformed(evt);
     }                                        
 
     private void jTextField1MouseClicked(MouseEvent evt) {                                         
@@ -188,16 +171,13 @@ public class PostcodePanel extends JPanel {
     }
     
     private void initialisingAction(){
-        
         WeatherStation.conditionsTimePanel.add(MainDashboardPanel.labelPanel[dateTime]);
         WeatherStation.frame.getContentPane().add(WeatherStation.navigationPanel, BorderLayout.SOUTH);
   
         repeatingAction();
-        
     }
     
     private void repeatingAction(){
-
         String postCode = postcodeInputField.getText();
         
         int codeUp = Integer.parseInt(postCode);
@@ -213,7 +193,7 @@ public class PostcodePanel extends JPanel {
         if(validWMO.size() > 1){
             CircularProgressBar.timer.stop();
             CardLayout cl = (CardLayout)(cards.getLayout());
-            //
+            
             ArrayList<String> stationNames = new ArrayList<>();
             for(String name : CollectInput.stationName){
                 stationNames.add(name);
@@ -227,8 +207,9 @@ public class PostcodePanel extends JPanel {
             ComboBoxModel model = new DefaultComboBoxModel(comboBoxValues);
 
             jComboBox1.setModel(model);
-            //
+            
             cl.show(cards, "postCodeSelect");
+            
             WeatherStation.navigationPanel.setVisible(false);
             MainDashboardPanel.labelPanel[dateTime].setVisible(false);
         } else {
@@ -238,13 +219,12 @@ public class PostcodePanel extends JPanel {
             CollectInput.getObservations(validWMO.get(selectedIndex));
             HomePostCodeStorage.setCurrentPostcode(postcodeInputField.getText());
             HomePostCodeStorage.setCurrentWMO(validWMO.get(selectedIndex));
+            HomePostCodeStorage.setCurrentStationName(CollectInput.stationName.get(selectedIndex));
+            
             MainPanelDriver.initializeArrays();
 
-            HomePostCodeStorage.setCurrentStationName(CollectInput.stationName.get(selectedIndex));
-
-
-            if(HomePostCodeStorage.getCurrentStationName().length() > 20){
-                HomePostCodeStorage.setCurrentStationName(HomePostCodeStorage.getCurrentStationName().substring(0, 20));
+            if(HomePostCodeStorage.getCurrentStationName().length() > MAX_STRING_LENGTH){
+                HomePostCodeStorage.setCurrentStationName(HomePostCodeStorage.getCurrentStationName().substring(0, MAX_STRING_LENGTH));
             }
 
             MainDashboardPanel.label[topLabel].setText(HomePostCodeStorage.getCurrentStationName() + " at ");

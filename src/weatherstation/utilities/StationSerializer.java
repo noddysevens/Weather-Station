@@ -4,13 +4,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import weatherstation.WeatherStation;
 
 /**
- * Program info: 
+ * Program info: This class serializes the station data
  * Author: David (NoddySevens) Programmer
  * E-mail Address: noddysevens@gmail.com
- * Last Changed: 
  */
 public class StationSerializer {
 
@@ -33,7 +31,7 @@ public class StationSerializer {
             sd.validWMO.add(item);
         }
         
-        for(ArrayList<String> list : WeatherStation.stationDataRows){
+        for(ArrayList<String> list : PrepareStationData.stationDataRows){
             sd.stationDataRows.add(list);
         }
         
@@ -43,7 +41,7 @@ public class StationSerializer {
         createObject();
         
         try {
-            FileOutputStream fileOut = new FileOutputStream("stationData.sav");
+            FileOutputStream fileOut = new FileOutputStream(System.getProperty("user.dir") + "\\stationData.sav");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(sd);
             out.close();
@@ -53,10 +51,10 @@ public class StationSerializer {
             System.out.println(i);
             i.printStackTrace();
         }
-        
     }
+    
+    //For testing purposes
     public static void main(String[] Args){
-        
         StationData sd = new StationData();
         sd.homePostCode = "4350";
         sd.blackList.add("99093");
@@ -64,7 +62,7 @@ public class StationSerializer {
         sd.validWMO.add("95551");
         
         try {
-            FileOutputStream fileOut = new FileOutputStream("stationData.sav");
+            FileOutputStream fileOut = new FileOutputStream(System.getProperty("user.dir") + "\\stationData.sav");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(sd);
             out.close();

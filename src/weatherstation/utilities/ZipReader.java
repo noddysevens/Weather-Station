@@ -34,7 +34,7 @@ public class ZipReader
 
         InputStream theFile = url.openStream();
         ZipInputStream stream = new ZipInputStream(theFile);
-        String outdir = "src/weatherstation/data/";
+        String outdir = System.getProperty("user.dir");
 
         try {
             // now iterate through each item in the stream. The get next

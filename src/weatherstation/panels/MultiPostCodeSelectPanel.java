@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -24,19 +22,19 @@ import static weatherstation.utilities.CollectInput.validWMO;
 import weatherstation.utilities.HomePostCodeStorage;
 
 /**
- *
- * @author David
+ * Class info: This class allows the user to choose which station when there is
+ * more than one option
+ * Author: David (NoddySevens) Programmer
+ * E-mail Address: noddysevens@gmail.com
  */
 public class MultiPostCodeSelectPanel extends JPanel {
     private JButton jButton1;
     public static JComboBox jComboBox1;
     private JLabel jLabel1;
     private JLabel jLabel2;
-    private ArrayList<String> stationNames;
     private int selectedIndex = 0;
     public MultiPostCodeSelectPanel() {
         initComponents();
-        stationNames = new ArrayList<>();
     }
     
     private void initComponents() {
@@ -114,6 +112,7 @@ public class MultiPostCodeSelectPanel extends JPanel {
     private void jButton1ActionPerformed(ActionEvent evt) {                                         
         WeatherStation.navigationPanel.setVisible(false);
         MainDashboardPanel.labelPanel[dateTime].setVisible(false);
+        
         CardLayout cl = (CardLayout)(cards.getLayout());
         cl = (CardLayout)(cards.getLayout());
         progressPanel = new CircularProgressBar("Preparing Data", 10);
@@ -124,35 +123,19 @@ public class MultiPostCodeSelectPanel extends JPanel {
         CollectInput.getObservations(validWMO.get(selectedIndex));
         HomePostCodeStorage.setCurrentPostcode(postCodePanel.postcodeInputField.getText());
         HomePostCodeStorage.setCurrentWMO(validWMO.get(selectedIndex));
-        MainPanelDriver.initializeArrays();
-        
         HomePostCodeStorage.setCurrentStationName(CollectInput.stationName.get(selectedIndex));
         
-        
+        MainPanelDriver.initializeArrays();
+
         if(HomePostCodeStorage.getCurrentStationName().length() > 20){
             HomePostCodeStorage.setCurrentStationName(HomePostCodeStorage.getCurrentStationName().substring(0, 20));
         }
         
         MainDashboardPanel.label[topLabel].setText(HomePostCodeStorage.getCurrentStationName() + " at ");
-        
-        /*
-        for(String name : CollectInput.stationName){
-            stationNames.add(name);
-        }
-        
-        String[] comboBoxValues = new String[stationNames.size()];
-        
-        for (int i = 0; i < stationNames.size(); i++){
-            comboBoxValues[i] = stationNames.get(i);
-        }
-        ComboBoxModel model = new DefaultComboBoxModel(comboBoxValues);
-        */
-        //jComboBox1.setModel(model);
     }                                        
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
         jButton1ActionPerformed(evt);
-        
     }                       
 }
 

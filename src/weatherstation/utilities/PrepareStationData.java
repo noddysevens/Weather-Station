@@ -9,7 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import weatherstation.WeatherStation;
 
 /**
  * Program info: This class processes the Stations.txt file into an arraylist 
@@ -21,11 +20,14 @@ import weatherstation.WeatherStation;
  */
 public class PrepareStationData {
 
-    static ArrayList<String> stationDataColumns = new ArrayList<>();
     private static final int OLDEST_STATION = 1750;
     
+    public static ArrayList<String> stationDataColumns = new ArrayList<>();
+    public static ArrayList<ArrayList<String>> stationDataRows = new ArrayList<>();
+    
+    
     public static void removeNthLine(String f, int toRemove) throws IOException {
-        File directory = new File("src/weatherstation/data/");
+        File directory = new File(System.getProperty("user.dir"));
         File tmp = File.createTempFile("tmp", null, directory);
 
         BufferedReader br = new BufferedReader(new FileReader(f));
@@ -34,7 +36,6 @@ public class PrepareStationData {
         for (int i = 0; i < toRemove; i++){
             if(i < 4){
                 br.readLine();
-                //System.out.println((String.format("%s%n", br.readLine())));
             } else {
                 bw.write(String.format("%s%n", br.readLine()));
             }
@@ -48,14 +49,12 @@ public class PrepareStationData {
         if (oldFile.delete()){
             tmp.renameTo(oldFile);
         }
-
-        //System.out.println("removed nth ");
     }
     
     public static void parseWords(){
         Scanner sc2 = null;
         try {
-            sc2 = new Scanner(new File("src/weatherstation/data/stations.txt"));
+            sc2 = new Scanner(new File(System.getProperty("user.dir") + "\\stations.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();  
         }
@@ -212,16 +211,15 @@ public class PrepareStationData {
             }
             
             //add column array to row and clear
-            WeatherStation.stationDataRows.add(new ArrayList<String>(stationDataColumns));
+            stationDataRows.add(new ArrayList<>(stationDataColumns));
             stationDataColumns.clear();
 
             } catch(Exception e){
-                System.out.println(e + " " + WeatherStation.stationDataRows.size()); 
+                System.out.println(e + " " + stationDataRows.size()); 
                 e.printStackTrace();
                 System.exit(0);
             }
         }
-        //System.out.println("complete");
     }
     
 }

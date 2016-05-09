@@ -23,7 +23,6 @@ import javax.swing.Timer;
 import weatherstation.MainPanelDriver;
 import weatherstation.WeatherStation;
 import static weatherstation.WeatherStation.cards;
-import static weatherstation.WeatherStation.postCodePanel;
 import static weatherstation.WeatherStation.progressPanel;
 import weatherstation.utilities.CollectInput;
 import weatherstation.utilities.HomePostCodeStorage;
@@ -32,34 +31,8 @@ import weatherstation.utilities.HomePostCodeStorage;
  * Class info: This class is the main dashboard panel
  * Author: David (NoddySevens) Java Developer
  * E-mail Address: noddysevens@gmail.com
- * Last Changed: 26 - April - 2016
  */
 public class MainDashboardPanel extends JPanel{
-    
-    private final String FONT_FACE = "verdana";
-    private final int FONT_STYLE = Font.BOLD;
-
-    
-    public enum FONT_SIZE {SMALL(10), MEDIUM(20), MED_MED_LARGE(25), MEDIUM_LARGE(30), LARGE(45);
-        private int value;
-        private FONT_SIZE(int value) {
-                this.value = value;
-        }
-    };
-    
-    private ImageIcon menu;
-    
-    private final int NUMBER_OF_PANELS = 3;
-    private static final int NUMBER_OF_LABEL_PANELS = 15;
-    private static final int NUMBER_OF_LABELS = 15;
-    private static final int NUMBER_OF_LABELS2 = 15;
-    private static final int NUMBER_OF_BUTTONS = 3;
-    
-    private JPanel[] panel = new JPanel[NUMBER_OF_PANELS];
-    public static JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
-    public static JLabel[] label = new JLabel[NUMBER_OF_LABELS];
-    public static JLabel[] label2 = new JLabel[NUMBER_OF_LABELS2];
-    public static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
     
     public int sortOrder = 0;
     public int air = 1;
@@ -76,18 +49,37 @@ public class MainDashboardPanel extends JPanel{
     public int pressMsl = 12;
     public int rainSince = 13;
     public int dateTime = 14;
-    public static int topLabel = 14;
-    
     private int imageButton = 0;
     private int changeHomeCode = 1;
     private int viewNewCode = 2;
-
+    public static int topLabel = 14;
+    
+    private final int FONT_STYLE = Font.BOLD;
+    private final String FONT_FACE = "verdana";
+    public enum FONT_SIZE {SMALL(10), MEDIUM(20), MED_MED_LARGE(25), 
+            MEDIUM_LARGE(30), LARGE(45);
+        private int value;
+        private FONT_SIZE(int value) {
+                this.value = value;
+        }
+    };
+    
+    private ImageIcon menu;
     public static JPopupMenu popupMenu;
     
+    private static final int NUMBER_OF_LABELS = 15;
+    private static final int NUMBER_OF_BUTTONS = 3;
+    private static final int NUMBER_OF_LABELS2 = 15;
+    private static final int NUMBER_OF_LABEL_PANELS = 15;
+    
+    
+    public static JLabel[] label = new JLabel[NUMBER_OF_LABELS];
+    public static JLabel[] label2 = new JLabel[NUMBER_OF_LABELS2];
+    public static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
+    public static JPanel[] labelPanel = new JPanel[NUMBER_OF_LABEL_PANELS];
+
     public MainDashboardPanel(MainPanelDriver driver) throws IOException {
         initialiseComponents();
-        
-        System.out.println("");
     }
 
     private void initialiseComponents(){
@@ -114,13 +106,13 @@ public class MainDashboardPanel extends JPanel{
 
         for(int index = 0; index < NUMBER_OF_LABELS; index++){
             label[index].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.SMALL.value));
-            label[index].setForeground(WeatherStation.darkBlue);
+            label[index].setForeground(WeatherStation.DARK_BLUE);
         }
         
         for(int index = 0; index < NUMBER_OF_LABELS2; index++){
             label2[index] = new JLabel("NULL");
             label2[index].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MED_MED_LARGE.value));
-            label2[index].setForeground(WeatherStation.mainTextColor);
+            label2[index].setForeground(WeatherStation.MAIN_TEXT_COLOUR);
         }
         
         label[topLabel].setForeground(Color.WHITE);
@@ -136,7 +128,7 @@ public class MainDashboardPanel extends JPanel{
         button[viewNewCode] = new JButton("View different Station");
         
         for (int i = 0; i < NUMBER_OF_BUTTONS; i++){
-            button[i].setBackground(WeatherStation.darkBlue);
+            button[i].setBackground(WeatherStation.DARK_BLUE);
             button[i].setForeground(Color.WHITE);
             button[i].addActionListener(new ActionListener(){
                 @Override
@@ -149,12 +141,12 @@ public class MainDashboardPanel extends JPanel{
                         WeatherStation.navigationPanel.setVisible(false);
                         MainDashboardPanel.labelPanel[dateTime].setVisible(false);
                         popupMenu.setVisible(false);
-                        postCodePanel.postcodeInputField.setText("Postcode: eg. 3066");
-                        postCodePanel.goButton.grabFocus();
-                        postCodePanel.goButton.requestFocus();
+                        PostcodePanel.postcodeInputField.setText("Postcode: eg. 3066");
+                        PostcodePanel.goButton.grabFocus();
+                        PostcodePanel.goButton.requestFocus();
                     }
                     if(e.getSource() == button[changeHomeCode]){
-                        if(postCodePanel.postcodeInputField.getText().equals("Postcode: eg. 3066")){
+                        if(PostcodePanel.postcodeInputField.getText().equals("Postcode: eg. 3066")){
                             HomePostCodeStorage.setHomePostcode(HomePostCodeStorage.getHomePostcode());
                         } else {
                             //this needs to set the rest
@@ -183,6 +175,7 @@ public class MainDashboardPanel extends JPanel{
         button[imageButton].setMargin(new Insets(0,0,0,0));
         button[imageButton].setContentAreaFilled(false);
         button[imageButton].addMouseListener(new MouseAdapter(){
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 showPopupMenu(button[imageButton]);
             }
@@ -202,7 +195,7 @@ public class MainDashboardPanel extends JPanel{
             labelPanel[index].setBackground(WeatherStation.BACKGROUND_COLOUR);
         }
         
-        labelPanel[dateTime].setBackground(WeatherStation.darkBlue);
+        labelPanel[dateTime].setBackground(WeatherStation.DARK_BLUE);
         
         labelPanel[sortOrder].add(label[sortOrder]);
         labelPanel[air].add(label[air]);
@@ -218,7 +211,6 @@ public class MainDashboardPanel extends JPanel{
         labelPanel[pressQnh].add(label[pressQnh]);
         labelPanel[pressMsl].add(label[pressMsl]);
         labelPanel[rainSince].add(label[rainSince]);
-        //labelPanel[dateTime] = dateTimePanel;
 
         labelPanel[sortOrder].add(label2[sortOrder]);
         labelPanel[air].add(label2[air]);
@@ -234,12 +226,8 @@ public class MainDashboardPanel extends JPanel{
         labelPanel[pressQnh].add(label2[pressQnh]);
         labelPanel[pressMsl].add(label2[pressMsl]);
         labelPanel[rainSince].add(label2[rainSince]);
-        try{
-            labelPanel[dateTime].add(button[imageButton]);
-        } catch (Exception e){
-            System.out.println(e);
-        }
         
+        labelPanel[dateTime].add(button[imageButton]);
         labelPanel[dateTime].add(label[topLabel]);
         labelPanel[dateTime].add(label2[dateTime]);
 
@@ -294,7 +282,7 @@ public class MainDashboardPanel extends JPanel{
     popupMenu.setLayout(new GridLayout(2, 1));
     popupMenu.add(button[changeHomeCode]);
     popupMenu.add(button[viewNewCode]);
-    popupMenu.setBackground(WeatherStation.darkBlue);
+    popupMenu.setBackground(WeatherStation.DARK_BLUE);
     popupMenu.show(invoker, 0, invoker.getHeight());
     popupMenu.addMouseListener(new MouseAdapter(){
         public void mouseEntered(java.awt.event.MouseEvent evt){

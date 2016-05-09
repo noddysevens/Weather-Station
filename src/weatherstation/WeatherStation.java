@@ -17,7 +17,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -29,9 +28,9 @@ import static weatherstation.panels.MainDashboardPanel.topLabel;
 import weatherstation.panels.MultiPostCodeSelectPanel;
 import weatherstation.panels.PostcodePanel;
 import weatherstation.utilities.CollectInput;
-import static weatherstation.utilities.CollectInput.validWMO;
 import weatherstation.utilities.HomePostCodeStorage;
 import weatherstation.utilities.PrepareStationData;
+import weatherstation.utilities.StationBlacklist;
 import weatherstation.utilities.StationDeserializer;
 import weatherstation.utilities.StationSerializer;
 import weatherstation.utilities.ZipReader;
@@ -44,12 +43,14 @@ import weatherstation.utilities.ZipReader;
  * E-mail Address: noddysevens@gmail.com
  */
 public class WeatherStation implements ActionListener{
-    private static int HEIGHT = 600;
-    private static int WIDTH = 650;
-    private final static int NUMBER_OF_BUTTONS = 3;
-    public static final int NAVIGATION_BUTTON = 0;
-    private final int MINIMIZE = 1;
+    
     private final int CLOSE = 2;
+    private final int MINIMIZE = 1;
+    private static final int WIDTH = 650;
+    private static final int HEIGHT = 600;
+    public final static int NAVIGATION_BUTTON = 0;
+    private final static int NUMBER_OF_BUTTONS = 3;
+    private final static String USER_DIR = System.getProperty("user.dir");
     
     private final String FONT_FACE = "verdana";
     private final int FONT_STYLE = Font.BOLD;
@@ -60,41 +61,30 @@ public class WeatherStation implements ActionListener{
         }
     };
     
-    public static Color darkBlue = new Color(0,86,150);
-    public static Color gioBlue = new Color(102,204,255);
-    public static Color BACKGROUND_COLOUR = new Color(236,244,250);
-    public static Color mainTextColor = new Color(30,56,91);
+    public final static Color DARK_BLUE = new Color(0,86,150);
+    public final static Color LIGHT_BLUE = new Color(102,204,255);
+    public final static Color MAIN_TEXT_COLOUR = new Color(30,56,91);
+    public final static Color BACKGROUND_COLOUR = new Color(236,244,250);
         
     public static JPanel cards;
+    public static JPanel navigationPanel;
+    public static JPanel conditionsTimePanel;
     public static DrawingPanel drawingPanel = new DrawingPanel();
     public static PostcodePanel postCodePanel = new PostcodePanel();
     public static MultiPostCodeSelectPanel postCodeSelectPanel;
+    
     private GraphPanel graphPanel = new GraphPanel();
-    static MainPanelDriver driver;
+    
+    MainPanelDriver driver;
+    StationBlacklist blacklist;
     public static CircularProgressBar progressPanel;
     
-    
+    private static Timer timer;
+    private static Point point; 
     public static JFrame frame = new JFrame("Oz Weather");
     
-    private static Point point = new Point();
-    
-    public static String[] weatherMeasurements = {"Sort Order", "Air Temp","Apparent Temp"
-            ,"Dew Point","Relative Humidity","Delta T","Wind Direction"
-            ,"Wind Speed(km/h)", "Wind Gusts(km/h)", "Wind Speed(knots)"
-            , "Wind Gusts(knots)", "Pressure(Qnh)", "Pressure(MSL)","Rain Since"
-            ,"Date Time"};
-    private String[] dataIndexes = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14"};
+    public static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
     public static String[] dataUnits = {"","°C","°C","","%","","","","","","","","","mm",""};
-    public static String[] stateJSONcodes = {"IDN60801","IDV60801","IDQ60801", "IDW60801","IDS60801","IDT60801","IDN60801","IDD60801"};
-    
-    public static int nsw = 0;
-    public static int vic = 1;
-    public static int qld = 2;
-    public static int wa = 3;
-    public static int sa = 4;
-    public static int tas = 5;
-    public static int act = 6;
-    public static int nt = 7;
 
     public int sortOrder = 0;
     public int air = 1;
@@ -112,22 +102,10 @@ public class WeatherStation implements ActionListener{
     public int rainSince = 13;
     public int dateTime = 14;
     
-    static Timer timer;
-    
-    public static JButton[] button = new JButton[NUMBER_OF_BUTTONS];
-    
-    public static JPanel navigationPanel;
-    public static JPanel conditionsTimePanel;
-    
-    public static HomePostCodeStorage postcodeStore;
-    
-    public static ArrayList<ArrayList<String>> stationDataRows;
-    
-    public static boolean hasRun;
-    
     public WeatherStation() throws IOException{
-        postcodeStore = new HomePostCodeStorage();
-        stationDataRows = new ArrayList<>();
+        point = new Point();
+        driver = new MainPanelDriver();
+        blacklist = new StationBlacklist();
     }
      
     public static void main(String[] Args) throws IOException{
@@ -155,13 +133,13 @@ public class WeatherStation implements ActionListener{
     }
     private static void createAndShowGUI() throws IOException {
         frame.setUndecorated(true);
-        frame.setBackground(gioBlue);
+        frame.setBackground(LIGHT_BLUE);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(HEIGHT,WIDTH));
-        WeatherStation calcSuite = new WeatherStation();
-        driver = new MainPanelDriver();
         
-        File file = new File("stationData.sav");
+        WeatherStation calcSuite = new WeatherStation();
+        
+        File file = new File(USER_DIR + "\\stationData.sav");
         if(file.exists()){
             StationDeserializer.retrieveData();
         } else {
@@ -169,23 +147,24 @@ public class WeatherStation implements ActionListener{
         }
         
         calcSuite.addComponentToPane(frame.getContentPane());
+        
         frame.pack();
         frame.setLocationRelativeTo( null );
         frame.setVisible(true);
         frame.addWindowFocusListener(new WindowAdapter() {
+            @Override
             public void windowGainedFocus(WindowEvent e) {
-                postCodePanel.goButton.grabFocus();
-                postCodePanel.goButton.requestFocus();
+                PostcodePanel.goButton.grabFocus();
+                PostcodePanel.goButton.requestFocus();
             }
         });
     }
     private static void prepareData(){
-        //run the zip reader
         try {
             ZipReader.readZip();
-            PrepareStationData.removeNthLine("src/weatherstation/data/stations.txt", 20118);
+            
+            PrepareStationData.removeNthLine(USER_DIR + "\\stations.txt", 20118);
             PrepareStationData.parseWords();
-            //System.out.println("Parsing complete");
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -193,8 +172,6 @@ public class WeatherStation implements ActionListener{
     
     private void addComponentToPane(Container pane) throws IOException {
         initializeButtons(); 
-        
-        
         
         timer = new Timer(60000, new ActionListener(){
                 @Override
@@ -205,14 +182,14 @@ public class WeatherStation implements ActionListener{
         timer.start(); 
         
         conditionsTimePanel = new JPanel();
-        conditionsTimePanel.setBackground(darkBlue);
+        conditionsTimePanel.setBackground(DARK_BLUE);
         
         navigationPanel = new JPanel();
         navigationPanel.add(button[NAVIGATION_BUTTON]);
         navigationPanel.setBackground(BACKGROUND_COLOUR);
         
         cards = new JPanel(new CardLayout());
-        addCardsToDeck(driver);
+        addCardsToDeck();
 
         JPanel topSub = new JPanel();
         topSub.setLayout(new BorderLayout());
@@ -222,7 +199,7 @@ public class WeatherStation implements ActionListener{
         
         JPanel controls = new JPanel();
         controls.setLayout(new BorderLayout());
-        controls.setBackground(gioBlue);
+        controls.setBackground(LIGHT_BLUE);
         controls.add(topSub, BorderLayout.CENTER);
         controls.add(button[CLOSE], BorderLayout.LINE_END);
         
@@ -236,7 +213,7 @@ public class WeatherStation implements ActionListener{
         button[CLOSE] = new JButton("X");
         
         for(int i = 0; i < NUMBER_OF_BUTTONS; i++){
-            button[i].setBackground(darkBlue);
+            button[i].setBackground(DARK_BLUE);
             button[i].setForeground(Color.WHITE);
             button[i].setBorderPainted(false);
             button[i].addActionListener(this);
@@ -245,18 +222,15 @@ public class WeatherStation implements ActionListener{
         button[MINIMIZE].setFont(new Font(FONT_FACE, FONT_STYLE, FONT_SIZE.MEDIUM_LARGE.value));
     }
     
-    
-    private void addCardsToDeck(MainPanelDriver driver){
-        
-        //first run
-        if(postcodeStore.getHomePostcode().equals("none")){
+    private void addCardsToDeck(){
+        if(HomePostCodeStorage.getHomePostcode().equals("none")){
             cards.add(postCodePanel, "Postcode");
-            cards.add(driver.mainPanel, "Main");
+            cards.add(MainPanelDriver.mainPanel, "Main");
             cards.add(graphPanel, "Graph");
             postCodeSelectPanel = new MultiPostCodeSelectPanel();
             cards.add(postCodeSelectPanel, "postCodeSelect");
-        } else { //future runs with saved data
-            cards.add(driver.mainPanel, "Main");
+        } else { 
+            cards.add(MainPanelDriver.mainPanel, "Main");
             cards.add(graphPanel, "Graph");
             cards.add(postCodePanel, "Postcode");
             postCodeSelectPanel = new MultiPostCodeSelectPanel();
@@ -264,42 +238,19 @@ public class WeatherStation implements ActionListener{
             conditionsTimePanel.add(MainDashboardPanel.labelPanel[dateTime]);
             frame.getContentPane().add(navigationPanel, BorderLayout.SOUTH);
             
-            //String postCode = postcodeStore.getHomePostcode();
+            CollectInput.checkState(HomePostCodeStorage.getHomePostcode());
+            CollectInput.getObservations(HomePostCodeStorage.getHomeWMO());
+            String homeStationName = HomePostCodeStorage.getHomeStationName();
             
-            /*
-            int codeUp = Integer.parseInt(postCode);
-            int codeDown = codeUp;
-            CollectInput.getPostcodeInfo(postCode);
-            while(CollectInput.validWMO.isEmpty()){
-                codeUp++;
-                CollectInput.getPostcodeInfo(String.valueOf(codeUp));
-                codeDown--;
-                CollectInput.getPostcodeInfo(String.valueOf(codeDown));
-            }
-            if(validWMO.size() > 1){
-                CardLayout cl = (CardLayout)(cards.getLayout());
-                
-                cl.show(cards, "postCodeSelect");
-                WeatherStation.navigationPanel.setVisible(false);
-                MainDashboardPanel.labelPanel[dateTime].setVisible(false);
-            } else {
-                */
-            
-            CollectInput.checkState(postcodeStore.getHomePostcode());
-            
-            CollectInput.getObservations(postcodeStore.getHomeWMO());
             MainPanelDriver.initializeArrays();
-
-            String homeStationName = postcodeStore.getHomeStationName();
+            
             if(homeStationName.length() > 20){
                 homeStationName = homeStationName.substring(0, 20);
             }
 
             MainDashboardPanel.label[topLabel].setText(homeStationName + " at ");
 
-            postCodePanel.firstRun = false;
-            
-            //}
+            PostcodePanel.firstRun = false;
         }
     }
 

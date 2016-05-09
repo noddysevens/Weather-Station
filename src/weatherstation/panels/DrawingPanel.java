@@ -38,6 +38,12 @@ public class DrawingPanel extends JPanel {
     
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
     
+    private String[] weatherMeasurements = {"Sort Order", "Air Temp","Apparent Temp"
+            ,"Dew Point","Relative Humidity","Delta T","Wind Direction"
+            ,"Wind Speed(km/h)", "Wind Gusts(km/h)", "Wind Speed(knots)"
+            , "Wind Gusts(knots)", "Pressure(Qnh)", "Pressure(MSL)","Rain Since"
+            ,"Date Time"};
+    
     public  List<Double> values;
     public  List<String> times;
     
@@ -61,8 +67,8 @@ public class DrawingPanel extends JPanel {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         
-        for(int i = 0; i < WeatherStation.weatherMeasurements.length; i++){
-            if(selectedLabel.equals(WeatherStation.weatherMeasurements[i])){
+        for(int i = 0; i < weatherMeasurements.length; i++){
+            if(selectedLabel.equals(weatherMeasurements[i])){
                 selectedIndex = i;
             }
         }
