@@ -10,10 +10,13 @@ import java.util.ArrayList;
  */
 public class StationData implements java.io.Serializable {
     public  String homePostCode;
+    public  String homeWMO;
+    public  String homeStationName;
     public  ArrayList<String> blackList;
     public  ArrayList<String> validWMO;
     public  ArrayList<String> stationName;
     public ArrayList<ArrayList<String>> stationDataRows;
+
     
     public StationData(){
         blackList = new ArrayList<>();

@@ -16,10 +16,12 @@ import weatherstation.MainPanelDriver;
 import static weatherstation.MainPanelDriver.dateTime;
 import weatherstation.WeatherStation;
 import static weatherstation.WeatherStation.cards;
+import static weatherstation.WeatherStation.postCodePanel;
 import static weatherstation.WeatherStation.progressPanel;
 import static weatherstation.panels.MainDashboardPanel.topLabel;
 import weatherstation.utilities.CollectInput;
 import static weatherstation.utilities.CollectInput.validWMO;
+import weatherstation.utilities.HomePostCodeStorage;
 
 /**
  *
@@ -31,6 +33,7 @@ public class MultiPostCodeSelectPanel extends JPanel {
     private JLabel jLabel1;
     private JLabel jLabel2;
     private ArrayList<String> stationNames;
+    private int selectedIndex = 0;
     public MultiPostCodeSelectPanel() {
         initComponents();
         stationNames = new ArrayList<>();
@@ -117,16 +120,22 @@ public class MultiPostCodeSelectPanel extends JPanel {
         cards.add(progressPanel, "Progress");
         cl.show(cards, "Progress");
         
-        int index = WeatherStation.postCodeSelectPanel.jComboBox1.getSelectedIndex();
-        CollectInput.getObservations(validWMO.get(index));
+        selectedIndex = WeatherStation.postCodeSelectPanel.jComboBox1.getSelectedIndex();
+        CollectInput.getObservations(validWMO.get(selectedIndex));
+        HomePostCodeStorage.setCurrentPostcode(postCodePanel.postcodeInputField.getText());
+        HomePostCodeStorage.setCurrentWMO(validWMO.get(selectedIndex));
         MainPanelDriver.initializeArrays();
         
-        if(CollectInput.stationName.get(0).length() > 20){
-            CollectInput.stationName.set(0, CollectInput.stationName.get(index).substring(0, 20));
+        HomePostCodeStorage.setCurrentStationName(CollectInput.stationName.get(selectedIndex));
+        
+        
+        if(HomePostCodeStorage.getCurrentStationName().length() > 20){
+            HomePostCodeStorage.setCurrentStationName(HomePostCodeStorage.getCurrentStationName().substring(0, 20));
         }
         
-        MainDashboardPanel.label[topLabel].setText(CollectInput.stationName.get(index) + " at ");
+        MainDashboardPanel.label[topLabel].setText(HomePostCodeStorage.getCurrentStationName() + " at ");
         
+        /*
         for(String name : CollectInput.stationName){
             stationNames.add(name);
         }
@@ -137,44 +146,12 @@ public class MultiPostCodeSelectPanel extends JPanel {
             comboBoxValues[i] = stationNames.get(i);
         }
         ComboBoxModel model = new DefaultComboBoxModel(comboBoxValues);
-        
-        jComboBox1.setModel(model);
+        */
+        //jComboBox1.setModel(model);
     }                                        
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        WeatherStation.navigationPanel.setVisible(false);
-        MainDashboardPanel.labelPanel[dateTime].setVisible(false);
-        CardLayout cl = (CardLayout)(cards.getLayout());
-        cl = (CardLayout)(cards.getLayout());
-        progressPanel = new CircularProgressBar("Preparing Data", 10);
-        cards.add(progressPanel, "Progress");
-        cl.show(cards, "Progress");
-        
-        WeatherStation.navigationPanel.setVisible(false);
-        MainDashboardPanel.labelPanel[dateTime].setVisible(false);
-        
-        int index = WeatherStation.postCodeSelectPanel.jComboBox1.getSelectedIndex();
-        CollectInput.getObservations(validWMO.get(index));
-        MainPanelDriver.initializeArrays();
-        
-        if(CollectInput.stationName.get(0).length() > 20){
-            CollectInput.stationName.set(0, CollectInput.stationName.get(index).substring(0, 20));
-        }
-        
-        MainDashboardPanel.label[topLabel].setText(CollectInput.stationName.get(index) + " at ");
-        
-        for(String name : CollectInput.stationName){
-            stationNames.add(name);
-        }
-        
-        String[] comboBoxValues = new String[stationNames.size()];
-        
-        for (int i = 0; i < stationNames.size(); i++){
-            comboBoxValues[i] = stationNames.get(i);
-        }
-        ComboBoxModel model = new DefaultComboBoxModel(comboBoxValues);
-        
-        jComboBox1.setModel(model);
+        jButton1ActionPerformed(evt);
         
     }                       
 }

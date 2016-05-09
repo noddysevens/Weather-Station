@@ -10,14 +10,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -161,7 +157,10 @@ public class MainDashboardPanel extends JPanel{
                         if(postCodePanel.postcodeInputField.getText().equals("Postcode: eg. 3066")){
                             HomePostCodeStorage.setHomePostcode(HomePostCodeStorage.getHomePostcode());
                         } else {
-                            HomePostCodeStorage.setHomePostcode(postCodePanel.postcodeInputField.getText());
+                            //this needs to set the rest
+                            HomePostCodeStorage.setHomePostcode(HomePostCodeStorage.getCurrentPostcode());
+                            HomePostCodeStorage.setHomeStationName(HomePostCodeStorage.getCurrentStationName());
+                            HomePostCodeStorage.setHomeWMO(HomePostCodeStorage.getCurrentWMO());
                         }
                         MainDashboardPanel.popupMenu.setVisible(false);
                         WeatherStation.navigationPanel.setVisible(false);

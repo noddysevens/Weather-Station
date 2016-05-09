@@ -99,7 +99,7 @@ public class CollectInput{
         obj = null;
         results = null;
     }
-    private static String checkState(String postcode){
+    public static String checkState(String postcode){
         String state = "";
         int code = Integer.parseInt(postcode);
         

@@ -161,11 +161,12 @@ public class WeatherStation implements ActionListener{
         WeatherStation calcSuite = new WeatherStation();
         driver = new MainPanelDriver();
         
-        //File file = new File();
-        
-        StationDeserializer.retrieveData();
-        //if !hasRun
-        //prepareData();
+        File file = new File("stationData.sav");
+        if(file.exists()){
+            StationDeserializer.retrieveData();
+        } else {
+            prepareData();
+        }
         
         calcSuite.addComponentToPane(frame.getContentPane());
         frame.pack();
@@ -246,13 +247,15 @@ public class WeatherStation implements ActionListener{
     
     
     private void addCardsToDeck(MainPanelDriver driver){
+        
+        //first run
         if(postcodeStore.getHomePostcode().equals("none")){
             cards.add(postCodePanel, "Postcode");
             cards.add(driver.mainPanel, "Main");
             cards.add(graphPanel, "Graph");
             postCodeSelectPanel = new MultiPostCodeSelectPanel();
             cards.add(postCodeSelectPanel, "postCodeSelect");
-        } else {
+        } else { //future runs with saved data
             cards.add(driver.mainPanel, "Main");
             cards.add(graphPanel, "Graph");
             cards.add(postCodePanel, "Postcode");
@@ -261,8 +264,9 @@ public class WeatherStation implements ActionListener{
             conditionsTimePanel.add(MainDashboardPanel.labelPanel[dateTime]);
             frame.getContentPane().add(navigationPanel, BorderLayout.SOUTH);
             
-            String postCode = postcodeStore.getHomePostcode();
-        
+            //String postCode = postcodeStore.getHomePostcode();
+            
+            /*
             int codeUp = Integer.parseInt(postCode);
             int codeDown = codeUp;
             CollectInput.getPostcodeInfo(postCode);
@@ -279,18 +283,23 @@ public class WeatherStation implements ActionListener{
                 WeatherStation.navigationPanel.setVisible(false);
                 MainDashboardPanel.labelPanel[dateTime].setVisible(false);
             } else {
+                */
+            
+            CollectInput.checkState(postcodeStore.getHomePostcode());
+            
+            CollectInput.getObservations(postcodeStore.getHomeWMO());
+            MainPanelDriver.initializeArrays();
 
-                CollectInput.getObservations(validWMO.get(0));
-                MainPanelDriver.initializeArrays();
-
-                if(CollectInput.stationName.get(0).length() > 20){
-                    CollectInput.stationName.set(0, CollectInput.stationName.get(0).substring(0, 20));
-                }
-
-                MainDashboardPanel.label[topLabel].setText(CollectInput.stationName.get(0) + " at ");
-
-                postCodePanel.firstRun = false;
+            String homeStationName = postcodeStore.getHomeStationName();
+            if(homeStationName.length() > 20){
+                homeStationName = homeStationName.substring(0, 20);
             }
+
+            MainDashboardPanel.label[topLabel].setText(homeStationName + " at ");
+
+            postCodePanel.firstRun = false;
+            
+            //}
         }
     }
 

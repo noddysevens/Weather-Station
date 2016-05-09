@@ -18,6 +18,8 @@ public class StationDeserializer {
     
     private static void deconstructObject(){
         HomePostCodeStorage.homePostcode = sd.homePostCode;
+        HomePostCodeStorage.homeStationName = sd.homeStationName;
+        HomePostCodeStorage.homeWMO = sd.homeWMO;
         
         for(String item : sd.blackList){
             StationBlacklist.addToBlacklist(Integer.parseInt(item));
@@ -68,6 +70,11 @@ public class StationDeserializer {
         
         System.out.println("Deserialzied station data");
         System.out.println("Home PostCode: " + sd.homePostCode);
+        
+        System.out.println("Home station name: " + sd.homeStationName);
+        
+        
+        System.out.println("Home WMO: " + sd.homeWMO);
         
         for(String item : sd.blackList){
             System.out.println("blacklist: " + item);

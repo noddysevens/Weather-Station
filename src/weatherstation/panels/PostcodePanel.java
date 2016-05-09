@@ -24,11 +24,14 @@ import static weatherstation.MainPanelDriver.dateTime;
 import weatherstation.WeatherStation;
 import static weatherstation.WeatherStation.cards;
 import static weatherstation.WeatherStation.frame;
+import static weatherstation.WeatherStation.postCodePanel;
+import static weatherstation.WeatherStation.postcodeStore;
 import static weatherstation.WeatherStation.progressPanel;
 import static weatherstation.panels.MainDashboardPanel.topLabel;
 import static weatherstation.panels.MultiPostCodeSelectPanel.jComboBox1;
 import weatherstation.utilities.CollectInput;
 import static weatherstation.utilities.CollectInput.validWMO;
+import weatherstation.utilities.HomePostCodeStorage;
 
 public class PostcodePanel extends JPanel {
     public static JButton goButton;
@@ -189,49 +192,7 @@ public class PostcodePanel extends JPanel {
         WeatherStation.conditionsTimePanel.add(MainDashboardPanel.labelPanel[dateTime]);
         WeatherStation.frame.getContentPane().add(WeatherStation.navigationPanel, BorderLayout.SOUTH);
   
-        String postCode = postcodeInputField.getText();
-        
-        int codeUp = Integer.parseInt(postCode);
-        int codeDown = codeUp;
-        CollectInput.getPostcodeInfo(postCode);
-        while(CollectInput.validWMO.isEmpty()){
-            codeUp++;
-            CollectInput.getPostcodeInfo(String.valueOf(codeUp));
-            codeDown--;
-            CollectInput.getPostcodeInfo(String.valueOf(codeDown));
-        }
-        if(validWMO.size() > 1){
-            CircularProgressBar.timer.stop();
-            CardLayout cl = (CardLayout)(cards.getLayout());
-            //
-            ArrayList<String> stationNames = new ArrayList<>();
-            for(String name : CollectInput.stationName){
-                stationNames.add(name);
-            }
-
-            String[] comboBoxValues = new String[stationNames.size()];
-
-            for (int i = 0; i < stationNames.size(); i++){
-                comboBoxValues[i] = stationNames.get(i);
-            }
-            ComboBoxModel model = new DefaultComboBoxModel(comboBoxValues);
-
-            jComboBox1.setModel(model);
-            //
-            cl.show(cards, "postCodeSelect");
-            WeatherStation.navigationPanel.setVisible(false);
-            MainDashboardPanel.labelPanel[dateTime].setVisible(false);
-        } else {
-            
-            CollectInput.getObservations(validWMO.get(0));
-            MainPanelDriver.initializeArrays();
-
-            if(CollectInput.stationName.get(0).length() > 20){
-                CollectInput.stationName.set(0, CollectInput.stationName.get(0).substring(0, 20));
-            }
-
-            MainDashboardPanel.label[topLabel].setText(CollectInput.stationName.get(0) + " at ");
-        }
+        repeatingAction();
         
     }
     
@@ -271,14 +232,22 @@ public class PostcodePanel extends JPanel {
             WeatherStation.navigationPanel.setVisible(false);
             MainDashboardPanel.labelPanel[dateTime].setVisible(false);
         } else {
-            CollectInput.getObservations(validWMO.get(0));
+            int selectedIndex = 0;
+            CollectInput.checkState(postcodeInputField.getText());
+            
+            CollectInput.getObservations(validWMO.get(selectedIndex));
+            HomePostCodeStorage.setCurrentPostcode(postcodeInputField.getText());
+            HomePostCodeStorage.setCurrentWMO(validWMO.get(selectedIndex));
             MainPanelDriver.initializeArrays();
 
-            if(CollectInput.stationName.get(0).length() > 20){
-                CollectInput.stationName.set(0, CollectInput.stationName.get(0).substring(0, 20));
+            HomePostCodeStorage.setCurrentStationName(CollectInput.stationName.get(selectedIndex));
+
+
+            if(HomePostCodeStorage.getCurrentStationName().length() > 20){
+                HomePostCodeStorage.setCurrentStationName(HomePostCodeStorage.getCurrentStationName().substring(0, 20));
             }
 
-            MainDashboardPanel.label[topLabel].setText(CollectInput.stationName.get(0) + " at ");
+            MainDashboardPanel.label[topLabel].setText(HomePostCodeStorage.getCurrentStationName() + " at ");
         }
 
     }

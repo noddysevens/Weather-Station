@@ -18,6 +18,8 @@ public class StationSerializer {
     
     private static void createObject(){
         sd.homePostCode = HomePostCodeStorage.getHomePostcode();
+        sd.homeStationName = HomePostCodeStorage.getHomeStationName();
+        sd.homeWMO = HomePostCodeStorage.getHomeWMO();
         
         for(int item : StationBlacklist.getBlacklist()){
             sd.blackList.add(String.valueOf(item));
