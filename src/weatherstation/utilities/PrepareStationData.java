@@ -28,19 +28,16 @@ public class PrepareStationData {
         File directory = new File(System.getProperty("user.dir"));
         File tmp = File.createTempFile("tmp", null, directory);
 
-        BufferedReader br = new BufferedReader(new FileReader(f));
-        BufferedWriter bw = new BufferedWriter(new FileWriter(tmp));
-        
-        for (int i = 0; i < toRemove; i++){
-            if(i < 4){
-                br.readLine();
-            } else {
-                bw.write(String.format("%s%n", br.readLine()));
+        try(BufferedReader br = new BufferedReader(new FileReader(f));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(tmp))){
+            for (int i = 0; i < toRemove; i++){
+                if(i < 4){
+                    br.readLine();
+                } else {
+                    bw.write(String.format("%s%n", br.readLine()));
+                }
             }
         }
-        
-        br.close();
-        bw.close();
 
         File oldFile = new File(f);
 
