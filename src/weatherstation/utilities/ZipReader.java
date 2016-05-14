@@ -28,10 +28,10 @@ public class ZipReader
         }
 
         InputStream theFile = url.openStream();
-        ZipInputStream stream = new ZipInputStream(theFile);
+        
         String outdir = System.getProperty("user.dir");
 
-        try {
+        try (ZipInputStream stream = new ZipInputStream(theFile)){
             ZipEntry entry;
             while((entry = stream.getNextEntry())!=null)
             {
@@ -40,23 +40,14 @@ public class ZipReader
                                 new Date(entry.getTime()));
                 
                 String outpath = outdir + "/" + entry.getName();
-                FileOutputStream output = null;
-                try {
-                    output = new FileOutputStream(outpath);
+                
+                try (FileOutputStream output = new FileOutputStream(outpath)){
                     int len = 0;
                     while ((len = stream.read(buffer)) > 0){
                         output.write(buffer, 0, len);
                     }
                 }
-                finally {
-                    if(output!=null){
-                        output.close();
-                    }
-                }
             }
-        }
-        finally {
-            stream.close();
         }
     }
     
