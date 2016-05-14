@@ -40,12 +40,9 @@ public class StationSerializer {
     public static void saveData(){
         createObject();
         
-        try {
-            FileOutputStream fileOut = new FileOutputStream(System.getProperty("user.dir") + "\\stationData.sav");
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        try (FileOutputStream fileOut = new FileOutputStream(System.getProperty("user.dir") + "\\stationData.sav");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut)){
             out.writeObject(sd);
-            out.close();
-            fileOut.close();
             System.out.println("Serialized data is saved in stationData.sav");
         } catch(IOException i){
             System.out.println(i);
@@ -61,12 +58,9 @@ public class StationSerializer {
         sd.stationName.add("TOOWOOMBA AIRPORT");
         sd.validWMO.add("95551");
         
-        try {
-            FileOutputStream fileOut = new FileOutputStream(System.getProperty("user.dir") + "\\stationData.sav");
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        try (FileOutputStream fileOut = new FileOutputStream(System.getProperty("user.dir") + "\\stationData.sav");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut)){
             out.writeObject(sd);
-            out.close();
-            fileOut.close();
             System.out.println("Serialized data is saved in stationData.sav");
         } catch(IOException i){
             System.out.println(i);
