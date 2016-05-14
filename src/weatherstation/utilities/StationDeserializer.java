@@ -51,12 +51,9 @@ public class StationDeserializer {
     //For testing purposes
     public static void main(String[] Args){
         StationData sd = null;
-        try{
-            FileInputStream fileIn = new FileInputStream(System.getProperty("user.dir") + "\\stationData.sav");
-            ObjectInputStream in = new ObjectInputStream(fileIn);
+        try(FileInputStream fileIn = new FileInputStream(System.getProperty("user.dir") + "\\stationData.sav");
+            ObjectInputStream in = new ObjectInputStream(fileIn)){
             sd = (StationData) in.readObject();
-            in.close();
-            fileIn.close();
         } catch (IOException | ClassNotFoundException i){
             System.out.println(i);
         }
